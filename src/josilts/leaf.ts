@@ -9,4 +9,6 @@ export abstract class Leaf extends TreeNode {
         super(name, type);
     }
 
+    public abstract newIntance(): Leaf;
+
 }

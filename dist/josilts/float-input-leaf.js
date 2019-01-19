@@ -6,9 +6,13 @@ class FloatInputLeaf extends leaf_1.Leaf {
         super("FLOAT INPUT", "FLOAT", "INPUT");
         this.inputName = inputName;
         this.name += "(" + this.inputName + ")";
+        this.desc = "" + this.inputName;
     }
     getValue(input) {
         return input[this.inputName];
+    }
+    newIntance() {
+        return this;
     }
 }
 exports.FloatInputLeaf = FloatInputLeaf;

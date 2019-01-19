@@ -13,9 +13,13 @@ class IntegerConstantLeaf extends leaf_1.Leaf {
         }
         this.value = utils_1.Utils.integerRandom(this.min, this.max);
         this.name += "(" + this.value + ")";
+        this.desc = "" + this.value;
     }
     getValue() {
         return this.value;
+    }
+    newIntance() {
+        return new IntegerConstantLeaf(this.min, this.max);
     }
 }
 exports.IntegerConstantLeaf = IntegerConstantLeaf;

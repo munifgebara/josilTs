@@ -6,9 +6,13 @@ class IntegerInputLeaf extends leaf_1.Leaf {
         super("INTEGER INPUT", "INTEGER", "INPUT");
         this.inputName = inputName;
         this.name += "(" + this.inputName + ")";
+        this.desc = "" + this.inputName;
     }
     getValue(input) {
         return input[this.inputName];
+    }
+    newIntance() {
+        return this;
     }
 }
 exports.IntegerInputLeaf = IntegerInputLeaf;

@@ -15,10 +15,15 @@ export class FloatConstantLeaf extends Leaf {
         }
         this.value = Utils.floatRandom(this.min, this.max);
         this.name += "(" + this.value + ")";
+        this.desc = "" + this.value;
     }
 
     public getValue(): number {
         return this.value;
+    }
+
+    public newIntance(): FloatConstantLeaf {
+        return new FloatConstantLeaf(this.min, this.max);
     }
 
 }

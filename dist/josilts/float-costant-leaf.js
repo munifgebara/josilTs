@@ -13,9 +13,13 @@ class FloatConstantLeaf extends leaf_1.Leaf {
         }
         this.value = utils_1.Utils.floatRandom(this.min, this.max);
         this.name += "(" + this.value + ")";
+        this.desc = "" + this.value;
     }
     getValue() {
         return this.value;
+    }
+    newIntance() {
+        return new FloatConstantLeaf(this.min, this.max);
     }
 }
 exports.FloatConstantLeaf = FloatConstantLeaf;

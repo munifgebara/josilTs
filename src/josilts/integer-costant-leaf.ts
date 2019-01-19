@@ -15,10 +15,15 @@ export class IntegerConstantLeaf extends Leaf {
         }
         this.value = Utils.integerRandom(this.min, this.max);
         this.name += "(" + this.value + ")";
+        this.desc = "" + this.value;
     }
 
     public getValue(): number {
         return this.value;
+    }
+
+    public newIntance(): IntegerConstantLeaf {
+        return new IntegerConstantLeaf(this.min, this.max);
     }
 
 }
