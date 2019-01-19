@@ -5,6 +5,8 @@ import { NodeExpression } from "./josilts/node-expression";
 import { FloatInputLeaf } from "./josilts/float-input-leaf";
 import { Leaf } from "./josilts/leaf";
 import { Utils } from "./josilts/utils";
+import { TreeNode } from "./josilts/tree-node";
+import { BooleanConstantLeaf } from "./josilts/boolean-costant-leaf";
 
 console.log("teste");
 
@@ -45,26 +47,37 @@ function testaIntegerConstantLeaf() {
     }
 }
 
+function names(n: TreeNode[]) {
+    return n.reduce((p, c) => p + " " + c.name, "");
+
+}
+
 function testaNodeExpression() {
-    let terminals = [new FloatInputLeaf("i"), new FloatConstantLeaf(-10, 10)];
+    let terminals = [new FloatInputLeaf("i"), new FloatConstantLeaf(-10, 10), new BooleanConstantLeaf()];
     let functions = [
         new NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
         new NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
         new NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
         new NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], terminals, [], 0),
         new NodeExpression("mod", "FLOAT", "return a1!=0?a0%a1:0;", ["FLOAT", "FLOAT"], terminals, [], 0),
+        new NodeExpression("eq", "BOOLEAN", "return a0==a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
+        new NodeExpression("neq", "BOOLEAN", "return a0!=a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
+        new NodeExpression("gt", "BOOLEAN", "return a0>a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
+        new NodeExpression("lt", "BOOLEAN", "return a0<a1;", ["FLOAT", "FLOAT"], terminals, [], 0),
+        new NodeExpression("ifthenelse", "FLOAT", "return a0?a1:a2;", ["BOOLEAN", "FLOAT", "FLOAT"], terminals, [], 0),
     ];
-    let base = functions[Utils.integerRandom(0, functions.length - 1)];
+    let soma = 0;
+    for (let j = 0; j < 1000; j++) {
+        let functionsType = functions.filter(f => f.type == "FLOAT");
+        let base = functionsType[Utils.integerRandom(0, functionsType.length - 1)];
+        let tree = new NodeExpression(`tree_${base.functionName}`, base.type, base.code, base.parametersTypes, terminals, functions, 3);
 
+        for (let i = 0; i < 10; i++) {
+            soma += tree.getValue({ i });
+        }
 
-
-    let tree = new NodeExpression(`tree_${base.functionName}`, "FLOAT", base.code, base.parametersTypes, terminals, functions, 3);
-
-
-    console.log(tree.name);
-    for (let i = 0; i < 10; i++) {
-        console.log(i, tree.getValue({ i }));
     }
+    console.log(soma);
 
 
 

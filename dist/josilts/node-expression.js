@@ -16,11 +16,19 @@ class NodeExpression extends tree_node_1.TreeNode {
         this.parametersTypes.forEach(pt => {
             let r = utils_1.Utils.integerRandom(0, maxHeight);
             if (r > 0) {
-                let ne = this.functions.filter(n => n.type == pt)[utils_1.Utils.integerRandom(0, functions.length - 1)];
+                let possibleFunctions = this.functions.filter(n => n.type == pt);
+                let ne = possibleFunctions[utils_1.Utils.integerRandom(0, possibleFunctions.length - 1)];
+                if (!ne) {
+                    console.log("NAO ACHOU FUNCAO " + pt);
+                }
                 this.children.push(ne);
             }
             else {
-                let nn = this.terminals.filter(n => n.type == pt)[utils_1.Utils.integerRandom(0, terminals.length - 1)];
+                let possibleTerminals = this.terminals.filter(n => n.type == pt);
+                let nn = possibleTerminals[utils_1.Utils.integerRandom(0, possibleTerminals.length - 1)];
+                if (!nn) {
+                    console.log("NAO ACHOU TERMINAL " + pt);
+                }
                 this.children.push(nn);
             }
         });
