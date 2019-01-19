@@ -33,6 +33,8 @@ class NodeExpression extends tree_node_1.TreeNode {
         this.name += `${this.children.reduce((p, c, i) => p + c.name + (i < this.children.length - 1 ? "," : ""), "(")})`;
     }
     getValue(input) {
+        if (!this.children[0])
+            return 0;
         let ex = `${this.expression} ${this.functionName}${this.children.reduce((p, c, i) => p + c.getValue(input) + (i < this.children.length - 1 ? "," : ")"), "(")}`;
         return eval(ex);
     }
@@ -50,9 +52,11 @@ class NodeExpression extends tree_node_1.TreeNode {
     percorre(no, dot, h) {
         dot.push(`N${no.id} [label="${no.desc}"];`);
         if (no['children']) {
-            no['children'].forEach(f => {
-                dot.push(`N${no.id} -> N${f.id};`);
-                this.percorre(f, dot, h + 1);
+            no['children'].forEach((f, i) => {
+                if (f) {
+                    dot.push(`N${no.id} -> N${f.id};`);
+                    this.percorre(f, dot, h + 1);
+                }
             });
         }
     }
@@ -72,8 +76,24 @@ class NodeExpression extends tree_node_1.TreeNode {
     copy() {
         let n = new NodeExpression(`${this.functionName}`, this.type, this.code, this.parametersTypes, this.terminals, this.functions, this.maxHeight);
         n.children = [];
-        this.children.forEach(c => n.children.push(c.copy()));
+        this.children.forEach(c => {
+            if (c)
+                n.children.push(c.copy());
+        });
         return n;
+    }
+    getAllSubNodeExpressions() {
+        let toReturn = [];
+        this.getSubNodeExpressions(toReturn, this);
+        return toReturn;
+    }
+    getSubNodeExpressions(all, current) {
+        all.push(current);
+        current.children.forEach(ch => {
+            if (ch && ch['children']) {
+                this.getSubNodeExpressions(all, ch);
+            }
+        });
     }
 }
 exports.NodeExpression = NodeExpression;

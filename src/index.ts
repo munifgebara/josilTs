@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as stringify from "json-stable-stringify";
 import { IntegerConstantLeaf } from "./josilts/integer-costant-leaf";
 import { FloatConstantLeaf } from "./josilts/float-costant-leaf";
 import { IntegerInputLeaf } from "./josilts/integer-input-leaf";
@@ -99,17 +100,24 @@ function testaProject() {
     for (let x = -10; x <= 10; x += 0.5) {
         project.targetValues.push({ x, f: x * x + 2 * x - 3 });
     }
+    let best = project.population[0];
 
-    let best = project.getBest();
+    for (let ge = 0; ge < 10; ge++) {
+        console.log("Geracao ", ge);;
+        best = project.getBest();
+        fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
+        project.evolve();
+        fs.writeFileSync(`report/pior.dot`, project.population[project.populationSize - 1], "utf-8");
+    }
     console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness, best.rootExpression.getNodesAsArray().length);
-    fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
-
     project.targetValues = [];
     for (let x = -10; x <= 15; x += 0.1) {
         project.targetValues.push({ x, f: x * x + 2 * x - 3 });
     }
 
+
     best.writeCSV(project.targetValues);
+
 
 
 
@@ -122,6 +130,15 @@ function testaCombina() {
     let mate1 = new Individual("FLOAT", "FLOAT", Project.defaultTerminals, Project.defaultFunctions, 1);
     let mate2 = new Individual("FLOAT", "FLOAT", Project.defaultTerminals, Project.defaultFunctions, 1);
     let { s1, s2 } = { ...mate1.combine(mate2) };
+    [s1, s2, mate1, mate2].forEach(i => {
+        let v = i.getValue({ x: 10 });
+        console.log(v);
+        if (v == 0) {
+            fs.writeFileSync("report/erro.json", stringify(i, { space: '  ' }), "utf-8");
+            process.exit(1);
+        }
+    });
+
 
     fs.writeFileSync(`report/mates.dot`, " digraph G20 {" + mate1.rootExpression.getDotToCombine() + s1.rootExpression.getDotToCombine() + "}", "utf-8");
     fs.writeFileSync(`report/mates2.dot`, " digraph G20 {" + mate2.rootExpression.getDotToCombine() + s2.rootExpression.getDotToCombine() + "}", "utf-8");

@@ -12,6 +12,7 @@ export class NodeExpression extends TreeNode {
 
     public expression: string;
     public children: TreeNode[] = [];
+    public nodeExpressions: NodeExpression[];
 
     constructor(public functionName: string, type: Type, public code: string, public parametersTypes: Type[], public terminals: Leaf[], public functions: NodeExpression[], public maxHeight: number = 4, public minHeight: number = 0) {
         super(functionName, type);
@@ -40,6 +41,7 @@ export class NodeExpression extends TreeNode {
     }
 
     public getValue(input: any) {
+        if (!this.children[0]) return 0;
         let ex = `${this.expression} ${this.functionName}${this.children.reduce((p, c: TreeNode, i) => p + c.getValue(input) + (i < this.children.length - 1 ? "," : ")"), "(")}`;
         return eval(ex);
     }
@@ -61,9 +63,11 @@ export class NodeExpression extends TreeNode {
     private percorre(no: TreeNode, dot: string[], h: number) {
         dot.push(`N${no.id} [label="${no.desc}"];`);
         if (no['children']) {
-            no['children'].forEach(f => {
-                dot.push(`N${no.id} -> N${f.id};`);
-                this.percorre(f, dot, h + 1);
+            no['children'].forEach((f: TreeNode, i) => {
+                if (f) {
+                    dot.push(`N${no.id} -> N${f.id};`);
+                    this.percorre(f, dot, h + 1);
+                }
             });
 
         }
@@ -88,8 +92,26 @@ export class NodeExpression extends TreeNode {
     public copy(): NodeExpression {
         let n = new NodeExpression(`${this.functionName}`, this.type, this.code, this.parametersTypes, this.terminals, this.functions, this.maxHeight);
         n.children = [];
-        this.children.forEach(c => n.children.push(c.copy()));
+        this.children.forEach(c => {
+            if (c) n.children.push(c.copy())
+        });
         return n;
+    }
+
+    public getAllSubNodeExpressions(): NodeExpression[] {
+        let toReturn: NodeExpression[] = [];
+        this.getSubNodeExpressions(toReturn, this);
+        return toReturn;
+
+    }
+
+    public getSubNodeExpressions(all: NodeExpression[], current) {
+        all.push(current);
+        current.children.forEach(ch => {
+            if (ch && ch['children']) {
+                this.getSubNodeExpressions(all, ch);
+            }
+        })
     }
 
 

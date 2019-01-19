@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
+const stringify = require("json-stable-stringify");
 const integer_costant_leaf_1 = require("./josilts/integer-costant-leaf");
 const float_costant_leaf_1 = require("./josilts/float-costant-leaf");
 const integer_input_leaf_1 = require("./josilts/integer-input-leaf");
@@ -79,9 +80,16 @@ function testaProject() {
     for (let x = -10; x <= 10; x += 0.5) {
         project.targetValues.push({ x, f: x * x + 2 * x - 3 });
     }
-    let best = project.getBest();
+    let best = project.population[0];
+    for (let ge = 0; ge < 10; ge++) {
+        console.log("Geracao ", ge);
+        ;
+        best = project.getBest();
+        fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
+        project.evolve();
+        fs.writeFileSync(`report/pior.dot`, project.population[project.populationSize - 1], "utf-8");
+    }
     console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness, best.rootExpression.getNodesAsArray().length);
-    fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
     project.targetValues = [];
     for (let x = -10; x <= 15; x += 0.1) {
         project.targetValues.push({ x, f: x * x + 2 * x - 3 });
@@ -92,6 +100,14 @@ function testaCombina() {
     let mate1 = new individual_1.Individual("FLOAT", "FLOAT", project_1.Project.defaultTerminals, project_1.Project.defaultFunctions, 1);
     let mate2 = new individual_1.Individual("FLOAT", "FLOAT", project_1.Project.defaultTerminals, project_1.Project.defaultFunctions, 1);
     let { s1, s2 } = Object.assign({}, mate1.combine(mate2));
+    [s1, s2, mate1, mate2].forEach(i => {
+        let v = i.getValue({ x: 10 });
+        console.log(v);
+        if (v == 0) {
+            fs.writeFileSync("report/erro.json", stringify(i, { space: '  ' }), "utf-8");
+            process.exit(1);
+        }
+    });
     fs.writeFileSync(`report/mates.dot`, " digraph G20 {" + mate1.rootExpression.getDotToCombine() + s1.rootExpression.getDotToCombine() + "}", "utf-8");
     fs.writeFileSync(`report/mates2.dot`, " digraph G20 {" + mate2.rootExpression.getDotToCombine() + s2.rootExpression.getDotToCombine() + "}", "utf-8");
 }

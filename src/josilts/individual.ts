@@ -6,6 +6,7 @@ import { FloatInputLeaf } from "./float-input-leaf";
 import { Type, TreeNode } from "./tree-node";
 import { TargetValue } from './project';
 import { Utils } from './utils';
+import { IntegerConstantLeaf } from './integer-costant-leaf';
 
 export class Individual {
 
@@ -54,6 +55,7 @@ export class Individual {
     }
 
 
+
     public combine(mate1: Individual): { s1: Individual, s2: Individual } {
         let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
         let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
@@ -66,9 +68,22 @@ export class Individual {
 
         let { begin: mate1Begin, end: mate1End } = { ... this.cut(mate1Array) };
         let { begin: mate2Begin, end: mate2End } = { ... this.cut(mate2Array) };
-
         s1.rootExpression.children = [mate1Begin[1] as NodeExpression];
         s2.rootExpression.children = [mate2Begin[1] as NodeExpression];
+
+        let s1re: NodeExpression[] = s1.rootExpression.getAllSubNodeExpressions();
+        let s2re: NodeExpression[] = s2.rootExpression.getAllSubNodeExpressions();
+        let a2 = s2re[Math.round(s2re.length / 2)];
+        let a1 = s1re[Math.round(s1re.length / 2)];
+
+        if (a1 && a2) s1re[Math.round(s1re.length / 2)].children[0] = a2.copy();
+        if (a1 && a2) s2re[Math.round(s2re.length / 2)].children[0] = a1.copy();
+
+
+
+
+
+
 
         return { s1, s2 };
     }

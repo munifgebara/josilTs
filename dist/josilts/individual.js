@@ -51,6 +51,14 @@ class Individual {
         let { begin: mate2Begin, end: mate2End } = Object.assign({}, this.cut(mate2Array));
         s1.rootExpression.children = [mate1Begin[1]];
         s2.rootExpression.children = [mate2Begin[1]];
+        let s1re = s1.rootExpression.getAllSubNodeExpressions();
+        let s2re = s2.rootExpression.getAllSubNodeExpressions();
+        let a2 = s2re[Math.round(s2re.length / 2)];
+        let a1 = s1re[Math.round(s1re.length / 2)];
+        if (a1 && a2)
+            s1re[Math.round(s1re.length / 2)].children[0] = a2.copy();
+        if (a1 && a2)
+            s2re[Math.round(s2re.length / 2)].children[0] = a1.copy();
         return { s1, s2 };
     }
 }

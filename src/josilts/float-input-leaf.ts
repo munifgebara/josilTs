@@ -5,7 +5,7 @@ import { Utils } from "./utils";
 
 export class FloatInputLeaf extends Leaf {
 
-    constructor(protected inputName: string) {
+    constructor(public inputName: string) {
         super("FLOAT INPUT", "FLOAT", "INPUT");
         this.name += "(" + this.inputName + ")";
         this.desc = "" + this.inputName;
@@ -16,11 +16,11 @@ export class FloatInputLeaf extends Leaf {
     }
 
     public newIntance(): FloatInputLeaf {
-        return new FloatInputLeaf(this.inputName);
+        return new FloatInputLeaf("" + this.inputName);
     }
 
     public copy(): FloatInputLeaf {
-        return new FloatInputLeaf(this.inputName);
+        return new FloatInputLeaf("" + this.inputName);
     }
 
 

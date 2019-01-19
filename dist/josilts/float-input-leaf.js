@@ -12,10 +12,10 @@ class FloatInputLeaf extends leaf_1.Leaf {
         return input[this.inputName];
     }
     newIntance() {
-        return new FloatInputLeaf(this.inputName);
+        return new FloatInputLeaf("" + this.inputName);
     }
     copy() {
-        return new FloatInputLeaf(this.inputName);
+        return new FloatInputLeaf("" + this.inputName);
     }
 }
 exports.FloatInputLeaf = FloatInputLeaf;

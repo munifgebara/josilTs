@@ -42,13 +42,22 @@ class Project {
         process.stdout.write("\n");
         return best;
     }
+    evolve() {
+        this.population.sort((a, b) => a.fitness - b.fitness);
+        let metade = Math.floor(this.populationSize / 2);
+        for (let i = 0; i < metade; i += 2) {
+            let j = metade + i;
+            let r = this.population[i].combine(this.population[i + 1]);
+            this.population[j] = r.s1;
+            this.population[j + 1] = r.s2;
+        }
+    }
 }
 Project.defaultTerminals = [new float_costant_leaf_1.FloatConstantLeaf(-100, 100), new float_input_leaf_1.FloatInputLeaf("x")];
 Project.defaultFunctions = [
     new node_expression_1.NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
     new node_expression_1.NodeExpression("add3", "FLOAT", "return a0+a1+a2;", ["FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
     new node_expression_1.NodeExpression("add4", "FLOAT", "return a0+a1+a2+a3;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-    new node_expression_1.NodeExpression("add5", "FLOAT", "return a0+a1+a2+a3+a4;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT", , "FLOAT"], Project.defaultTerminals, [], 0),
     new node_expression_1.NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
     new node_expression_1.NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
     new node_expression_1.NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),

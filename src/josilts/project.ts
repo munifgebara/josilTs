@@ -20,7 +20,6 @@ export class Project {
         new NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("add3", "FLOAT", "return a0+a1+a2;", ["FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("add4", "FLOAT", "return a0+a1+a2+a3;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("add5", "FLOAT", "return a0+a1+a2+a3+a4;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT", , "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
@@ -71,6 +70,20 @@ export class Project {
 
 
         return best;
+    }
+
+    public evolve() {
+        this.population.sort((a, b) => a.fitness - b.fitness);
+        let metade = Math.floor(this.populationSize / 2);
+
+        for (let i = 0; i < metade; i += 2) {
+            let j = metade + i;
+            let r = this.population[i].combine(this.population[i + 1]);
+            this.population[j] = r.s1;
+            this.population[j + 1] = r.s2;
+        }
+
+
     }
 
 

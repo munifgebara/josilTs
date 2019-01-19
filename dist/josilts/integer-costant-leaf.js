@@ -24,6 +24,8 @@ class IntegerConstantLeaf extends leaf_1.Leaf {
     copy() {
         let n = new IntegerConstantLeaf(this.min, this.max);
         n.value = this.value;
+        n.name = "INTEGER CONSTANT(" + n.value + ")";
+        n.desc = "" + n.value;
         return n;
     }
 }
