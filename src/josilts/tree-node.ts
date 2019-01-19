@@ -17,6 +17,9 @@ export abstract class TreeNode {
 
     public abstract getValue(input: any): any;
 
+    public abstract copy(): TreeNode;
+
+
 
 
 

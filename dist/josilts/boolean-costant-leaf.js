@@ -14,6 +14,9 @@ class BooleanConstantLeaf extends leaf_1.Leaf {
     newIntance() {
         return new BooleanConstantLeaf(this.value);
     }
+    copy() {
+        return new BooleanConstantLeaf(this.value);
+    }
 }
 exports.BooleanConstantLeaf = BooleanConstantLeaf;
 //# sourceMappingURL=boolean-costant-leaf.js.map

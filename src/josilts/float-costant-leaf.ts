@@ -5,7 +5,7 @@ import { Utils } from "./utils";
 
 export class FloatConstantLeaf extends Leaf {
 
-    protected value: number;
+    public value: number;
 
     constructor(protected min: number, protected max: number) {
         super("FLOAT CONSTANT", "FLOAT", "CONSTANT");
@@ -24,6 +24,19 @@ export class FloatConstantLeaf extends Leaf {
 
     public newIntance(): FloatConstantLeaf {
         return new FloatConstantLeaf(this.min, this.max);
+    }
+
+    public mudaValue(v: number) {
+        this.value = v;
+    }
+
+    public copy(): FloatConstantLeaf {
+        let n: FloatConstantLeaf = new FloatConstantLeaf(this.min, this.max);
+        n.value = this.value;
+        n.name = "FLOAT CONSTANT(" + n.value + ")";
+        n.desc = "" + n.value;
+
+        return n;
     }
 
 }

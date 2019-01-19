@@ -3,8 +3,9 @@ import { Leaf } from "./leaf";
 import { NodeExpression } from "./node-expression";
 import { FloatConstantLeaf } from "./float-costant-leaf";
 import { FloatInputLeaf } from "./float-input-leaf";
-import { Type } from "./tree-node";
+import { Type, TreeNode } from "./tree-node";
 import { TargetValue } from './project';
+import { Utils } from './utils';
 
 export class Individual {
 
@@ -46,6 +47,32 @@ export class Individual {
             this.fitness += (dif * dif);
         });
     }
+
+    private cut(ind: TreeNode[]): { begin: TreeNode[], end: TreeNode[] } {
+        let cutPoint = 1 + Math.floor(Math.random() * (ind.length - 1));
+        return { begin: ind.slice(0, cutPoint), end: ind.slice(cutPoint) };
+    }
+
+
+    public combine(mate1: Individual): { s1: Individual, s2: Individual } {
+        let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
+        let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
+
+        let m1R: NodeExpression = this.rootExpression.copy() as NodeExpression;
+        let m2R: NodeExpression = mate1.rootExpression.copy() as NodeExpression;
+
+        let mate1Array = m1R.getNodesAsArray();
+        let mate2Array = m2R.getNodesAsArray();
+
+        let { begin: mate1Begin, end: mate1End } = { ... this.cut(mate1Array) };
+        let { begin: mate2Begin, end: mate2End } = { ... this.cut(mate2Array) };
+
+        s1.rootExpression.children = [mate1Begin[1] as NodeExpression];
+        s2.rootExpression.children = [mate2Begin[1] as NodeExpression];
+
+        return { s1, s2 };
+    }
+
 
 
 

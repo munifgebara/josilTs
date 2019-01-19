@@ -36,6 +36,23 @@ class Individual {
             this.fitness += (dif * dif);
         });
     }
+    cut(ind) {
+        let cutPoint = 1 + Math.floor(Math.random() * (ind.length - 1));
+        return { begin: ind.slice(0, cutPoint), end: ind.slice(cutPoint) };
+    }
+    combine(mate1) {
+        let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
+        let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
+        let m1R = this.rootExpression.copy();
+        let m2R = mate1.rootExpression.copy();
+        let mate1Array = m1R.getNodesAsArray();
+        let mate2Array = m2R.getNodesAsArray();
+        let { begin: mate1Begin, end: mate1End } = Object.assign({}, this.cut(mate1Array));
+        let { begin: mate2Begin, end: mate2End } = Object.assign({}, this.cut(mate2Array));
+        s1.rootExpression.children = [mate1Begin[1]];
+        s2.rootExpression.children = [mate2Begin[1]];
+        return { s1, s2 };
+    }
 }
 Individual.ID = 0;
 exports.Individual = Individual;

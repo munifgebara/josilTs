@@ -18,4 +18,12 @@ export class IntegerInputLeaf extends Leaf {
     public newIntance(): IntegerInputLeaf {
         return this;
     }
+
+    public copy(): IntegerInputLeaf {
+        return this;
+    }
+
+
+
+
 }

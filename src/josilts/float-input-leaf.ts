@@ -16,6 +16,12 @@ export class FloatInputLeaf extends Leaf {
     }
 
     public newIntance(): FloatInputLeaf {
-        return this;
+        return new FloatInputLeaf(this.inputName);
     }
+
+    public copy(): FloatInputLeaf {
+        return new FloatInputLeaf(this.inputName);
+    }
+
+
 }

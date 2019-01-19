@@ -18,6 +18,9 @@ export class Project {
 
     public static defaultFunctions = [
         new NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
+        new NodeExpression("add3", "FLOAT", "return a0+a1+a2;", ["FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
+        new NodeExpression("add4", "FLOAT", "return a0+a1+a2+a3;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
+        new NodeExpression("add5", "FLOAT", "return a0+a1+a2+a3+a4;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT", , "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
         new NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),

@@ -8,6 +8,7 @@ const node_expression_1 = require("./josilts/node-expression");
 const float_input_leaf_1 = require("./josilts/float-input-leaf");
 const utils_1 = require("./josilts/utils");
 const project_1 = require("./josilts/project");
+const individual_1 = require("./josilts/individual");
 console.log("teste");
 function testaFloatConstantLeaf() {
     let soma = 0;
@@ -79,7 +80,7 @@ function testaProject() {
         project.targetValues.push({ x, f: x * x + 2 * x - 3 });
     }
     let best = project.getBest();
-    console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
+    console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness, best.rootExpression.getNodesAsArray().length);
     fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
     project.targetValues = [];
     for (let x = -10; x <= 15; x += 0.1) {
@@ -87,7 +88,15 @@ function testaProject() {
     }
     best.writeCSV(project.targetValues);
 }
-testaProject();
+function testaCombina() {
+    let mate1 = new individual_1.Individual("FLOAT", "FLOAT", project_1.Project.defaultTerminals, project_1.Project.defaultFunctions, 1);
+    let mate2 = new individual_1.Individual("FLOAT", "FLOAT", project_1.Project.defaultTerminals, project_1.Project.defaultFunctions, 1);
+    let { s1, s2 } = Object.assign({}, mate1.combine(mate2));
+    fs.writeFileSync(`report/mates.dot`, " digraph G20 {" + mate1.rootExpression.getDotToCombine() + s1.rootExpression.getDotToCombine() + "}", "utf-8");
+    fs.writeFileSync(`report/mates2.dot`, " digraph G20 {" + mate2.rootExpression.getDotToCombine() + s2.rootExpression.getDotToCombine() + "}", "utf-8");
+}
+testaCombina();
+//testaProject();
 //testaNodeExpression();
 //testaIntegerInputLeaf();
 //testaFloatConstantLeaf();

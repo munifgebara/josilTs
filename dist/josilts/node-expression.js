@@ -42,6 +42,11 @@ class NodeExpression extends tree_node_1.TreeNode {
         dot.push("}");
         return dot.reduce((p, c) => p + c + '\n', '');
     }
+    getDotToCombine() {
+        let dot = [];
+        this.percorre(this, dot, 1);
+        return dot.reduce((p, c) => p + c + '\n', '');
+    }
     percorre(no, dot, h) {
         dot.push(`N${no.id} [label="${no.desc}"];`);
         if (no['children']) {
@@ -50,6 +55,25 @@ class NodeExpression extends tree_node_1.TreeNode {
                 this.percorre(f, dot, h + 1);
             });
         }
+    }
+    getNodesAsArray() {
+        let toReturn = [];
+        this.getNodes(toReturn, this);
+        return toReturn;
+    }
+    getNodes(all, current) {
+        all.push(current.copy());
+        if (current['children']) {
+            current['children'].forEach(c => {
+                this.getNodes(all, c);
+            });
+        }
+    }
+    copy() {
+        let n = new NodeExpression(`${this.functionName}`, this.type, this.code, this.parametersTypes, this.terminals, this.functions, this.maxHeight);
+        n.children = [];
+        this.children.forEach(c => n.children.push(c.copy()));
+        return n;
     }
 }
 exports.NodeExpression = NodeExpression;

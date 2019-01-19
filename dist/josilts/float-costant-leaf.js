@@ -21,6 +21,16 @@ class FloatConstantLeaf extends leaf_1.Leaf {
     newIntance() {
         return new FloatConstantLeaf(this.min, this.max);
     }
+    mudaValue(v) {
+        this.value = v;
+    }
+    copy() {
+        let n = new FloatConstantLeaf(this.min, this.max);
+        n.value = this.value;
+        n.name = "FLOAT CONSTANT(" + n.value + ")";
+        n.desc = "" + n.value;
+        return n;
+    }
 }
 exports.FloatConstantLeaf = FloatConstantLeaf;
 //# sourceMappingURL=float-costant-leaf.js.map

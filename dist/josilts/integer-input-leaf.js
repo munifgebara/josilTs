@@ -14,6 +14,9 @@ class IntegerInputLeaf extends leaf_1.Leaf {
     newIntance() {
         return this;
     }
+    copy() {
+        return this;
+    }
 }
 exports.IntegerInputLeaf = IntegerInputLeaf;
 //# sourceMappingURL=integer-input-leaf.js.map

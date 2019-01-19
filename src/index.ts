@@ -9,6 +9,7 @@ import { Utils } from "./josilts/utils";
 import { TreeNode, Type } from "./josilts/tree-node";
 import { BooleanConstantLeaf } from "./josilts/boolean-costant-leaf";
 import { Project } from './josilts/project';
+import { Individual } from './josilts/individual';
 
 console.log("teste");
 
@@ -100,7 +101,7 @@ function testaProject() {
     }
 
     let best = project.getBest();
-    console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
+    console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness, best.rootExpression.getNodesAsArray().length);
     fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
 
     project.targetValues = [];
@@ -114,13 +115,26 @@ function testaProject() {
 
 
 
+}
+
+function testaCombina() {
+
+    let mate1 = new Individual("FLOAT", "FLOAT", Project.defaultTerminals, Project.defaultFunctions, 1);
+    let mate2 = new Individual("FLOAT", "FLOAT", Project.defaultTerminals, Project.defaultFunctions, 1);
+    let { s1, s2 } = { ...mate1.combine(mate2) };
+
+    fs.writeFileSync(`report/mates.dot`, " digraph G20 {" + mate1.rootExpression.getDotToCombine() + s1.rootExpression.getDotToCombine() + "}", "utf-8");
+    fs.writeFileSync(`report/mates2.dot`, " digraph G20 {" + mate2.rootExpression.getDotToCombine() + s2.rootExpression.getDotToCombine() + "}", "utf-8");
+
+
+
 
 
 }
 
+testaCombina();
 
-
-testaProject();
+//testaProject();
 
 //testaNodeExpression();
 

@@ -21,6 +21,11 @@ class IntegerConstantLeaf extends leaf_1.Leaf {
     newIntance() {
         return new IntegerConstantLeaf(this.min, this.max);
     }
+    copy() {
+        let n = new IntegerConstantLeaf(this.min, this.max);
+        n.value = this.value;
+        return n;
+    }
 }
 exports.IntegerConstantLeaf = IntegerConstantLeaf;
 //# sourceMappingURL=integer-costant-leaf.js.map

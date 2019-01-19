@@ -26,4 +26,10 @@ export class IntegerConstantLeaf extends Leaf {
         return new IntegerConstantLeaf(this.min, this.max);
     }
 
+    public copy(): IntegerConstantLeaf {
+        let n = new IntegerConstantLeaf(this.min, this.max);
+        n.value = this.value;
+        return n;
+    }
+
 }

@@ -21,4 +21,8 @@ export class BooleanConstantLeaf extends Leaf {
         return new BooleanConstantLeaf(this.value);
     }
 
+    public copy(): BooleanConstantLeaf {
+        return new BooleanConstantLeaf(this.value);
+    }
+
 }

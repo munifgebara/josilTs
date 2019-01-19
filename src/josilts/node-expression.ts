@@ -51,6 +51,12 @@ export class NodeExpression extends TreeNode {
         return dot.reduce((p, c) => p + c + '\n', '');
     }
 
+    public getDotToCombine() {
+        let dot = [];
+        this.percorre(this, dot, 1);
+        return dot.reduce((p, c) => p + c + '\n', '');
+    }
+
 
     private percorre(no: TreeNode, dot: string[], h: number) {
         dot.push(`N${no.id} [label="${no.desc}"];`);
@@ -63,5 +69,28 @@ export class NodeExpression extends TreeNode {
         }
 
     }
+
+    public getNodesAsArray(): TreeNode[] {
+        let toReturn: TreeNode[] = [];
+        this.getNodes(toReturn, this);
+        return toReturn;
+    }
+
+    public getNodes(all: TreeNode[], current: TreeNode) {
+        all.push(current.copy());
+        if (current['children']) {
+            current['children'].forEach(c => {
+                this.getNodes(all, c);
+            });
+        }
+    }
+
+    public copy(): NodeExpression {
+        let n = new NodeExpression(`${this.functionName}`, this.type, this.code, this.parametersTypes, this.terminals, this.functions, this.maxHeight);
+        n.children = [];
+        this.children.forEach(c => n.children.push(c.copy()));
+        return n;
+    }
+
 
 }
