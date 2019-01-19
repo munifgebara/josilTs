@@ -7,6 +7,8 @@ const integer_input_leaf_1 = require("./josilts/integer-input-leaf");
 const node_expression_1 = require("./josilts/node-expression");
 const float_input_leaf_1 = require("./josilts/float-input-leaf");
 const utils_1 = require("./josilts/utils");
+const boolean_costant_leaf_1 = require("./josilts/boolean-costant-leaf");
+const project_1 = require("./josilts/project");
 console.log("teste");
 function testaFloatConstantLeaf() {
     let soma = 0;
@@ -72,7 +74,29 @@ function testaNodeExpression() {
     }
     fs.writeFileSync("tree.dot", tree.getDot(), "utf-8");
 }
-testaNodeExpression();
+function testaProject() {
+    let defaultTerminals = [new float_costant_leaf_1.FloatConstantLeaf(-0, 1), new float_costant_leaf_1.FloatConstantLeaf(-10, 10), new float_costant_leaf_1.FloatConstantLeaf(-100, 100), new float_input_leaf_1.FloatInputLeaf("x"), new boolean_costant_leaf_1.BooleanConstantLeaf(true), new boolean_costant_leaf_1.BooleanConstantLeaf(false)];
+    let defaultFunctions = [
+        new node_expression_1.NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("mod", "FLOAT", "return a1!=0?a0%a1:0;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("eq", "BOOLEAN", "return a0==a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("neq", "BOOLEAN", "return a0!=a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("gt", "BOOLEAN", "return a0>a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("lt", "BOOLEAN", "return a0<a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("ifthenelse", "FLOAT", "return a0?a1:a2;", ["BOOLEAN", "FLOAT", "FLOAT"], defaultTerminals, [], 0),
+        new node_expression_1.NodeExpression("or", "BOOLEAN", "return a0||a1;", ["BOOLEAN", "BOOLEAN"], defaultTerminals, [], 0, 3),
+        new node_expression_1.NodeExpression("and", "BOOLEAN", "return a0&&a1;", ["BOOLEAN", "BOOLEAN"], defaultTerminals, [], 0, 3),
+        new node_expression_1.NodeExpression("not", "BOOLEAN", "return !a0;", ["BOOLEAN"], defaultTerminals, [], 0, 0),
+    ];
+    //Project.defaultFunctions.forEach(f => console.log(f.name));
+    let project = new project_1.Project("f2", "FLOAT", "FLOAT", project_1.Project.defaultTerminals, project_1.Project.defaultFunctions, 10);
+    project.population.forEach(ind => ind.writeDot());
+}
+testaProject();
+//testaNodeExpression();
 //testaIntegerInputLeaf();
 //testaFloatConstantLeaf();
 //testaIntegerConstantLeaf();

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tree_node_1 = require("./tree-node");
 const utils_1 = require("./utils");
 class NodeExpression extends tree_node_1.TreeNode {
-    constructor(functionName, type, code, parametersTypes, terminals, functions, maxHeight = 4) {
+    constructor(functionName, type, code, parametersTypes, terminals, functions, maxHeight = 4, minHeight = 0) {
         super(functionName, type);
         this.functionName = functionName;
         this.code = code;
@@ -11,31 +11,25 @@ class NodeExpression extends tree_node_1.TreeNode {
         this.terminals = terminals;
         this.functions = functions;
         this.maxHeight = maxHeight;
+        this.minHeight = minHeight;
         this.children = [];
         this.desc = "" + this.functionName;
         this.expression = `function ${this.name} ${this.parametersTypes.reduce((p, c, i) => p + "a" + i + (i < this.parametersTypes.length - 1 ? "," : ")"), "(")} {${this.code}}`;
-        this.parametersTypes.forEach(pt => {
-            let r = utils_1.Utils.integerRandom(0, maxHeight);
-            let possibleFunctions = this.functions.filter(n => n.type == pt);
-            let ne = possibleFunctions[utils_1.Utils.integerRandom(0, possibleFunctions.length - 1)];
-            if (r > 1) {
-                this.children.push(new NodeExpression(`tree_${ne.functionName}`, ne.type, ne.code, ne.parametersTypes, terminals, functions, this.maxHeight - 1));
+        for (let i = 0; i < this.parametersTypes.length; i++) {
+            let pt = this.parametersTypes[i];
+            let possibleFunctions = functions.filter(n => n.type == pt && n.minHeight <= maxHeight);
+            let possibleTerminals = terminals.filter(n => n.type == pt);
+            if (minHeight <= maxHeight && possibleFunctions.length > 0) {
+                let ne = possibleFunctions[utils_1.Utils.integerRandom(0, possibleFunctions.length - 1)];
+                this.children.push(new NodeExpression(`n_${ne.functionName}`, ne.type, ne.code, ne.parametersTypes, terminals, functions, maxHeight - 1));
             }
-            else if (r > 0) {
-                if (!ne) {
-                    console.log("NAO ACHOU FUNCAO " + pt);
-                }
-                this.children.push(ne);
+            else if (possibleTerminals.length > 0) {
+                this.children.push(possibleTerminals[utils_1.Utils.integerRandom(0, possibleTerminals.length - 1)].newIntance());
             }
             else {
-                let possibleTerminals = this.terminals.filter(n => n.type == pt);
-                let nn = possibleTerminals[utils_1.Utils.integerRandom(0, possibleTerminals.length - 1)];
-                if (!nn) {
-                    console.log("NAO ACHOU TERMINAL " + pt);
-                }
-                this.children.push(nn.newIntance());
+                console.log(`${functionName} ${possibleTerminals.length}/${terminals.length}   ${possibleFunctions.length}/${functions.length}  ${minHeight}<${maxHeight}`);
             }
-        });
+        }
         this.name += `${this.children.reduce((p, c, i) => p + c.name + (i < this.children.length - 1 ? "," : ""), "(")})`;
     }
     getValue(input) {
