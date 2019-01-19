@@ -91,34 +91,31 @@ function testaNodeExpression() {
 
 
 function testaProject() {
-    let defaultTerminals: Leaf[] = [new FloatConstantLeaf(-0, 1), new FloatConstantLeaf(-10, 10), new FloatConstantLeaf(-100, 100), new FloatInputLeaf("x"), new BooleanConstantLeaf(true), new BooleanConstantLeaf(false)];
 
-    let defaultFunctions = [
-        new NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("mod", "FLOAT", "return a1!=0?a0%a1:0;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("eq", "BOOLEAN", "return a0==a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("neq", "BOOLEAN", "return a0!=a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("gt", "BOOLEAN", "return a0>a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("lt", "BOOLEAN", "return a0<a1;", ["FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("ifthenelse", "FLOAT", "return a0?a1:a2;", ["BOOLEAN", "FLOAT", "FLOAT"], defaultTerminals, [], 0),
-        new NodeExpression("or", "BOOLEAN", "return a0||a1;", ["BOOLEAN", "BOOLEAN"], defaultTerminals, [], 0, 3),
-        new NodeExpression("and", "BOOLEAN", "return a0&&a1;", ["BOOLEAN", "BOOLEAN"], defaultTerminals, [], 0, 3),
-        new NodeExpression("not", "BOOLEAN", "return !a0;", ["BOOLEAN"], defaultTerminals, [], 0, 0),
 
-    ];
+    let project = new Project("f2", "FLOAT", "FLOAT", Project.defaultTerminals, Project.defaultFunctions, parseInt(process.argv[2]), parseInt(process.argv[3]));
 
-    //Project.defaultFunctions.forEach(f => console.log(f.name));
+    for (let x = -10; x <= 10; x += 0.5) {
+        project.targetValues.push({ x, f: x * x + 2 * x - 3 });
+    }
 
-    let project = new Project("f2", "FLOAT", "FLOAT", Project.defaultTerminals, Project.defaultFunctions, 10);
+    let best = project.getBest();
+    console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
+    fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
+
+    project.targetValues = [];
+    for (let x = -10; x <= 15; x += 0.1) {
+        project.targetValues.push({ x, f: x * x + 2 * x - 3 });
+    }
+
+    best.writeCSV(project.targetValues);
 
 
 
 
 
-    project.population.forEach(ind => ind.writeDot());
+
+
 }
 
 
