@@ -10,6 +10,7 @@ const float_input_leaf_1 = require("./josilts/float-input-leaf");
 const utils_1 = require("./josilts/utils");
 const project_1 = require("./josilts/project");
 const individual_1 = require("./josilts/individual");
+const gp_node_1 = require("./josilts/gp-node");
 console.log("teste");
 function testaFloatConstantLeaf() {
     let soma = 0;
@@ -111,7 +112,15 @@ function testaCombina() {
     fs.writeFileSync(`report/mates.dot`, " digraph G20 {" + mate1.rootExpression.getDotToCombine() + s1.rootExpression.getDotToCombine() + "}", "utf-8");
     fs.writeFileSync(`report/mates2.dot`, " digraph G20 {" + mate2.rootExpression.getDotToCombine() + s2.rootExpression.getDotToCombine() + "}", "utf-8");
 }
-testaCombina();
+function testaGpNode() {
+    //let fs = GPNode.generateFunctions() + "console.log(add(1, 3))";
+    let node = new gp_node_1.GPNode("", "NUMBER", "return i0;", ["NUMBER"]);
+    node.initChildren([new gp_node_1.GPNode("x", "EXTERNAL")], parseInt(process.argv[2]));
+    console.log(node.getExpression());
+    console.log(eval(`const externals={x:10};\n` + gp_node_1.GPNode.generateFunctions() + node.getExpression()));
+    fs.writeFileSync("report/node.dot", node.getDot(), "utf-8");
+}
+testaGpNode();
 //testaProject();
 //testaNodeExpression();
 //testaIntegerInputLeaf();

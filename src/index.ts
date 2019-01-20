@@ -11,6 +11,7 @@ import { TreeNode, Type } from "./josilts/tree-node";
 import { BooleanConstantLeaf } from "./josilts/boolean-costant-leaf";
 import { Project } from './josilts/project';
 import { Individual } from './josilts/individual';
+import { GPNode } from './josilts/gp-node';
 
 console.log("teste");
 
@@ -148,8 +149,27 @@ function testaCombina() {
 
 
 }
+function testaGpNode() {
+    //let fs = GPNode.generateFunctions() + "console.log(add(1, 3))";
 
-testaCombina();
+
+    let node: GPNode = new GPNode("", "NUMBER", "return i0;", ["NUMBER"]);
+    node.initChildren([new GPNode("x", "EXTERNAL")], parseInt(process.argv[2]));
+
+    console.log(node.getExpression());
+
+    console.log(eval(`const externals={x:10};\n` + GPNode.generateFunctions() + node.getExpression()));
+
+    fs.writeFileSync("report/node.dot", node.getDot(), "utf-8");
+
+
+
+
+
+
+}
+
+testaGpNode();
 
 //testaProject();
 

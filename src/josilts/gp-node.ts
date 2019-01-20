@@ -1,0 +1,121 @@
+import { Utils } from "./utils";
+
+
+export type GPType = "NUMBER" | "BOOLEAN" | "STRING" | "EXTERNAL";
+
+export class GPNode {
+
+    public static ID = 0;
+
+    public static getNumberConstantNode(): GPNode {
+        return new GPNode("CONSTANT", "NUMBER");
+    }
+
+    public static getNumberConstantNodes(quantity: number): GPNode[] {
+        let toReturn: GPNode[] = [];
+        for (let i = 0; i < quantity; i++) {
+            toReturn.push(new GPNode("CONSTANT", "NUMBER"));
+        }
+        return toReturn;
+
+    }
+
+    public static getGenericFunctions(): GPNode[] {
+        let toReturn: GPNode[] = [];
+        toReturn.push(new GPNode("add", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("sub", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("mul", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("div", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("sqr", "NUMBER", "return i0*i0;", ["NUMBER"]));
+        toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
+        return toReturn;
+    }
+
+    public static generateFunctions(functions: GPNode[] = GPNode.getGenericFunctions()) {
+        return functions.reduce((p, c) => p + c.getFunction(), "");
+    }
+
+
+    public children: GPNode[] = [];
+
+    public id = ++GPNode.ID;
+
+    public createCopy(): GPNode {
+        return new GPNode(this.name, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+    }
+
+    constructor(private name: string, private returnType: GPType, private code: string = Utils.floatRandom(-10, 10).toString(), private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
+        this.initNode();
+
+    }
+
+    public getFunction(): string {
+        const cInputs = this.inputTypes.length;
+        return `function ${this.name}(${this.inputTypes.reduce((p, c, i) => p + 'i' + i + (i < cInputs - 1 ? ',' : ''), "")}){\n ${this.code}\n}\n`;
+    }
+
+    public getExpression(externals: any = {}): string {
+        if (this.children.length == 0) {
+            return this.code;
+        }
+        const cInputs = this.inputTypes.length;
+        return `${this.name}(${this.children.reduce((p, c, i) => p + c.getExpression() + (i < cInputs - 1 ? ',' : ''), "")})`;
+    }
+
+    public initChildren(nodes: GPNode[], maxHeigth: number = 4) {
+        this.children = [];
+        let possibleLeafs: GPNode[] = [...GPNode.getNumberConstantNodes(this.inputTypes.length), ...nodes.filter(n => (n.returnType == "EXTERNAL"))];
+        let functions: GPNode[] = GPNode.getGenericFunctions();
+        let all: GPNode[] = [...possibleLeafs, ...functions];
+
+        this.inputTypes.forEach(type => {
+            if (maxHeigth > 1) {
+                let nc: GPNode = functions[Utils.integerRandom(0, functions.length - 1)].createCopy();
+                nc.initChildren(nodes, maxHeigth - 1);
+                this.children.push(nc);
+            }
+            else if (maxHeigth == 1) {
+                let nc: GPNode = all[Utils.integerRandom(0, all.length - 1)].createCopy();
+                nc.initChildren(nodes, maxHeigth - 1);
+                this.children.push(nc);
+            }
+            else {
+                let nc: GPNode = possibleLeafs[Utils.integerRandom(0, possibleLeafs.length - 1)].createCopy();
+                this.children.push(nc);
+            }
+        });
+
+    }
+
+
+    public initNode() {
+        if (this.returnType == "EXTERNAL") {
+            this.code = `externals['${this.name}']`;
+        }
+    }
+
+    public value(extermal: any) {
+        return eval(this.getExpression());
+    }
+
+    public getDot() {
+        let dot = [` digraph G${this.id} {`];
+        this.buildDot(this, dot);
+        dot.push("}");
+        return dot.reduce((p, c) => p + c + '\n', '');
+    }
+
+    public getDotToCombine() {
+        let dot = [];
+        this.buildDot(this, dot);
+        return dot.reduce((p, c) => p + c + '\n', '');
+    }
+
+    private buildDot(current: GPNode, dot: string[]): any {
+        dot.push(`N${current.id} [label="${current.name != "CONSTANT" ? current.name : current.code}"];`);
+        current.children.forEach(n => {
+            dot.push(`N${current.id} -> N${n.id};`);
+            this.buildDot(n, dot);
+        });
+    }
+}

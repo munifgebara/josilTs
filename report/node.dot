@@ -1,0 +1,17 @@
+ digraph G1 {
+N1 [label=""];
+N1 -> N10;
+N10 [label="sqr"];
+N10 -> N18;
+N18 [label="mul"];
+N18 -> N27;
+N27 [label="sqr"];
+N27 -> N35;
+N35 [label="x"];
+N18 -> N36;
+N36 [label="mul"];
+N36 -> N45;
+N45 [label="8.47757661676589"];
+N36 -> N46;
+N46 [label="x"];
+}
