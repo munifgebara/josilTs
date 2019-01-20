@@ -62,6 +62,24 @@ export class Project {
 
     }
 
+    public static readSVG(name: string): any[] {
+        let l = [];
+        let data = fs.readFileSync(name).toString().split("\r\n");
+        let fields = data[0].split(",");
+        for (let i = 1; i < data.length; i++) {
+            let row = data[i].split(",");
+            let obj = fields.reduce((p: any, c: string, ind) => {
+                p[c] = parseInt(row[ind]);
+                return p;
+            }, { index: i });
+            if (obj[fields[0]]) {
+                l.push(obj);
+            }
+        }
+        console.log(`${l.length} rows imported`);
+        return l;
+    }
+
 
 }
 

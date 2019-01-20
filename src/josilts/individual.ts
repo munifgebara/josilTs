@@ -15,7 +15,7 @@ export class Individual {
 
     constructor(public inputTypes: GPType[], public outputType: GPType, public maxHeigth: number = 4) {
         this.rootExpression = new GPNode(``, this.outputType, "return i0;", this.inputTypes);
-        this.rootExpression.initChildren([new GPNode("x", "EXTERNAL"), new GPNode("y", "EXTERNAL")], maxHeigth);
+        this.rootExpression.initChildren([new GPNode("d", "EXTERNAL"), new GPNode("w", "EXTERNAL")], maxHeigth);
     }
 
     public getValue(input: any) {
@@ -24,9 +24,9 @@ export class Individual {
 
     public writeCSV(targetValues: TargetValue[]): void {
         let csv = "";
-        csv += `x,y,F,PG\n`;
+        csv += `d,w,p,pg\n`;
         targetValues.forEach(v => {
-            let value = this.getValue({ x: v.input[0], y: v.input[1] });
+            let value = this.getValue({ d: v.input[0], w: v.input[1] });
             csv += `${v.input[0]},${v.input[1]},${v.output},${value}\n`;
         });
         fs.writeFileSync(`report/i${this.id}.csv`, csv, "utf-8");
@@ -36,7 +36,7 @@ export class Individual {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
-                let dif = v.output - this.getValue({ x: v.input[0], y: v.input[1] });
+                let dif = v.output - this.getValue({ d: v.input[0], w: v.input[1] });
                 this.fitness += (dif * dif);
             });
         }
@@ -73,36 +73,6 @@ export class Individual {
 
 
 
-    /*
-            let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
-          let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
-  
-          let m1R: NodeExpression = this.rootExpression.copy() as NodeExpression;
-          let m2R: NodeExpression = mate1.rootExpression.copy() as NodeExpression;
-  
-          let mate1Array = m1R.getNodesAsArray();
-          let mate2Array = m2R.getNodesAsArray();
-  
-          let { begin: mate1Begin, end: mate1End } = { ... this.cut(mate1Array) };
-          let { begin: mate2Begin, end: mate2End } = { ... this.cut(mate2Array) };
-          s1.rootExpression.children = [mate1Begin[1] as NodeExpression];
-          s2.rootExpression.children = [mate2Begin[1] as NodeExpression];
-  
-          let s1re: NodeExpression[] = s1.rootExpression.getAllSubNodeExpressions();
-          let s2re: NodeExpression[] = s2.rootExpression.getAllSubNodeExpressions();
-          let a2 = s2re[Math.round(s2re.length / 2)];
-          let a1 = s1re[Math.round(s1re.length / 2)];
-  
-          if (a1 && a2) s1re[Math.round(s1re.length / 2)].children[0] = a2.copy();
-          if (a1 && a2) s2re[Math.round(s2re.length / 2)].children[0] = a1.copy();
-  
-  
-  
-  
-  
-  
-  
-    */
 
 
 }

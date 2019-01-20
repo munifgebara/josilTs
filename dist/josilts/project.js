@@ -47,6 +47,23 @@ class Project {
             this.population[j + 1] = r.s2;
         }
     }
+    static readSVG(name) {
+        let l = [];
+        let data = fs.readFileSync(name).toString().split("\r\n");
+        let fields = data[0].split(",");
+        for (let i = 1; i < data.length; i++) {
+            let row = data[i].split(",");
+            let obj = fields.reduce((p, c, ind) => {
+                p[c] = parseInt(row[ind]);
+                return p;
+            }, { index: i });
+            if (obj[fields[0]]) {
+                l.push(obj);
+            }
+        }
+        console.log(`${l.length} rows imported`);
+        return l;
+    }
 }
 exports.Project = Project;
 //# sourceMappingURL=project.js.map

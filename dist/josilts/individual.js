@@ -11,16 +11,16 @@ class Individual {
         this.id = ++Individual.ID;
         this.fitness = -1;
         this.rootExpression = new gp_node_1.GPNode(``, this.outputType, "return i0;", this.inputTypes);
-        this.rootExpression.initChildren([new gp_node_1.GPNode("x", "EXTERNAL"), new gp_node_1.GPNode("y", "EXTERNAL")], maxHeigth);
+        this.rootExpression.initChildren([new gp_node_1.GPNode("d", "EXTERNAL"), new gp_node_1.GPNode("w", "EXTERNAL")], maxHeigth);
     }
     getValue(input) {
         return this.rootExpression.value(input);
     }
     writeCSV(targetValues) {
         let csv = "";
-        csv += `x,y,F,PG\n`;
+        csv += `d,w,p,pg\n`;
         targetValues.forEach(v => {
-            let value = this.getValue({ x: v.input[0], y: v.input[1] });
+            let value = this.getValue({ d: v.input[0], w: v.input[1] });
             csv += `${v.input[0]},${v.input[1]},${v.output},${value}\n`;
         });
         fs.writeFileSync(`report/i${this.id}.csv`, csv, "utf-8");
@@ -29,7 +29,7 @@ class Individual {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
-                let dif = v.output - this.getValue({ x: v.input[0], y: v.input[1] });
+                let dif = v.output - this.getValue({ d: v.input[0], w: v.input[1] });
                 this.fitness += (dif * dif);
             });
         }

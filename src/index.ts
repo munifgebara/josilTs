@@ -5,32 +5,27 @@ import { Project } from './josilts/project';
 import { Individual } from './josilts/individual';
 import { GPNode } from './josilts/gp-node';
 
-console.log("teste");
-
 
 
 function testaProject() {
-
-
     let project = new Project("f2", ["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
-    for (let y = -10; y <= 10; y += 1) {
-        for (let x = -10; x <= 10; x += 1) {
-            project.targetValues.push({ input: [x, y], output: x * y + 2 * x + 3 * y - 3 });
-        }
-    }
+    let serra = Project.readSVG("serra.csv");
+    serra.forEach(s => {
+        project.targetValues.push({ input: [s.d, s.w], output: s.p });
+    })
+
     let best = project.population[0];
     for (let ge = 0; ge <= parseInt(process.argv[4]); ge++) {
         process.stdout.write("                                                                           Offspring " + ge + " " + project.avgFit + "\r");
         best = project.getBest();
+        best.writeCSV(project.targetValues);
         fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
         fs.writeFileSync(`report/pior.dot`, project.population[project.populationSize - 1], "utf-8");
         project.evolve();
     }
     console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
     best.writeCSV(project.targetValues);
-
     console.log(best.rootExpression.getExpression());
-
 }
 
 function testaCombina() {
@@ -50,38 +45,9 @@ function testaCombina() {
             process.exit(1);
         }
     });
-
-
-
-
-
-
-
-
-
 }
-function testaGpNode() {
-    //let fs = GPNode.generateFunctions() + "console.log(add(1, 3))";
-
-
-    let node: GPNode = new GPNode("", "NUMBER", "return i0;", ["NUMBER"]);
-    node.initChildren([new GPNode("x", "EXTERNAL")], parseInt(process.argv[2]));
-
-    console.log(node.getExpression());
-
-    fs.writeFileSync("report/node.dot", node.getDot(), "utf-8");
-
-    console.log(node.value({ x: 10 }));
-
-
-}
-
-//testaCombina();
 
 testaProject();
 
-//testaNodeExpression();
 
-//testaIntegerInputLeaf();
-//testaFloatConstantLeaf();
-//testaIntegerConstantLeaf();
+
