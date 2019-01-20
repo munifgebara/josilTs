@@ -1,34 +1,25 @@
 import * as fs from 'fs';
-import { Leaf } from "./leaf";
-import { NodeExpression } from "./node-expression";
-import { FloatConstantLeaf } from "./float-costant-leaf";
-import { FloatInputLeaf } from "./float-input-leaf";
-import { Type, TreeNode } from "./tree-node";
 import { TargetValue } from './project';
 import { Utils } from './utils';
-import { IntegerConstantLeaf } from './integer-costant-leaf';
+import { GPNode, GPType } from './gp-node';
 
 export class Individual {
 
     public static ID = 0;
 
-    public id: number = 0;
+    public id = ++Individual.ID;
 
-    public rootExpression: NodeExpression;
+    public rootExpression: GPNode;
 
     public fitness: number = 0;
 
-    constructor(public inputType: Type, public outputType: Type, public terminals: Leaf[], public functions: NodeExpression[], public maxHeigth: number = 4) {
-        this.id = ++Individual.ID;
-        this.rootExpression = new NodeExpression("I" + this.id, this.inputType, "return a0;", [this.outputType], this.terminals, this.functions, maxHeigth, 0);
+    constructor(public inputType: GPType, public outputType: GPType, public maxHeigth: number = 4) {
+        this.rootExpression = new GPNode(``, "NUMBER", "return i0;", ["NUMBER"]);
+        this.rootExpression.initChildren([new GPNode("x", "EXTERNAL")], maxHeigth);
     }
 
     public getValue(input: any) {
-        return this.rootExpression.getValue(input);
-    }
-
-    public writeDot(): void {
-        fs.writeFileSync(`report/i${this.id}.dot`, this.rootExpression.getDot(), "utf-8");
+        return this.rootExpression.value(input);
     }
 
     public writeCSV(targetValues: TargetValue[]): void {
@@ -49,39 +40,29 @@ export class Individual {
         });
     }
 
-    private cut(ind: TreeNode[]): { begin: TreeNode[], end: TreeNode[] } {
-        let cutPoint = 1 + Math.floor(Math.random() * (ind.length - 1));
-        return { begin: ind.slice(0, cutPoint), end: ind.slice(cutPoint) };
-    }
 
 
+    public combine(other: Individual): { s1: Individual, s2: Individual } {
+        let s1: Individual = new Individual(this.inputType, this.outputType, this.maxHeigth);
+        s1.rootExpression = this.rootExpression.createCopy();
+        let s2: Individual = new Individual(other.inputType, other.outputType, other.maxHeigth);
+        s2.rootExpression = other.rootExpression.createCopy();
 
-    public combine(mate1: Individual): { s1: Individual, s2: Individual } {
-        let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
-        let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
-
-        let m1R: NodeExpression = this.rootExpression.copy() as NodeExpression;
-        let m2R: NodeExpression = mate1.rootExpression.copy() as NodeExpression;
-
-        let mate1Array = m1R.getNodesAsArray();
-        let mate2Array = m2R.getNodesAsArray();
-
-        let { begin: mate1Begin, end: mate1End } = { ... this.cut(mate1Array) };
-        let { begin: mate2Begin, end: mate2End } = { ... this.cut(mate2Array) };
-        s1.rootExpression.children = [mate1Begin[1] as NodeExpression];
-        s2.rootExpression.children = [mate2Begin[1] as NodeExpression];
-
-        let s1re: NodeExpression[] = s1.rootExpression.getAllSubNodeExpressions();
-        let s2re: NodeExpression[] = s2.rootExpression.getAllSubNodeExpressions();
-        let a2 = s2re[Math.round(s2re.length / 2)];
-        let a1 = s1re[Math.round(s1re.length / 2)];
-
-        if (a1 && a2) s1re[Math.round(s1re.length / 2)].children[0] = a2.copy();
-        if (a1 && a2) s2re[Math.round(s2re.length / 2)].children[0] = a1.copy();
+        let s1fcs: GPNode[] = s1.rootExpression.getAllFunctions();
+        let a1 = s1fcs[Utils.integerRandom(0, s1fcs.length - 1)];
 
 
+        let s2fcs: GPNode[] = s2.rootExpression.getAllFunctions();
+        let a2 = s2fcs[Utils.integerRandom(0, s2fcs.length - 1)];
 
 
+        let i1 = Utils.integerRandom(0, a1.children.length - 1);
+        let i2 = Utils.integerRandom(0, a2.children.length - 1);
+
+        let aux: GPNode = a1.children[i1].createCopy();
+
+        a1.children[i1] = a2.children[i2].createCopy();
+        a2.children[i2] = aux;
 
 
 
@@ -89,6 +70,37 @@ export class Individual {
     }
 
 
+
+    /*
+            let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
+          let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
+  
+          let m1R: NodeExpression = this.rootExpression.copy() as NodeExpression;
+          let m2R: NodeExpression = mate1.rootExpression.copy() as NodeExpression;
+  
+          let mate1Array = m1R.getNodesAsArray();
+          let mate2Array = m2R.getNodesAsArray();
+  
+          let { begin: mate1Begin, end: mate1End } = { ... this.cut(mate1Array) };
+          let { begin: mate2Begin, end: mate2End } = { ... this.cut(mate2Array) };
+          s1.rootExpression.children = [mate1Begin[1] as NodeExpression];
+          s2.rootExpression.children = [mate2Begin[1] as NodeExpression];
+  
+          let s1re: NodeExpression[] = s1.rootExpression.getAllSubNodeExpressions();
+          let s2re: NodeExpression[] = s2.rootExpression.getAllSubNodeExpressions();
+          let a2 = s2re[Math.round(s2re.length / 2)];
+          let a1 = s1re[Math.round(s1re.length / 2)];
+  
+          if (a1 && a2) s1re[Math.round(s1re.length / 2)].children[0] = a2.copy();
+          if (a1 && a2) s2re[Math.round(s2re.length / 2)].children[0] = a1.copy();
+  
+  
+  
+  
+  
+  
+  
+    */
 
 
 }

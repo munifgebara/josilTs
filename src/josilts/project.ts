@@ -1,11 +1,9 @@
 import * as fs from 'fs';
-import { Leaf } from "./leaf";
-import { NodeExpression } from "./node-expression";
-import { FloatConstantLeaf } from "./float-costant-leaf";
-import { FloatInputLeaf } from "./float-input-leaf";
-import { Type } from "./tree-node";
+
+
 import { Individual } from "./individual";
-import { BooleanConstantLeaf } from "./boolean-costant-leaf";
+import { GPType } from './gp-node';
+
 
 export interface TargetValue {
     x: number,
@@ -14,42 +12,18 @@ export interface TargetValue {
 
 export class Project {
 
-    public static defaultTerminals: Leaf[] = [new FloatConstantLeaf(-100, 100), new FloatInputLeaf("x")];
-
-    public static defaultFunctions = [
-        new NodeExpression("add", "FLOAT", "return a0+a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("add3", "FLOAT", "return a0+a1+a2;", ["FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("add4", "FLOAT", "return a0+a1+a2+a3;", ["FLOAT", "FLOAT", "FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("sub", "FLOAT", "return a0-a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("mul", "FLOAT", "return a0*a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("div", "FLOAT", "return a1!=0?a0/a1:1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("sqr", "FLOAT", "return a0*a0;", ["FLOAT"], Project.defaultTerminals, [], 0),
-        new NodeExpression("mod", "FLOAT", "return a1!=0?a0%a1:0;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        // new NodeExpression("eq", "BOOLEAN", "return a0==a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        // new NodeExpression("neq", "BOOLEAN", "return a0!=a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        // new NodeExpression("gt", "BOOLEAN", "return a0>a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        // new NodeExpression("lt", "BOOLEAN", "return a0<a1;", ["FLOAT", "FLOAT"], Project.defaultTerminals, [], 0),
-        // new NodeExpression("zero", "BOOLEAN", "return a0==0;", ["FLOAT"], Project.defaultTerminals, [], 0, 0)
-    ];
-
 
     public population: Individual[];
 
     public targetValues: TargetValue[];
 
-    constructor(public title: string, public inputType: Type, public outputType: Type, public terminals: Leaf[], public functions: NodeExpression[], public populationSize: number = 100, public maxHeigth = 5) {
+    constructor(public title: string, public inputType: GPType, public outputType: GPType, public populationSize: number = 100, public maxHeigth = 5) {
+        console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
-        let booleanFunctions: NodeExpression[] = [
-            // new NodeExpression("ifthenelse", "FLOAT", "return a0?a1:a2;", ["BOOLEAN", "FLOAT", "FLOAT"], Project.defaultTerminals, Project.defaultFunctions, 5, 4),
-            // new NodeExpression("or", "BOOLEAN", "return a0||a1;", ["BOOLEAN", "BOOLEAN"], Project.defaultTerminals, Project.defaultFunctions, 4, 3),
-            // new NodeExpression("and", "BOOLEAN", "return a0&&a1;", ["BOOLEAN", "BOOLEAN"], Project.defaultTerminals, Project.defaultFunctions, 4, 3),
-            // new NodeExpression("not", "BOOLEAN", "return !a0;", ["BOOLEAN"], Project.defaultTerminals, Project.defaultFunctions, 2, 1)
-        ];
-
-
         this.population = [];
         for (let i = 0; i < this.populationSize; i++) {
-            this.population.push(new Individual(this.inputType, this.outputType, this.terminals, [...this.functions, ...booleanFunctions], 1 + i % maxHeigth));
+            process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
+            this.population.push(new Individual(this.inputType, this.outputType, 1 + i % this.maxHeigth));
         }
     }
 
@@ -67,15 +41,12 @@ export class Project {
             }
         });
         process.stdout.write("\n");
-
-
         return best;
     }
 
     public evolve() {
         this.population.sort((a, b) => a.fitness - b.fitness);
         let metade = Math.floor(this.populationSize / 2);
-
         for (let i = 0; i < metade; i += 2) {
             let j = metade + i;
             let r = this.population[i].combine(this.population[i + 1]);
@@ -85,11 +56,6 @@ export class Project {
 
 
     }
-
-
-
-
-
 
 
 }

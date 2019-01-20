@@ -36,7 +36,10 @@ class GPNode {
         return functions.reduce((p, c) => p + c.getFunction(), "");
     }
     createCopy() {
-        return new GPNode(this.name, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+        let ni = new GPNode(this.name, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+        ni.children = [];
+        this.children.forEach(c => ni.children.push(c.createCopy()));
+        return ni;
     }
     getFunction() {
         const cInputs = this.inputTypes.length;
@@ -76,8 +79,8 @@ class GPNode {
             this.code = `externals['${this.name}']`;
         }
     }
-    value(extermal) {
-        return eval(this.getExpression());
+    value(externals) {
+        return eval(GPNode.generateFunctions() + this.getExpression());
     }
     getDot() {
         let dot = [` digraph G${this.id} {`];
@@ -91,11 +94,25 @@ class GPNode {
         return dot.reduce((p, c) => p + c + '\n', '');
     }
     buildDot(current, dot) {
-        dot.push(`N${current.id} [label="${current.name != "CONSTANT" ? current.name : current.code}"];`);
+        dot.push(`N${current.id} [label="${current.label()}"];`);
         current.children.forEach(n => {
             dot.push(`N${current.id} -> N${n.id};`);
             this.buildDot(n, dot);
         });
+    }
+    addFunctions(current, all) {
+        if (current.children.length > 0) {
+            all.push(current);
+            current.children.forEach(c => this.addFunctions(c, all));
+        }
+    }
+    getAllFunctions() {
+        let tr = [];
+        this.addFunctions(this, tr);
+        return tr;
+    }
+    label() {
+        return `${this.name != "CONSTANT" ? this.name : this.code}`;
     }
 }
 GPNode.ID = 0;

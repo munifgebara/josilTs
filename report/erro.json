@@ -1,1016 +1,174 @@
 {
   "fitness": 0,
-  "functions": [
-    {
-      "children": [
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 4,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        },
-        {
-          "behavior": "CONSTANT",
-          "desc": "-68.67164414734015",
-          "id": 5,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-68.67164414734015)",
-          "type": "FLOAT",
-          "value": -68.67164414734015
-        }
-      ],
-      "code": "return a0+a1;",
-      "desc": "add",
-      "expression": "function add (a0,a1) {return a0+a1;}",
-      "functionName": "add",
-      "functions": [
-      ],
-      "id": 3,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "add(FLOAT INPUT(x),FLOAT CONSTANT(-68.67164414734015))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 7,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        },
-        {
-          "behavior": "CONSTANT",
-          "desc": "-9.95177601588702",
-          "id": 8,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-9.95177601588702)",
-          "type": "FLOAT",
-          "value": -9.95177601588702
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 9,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "code": "return a0+a1+a2;",
-      "desc": "add3",
-      "expression": "function add3 (a0,a1,a2) {return a0+a1+a2;}",
-      "functionName": "add3",
-      "functions": [
-      ],
-      "id": 6,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "add3(FLOAT INPUT(x),FLOAT CONSTANT(-9.95177601588702),FLOAT INPUT(x))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "41.60510042090942",
-          "id": 11,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(41.60510042090942)",
-          "type": "FLOAT",
-          "value": 41.60510042090942
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 12,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 13,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        },
-        {
-          "behavior": "CONSTANT",
-          "desc": "-66.83856670016391",
-          "id": 14,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-66.83856670016391)",
-          "type": "FLOAT",
-          "value": -66.83856670016391
-        }
-      ],
-      "code": "return a0+a1+a2+a3;",
-      "desc": "add4",
-      "expression": "function add4 (a0,a1,a2,a3) {return a0+a1+a2+a3;}",
-      "functionName": "add4",
-      "functions": [
-      ],
-      "id": 10,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "add4(FLOAT CONSTANT(41.60510042090942),FLOAT INPUT(x),FLOAT INPUT(x),FLOAT CONSTANT(-66.83856670016391))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT",
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-68.75390904070983",
-          "id": 16,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-68.75390904070983)",
-          "type": "FLOAT",
-          "value": -68.75390904070983
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 17,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "code": "return a0-a1;",
-      "desc": "sub",
-      "expression": "function sub (a0,a1) {return a0-a1;}",
-      "functionName": "sub",
-      "functions": [
-      ],
-      "id": 15,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "sub(FLOAT CONSTANT(-68.75390904070983),FLOAT INPUT(x))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 19,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        },
-        {
-          "behavior": "CONSTANT",
-          "desc": "-18.737435269104324",
-          "id": 20,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-18.737435269104324)",
-          "type": "FLOAT",
-          "value": -18.737435269104324
-        }
-      ],
-      "code": "return a0*a1;",
-      "desc": "mul",
-      "expression": "function mul (a0,a1) {return a0*a1;}",
-      "functionName": "mul",
-      "functions": [
-      ],
-      "id": 18,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "mul(FLOAT INPUT(x),FLOAT CONSTANT(-18.737435269104324))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-53.90288565077017",
-          "id": 22,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-53.90288565077017)",
-          "type": "FLOAT",
-          "value": -53.90288565077017
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 23,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "code": "return a1!=0?a0/a1:1;",
-      "desc": "div",
-      "expression": "function div (a0,a1) {return a1!=0?a0/a1:1;}",
-      "functionName": "div",
-      "functions": [
-      ],
-      "id": 21,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "div(FLOAT CONSTANT(-53.90288565077017),FLOAT INPUT(x))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 25,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "code": "return a0*a0;",
-      "desc": "sqr",
-      "expression": "function sqr (a0) {return a0*a0;}",
-      "functionName": "sqr",
-      "functions": [
-      ],
-      "id": 24,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "sqr(FLOAT INPUT(x))",
-      "parametersTypes": [
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    },
-    {
-      "children": [
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 27,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        },
-        {
-          "behavior": "CONSTANT",
-          "desc": "36.19462433302624",
-          "id": 28,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(36.19462433302624)",
-          "type": "FLOAT",
-          "value": 36.19462433302624
-        }
-      ],
-      "code": "return a1!=0?a0%a1:0;",
-      "desc": "mod",
-      "expression": "function mod (a0,a1) {return a1!=0?a0%a1:0;}",
-      "functionName": "mod",
-      "functions": [
-      ],
-      "id": 26,
-      "maxHeight": 0,
-      "minHeight": 0,
-      "name": "mod(FLOAT INPUT(x),FLOAT CONSTANT(36.19462433302624))",
-      "parametersTypes": [
-        "FLOAT",
-        "FLOAT"
-      ],
-      "terminals": [
-        {
-          "behavior": "CONSTANT",
-          "desc": "-67.93455536665846",
-          "id": 1,
-          "max": 100,
-          "min": -100,
-          "name": "FLOAT CONSTANT(-67.93455536665846)",
-          "type": "FLOAT",
-          "value": -67.93455536665846
-        },
-        {
-          "behavior": "INPUT",
-          "desc": "x",
-          "id": 2,
-          "inputName": "x",
-          "name": "FLOAT INPUT(x)",
-          "type": "FLOAT"
-        }
-      ],
-      "type": "FLOAT"
-    }
-  ],
-  "id": 4,
-  "inputType": "FLOAT",
-  "maxHeigth": 0,
-  "outputType": "FLOAT",
+  "id": 1,
+  "inputType": "NUMBER",
+  "maxHeigth": 3,
+  "outputType": "NUMBER",
   "rootExpression": {
     "children": [
-      null
-    ],
-    "code": "return a0;",
-    "desc": "I4",
-    "expression": "function I4 (a0) {return a0;}",
-    "functionName": "I4",
-    "functions": [
       {
         "children": [
           {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 4,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          },
-          {
-            "behavior": "CONSTANT",
-            "desc": "-68.67164414734015",
-            "id": 5,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-68.67164414734015)",
-            "type": "FLOAT",
-            "value": -68.67164414734015
-          }
-        ],
-        "code": "return a0+a1;",
-        "desc": "add",
-        "expression": "function add (a0,a1) {return a0+a1;}",
-        "functionName": "add",
-        "functions": [
-        ],
-        "id": 3,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "add(FLOAT INPUT(x),FLOAT CONSTANT(-68.67164414734015))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 7,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          },
-          {
-            "behavior": "CONSTANT",
-            "desc": "-9.95177601588702",
-            "id": 8,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-9.95177601588702)",
-            "type": "FLOAT",
-            "value": -9.95177601588702
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 9,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "code": "return a0+a1+a2;",
-        "desc": "add3",
-        "expression": "function add3 (a0,a1,a2) {return a0+a1+a2;}",
-        "functionName": "add3",
-        "functions": [
-        ],
-        "id": 6,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "add3(FLOAT INPUT(x),FLOAT CONSTANT(-9.95177601588702),FLOAT INPUT(x))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "41.60510042090942",
-            "id": 11,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(41.60510042090942)",
-            "type": "FLOAT",
-            "value": 41.60510042090942
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 12,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 13,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          },
-          {
-            "behavior": "CONSTANT",
-            "desc": "-66.83856670016391",
-            "id": 14,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-66.83856670016391)",
-            "type": "FLOAT",
-            "value": -66.83856670016391
-          }
-        ],
-        "code": "return a0+a1+a2+a3;",
-        "desc": "add4",
-        "expression": "function add4 (a0,a1,a2,a3) {return a0+a1+a2+a3;}",
-        "functionName": "add4",
-        "functions": [
-        ],
-        "id": 10,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "add4(FLOAT CONSTANT(41.60510042090942),FLOAT INPUT(x),FLOAT INPUT(x),FLOAT CONSTANT(-66.83856670016391))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT",
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-68.75390904070983",
-            "id": 16,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-68.75390904070983)",
-            "type": "FLOAT",
-            "value": -68.75390904070983
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 17,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "code": "return a0-a1;",
-        "desc": "sub",
-        "expression": "function sub (a0,a1) {return a0-a1;}",
-        "functionName": "sub",
-        "functions": [
-        ],
-        "id": 15,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "sub(FLOAT CONSTANT(-68.75390904070983),FLOAT INPUT(x))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "INPUT",
-            "desc": "x",
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                    ],
+                    "code": "externals['x']",
+                    "id": 37,
+                    "inputTypes": [
+                    ],
+                    "minimumHeight": 0,
+                    "name": "x",
+                    "returnType": "EXTERNAL"
+                  },
+                  {
+                    "children": [
+                    ],
+                    "code": "externals['x']",
+                    "id": 38,
+                    "inputTypes": [
+                    ],
+                    "minimumHeight": 0,
+                    "name": "x",
+                    "returnType": "EXTERNAL"
+                  }
+                ],
+                "code": "return i0+i1;",
+                "id": 28,
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "name": "add",
+                "returnType": "NUMBER"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                    ],
+                    "code": "9.02579330395309",
+                    "id": 48,
+                    "inputTypes": [
+                    ],
+                    "minimumHeight": 0,
+                    "name": "CONSTANT",
+                    "returnType": "NUMBER"
+                  },
+                  {
+                    "children": [
+                    ],
+                    "code": "9.02579330395309",
+                    "id": 49,
+                    "inputTypes": [
+                    ],
+                    "minimumHeight": 0,
+                    "name": "CONSTANT",
+                    "returnType": "NUMBER"
+                  }
+                ],
+                "code": "return i1==0?i0:i0%i1;",
+                "id": 39,
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "name": "mod",
+                "returnType": "NUMBER"
+              }
+            ],
+            "code": "return i0*i1;",
             "id": 19,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
+            "inputTypes": [
+              "NUMBER",
+              "NUMBER"
+            ],
+            "minimumHeight": 0,
+            "name": "mul",
+            "returnType": "NUMBER"
           },
           {
-            "behavior": "CONSTANT",
-            "desc": "-18.737435269104324",
-            "id": 20,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-18.737435269104324)",
-            "type": "FLOAT",
-            "value": -18.737435269104324
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                    ],
+                    "code": "-8.970882913133295",
+                    "id": 68,
+                    "inputTypes": [
+                    ],
+                    "minimumHeight": 0,
+                    "name": "CONSTANT",
+                    "returnType": "NUMBER"
+                  },
+                  {
+                    "children": [
+                    ],
+                    "code": "externals['x']",
+                    "id": 69,
+                    "inputTypes": [
+                    ],
+                    "minimumHeight": 0,
+                    "name": "x",
+                    "returnType": "EXTERNAL"
+                  }
+                ],
+                "code": "return i1==0?1:i0/i1;",
+                "id": 59,
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "name": "div",
+                "returnType": "NUMBER"
+              },
+              {
+                "children": [
+                ],
+                "code": "-8.301380301661405",
+                "id": 70,
+                "inputTypes": [
+                ],
+                "minimumHeight": 0,
+                "name": "CONSTANT",
+                "returnType": "NUMBER"
+              }
+            ],
+            "code": "return i1==0?i0:i0%i1;",
+            "id": 50,
+            "inputTypes": [
+              "NUMBER",
+              "NUMBER"
+            ],
+            "minimumHeight": 0,
+            "name": "mod",
+            "returnType": "NUMBER"
           }
         ],
-        "code": "return a0*a1;",
-        "desc": "mul",
-        "expression": "function mul (a0,a1) {return a0*a1;}",
-        "functionName": "mul",
-        "functions": [
+        "code": "return i1==0?1:i0/i1;",
+        "id": 10,
+        "inputTypes": [
+          "NUMBER",
+          "NUMBER"
         ],
-        "id": 18,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "mul(FLOAT INPUT(x),FLOAT CONSTANT(-18.737435269104324))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-53.90288565077017",
-            "id": 22,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-53.90288565077017)",
-            "type": "FLOAT",
-            "value": -53.90288565077017
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 23,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "code": "return a1!=0?a0/a1:1;",
-        "desc": "div",
-        "expression": "function div (a0,a1) {return a1!=0?a0/a1:1;}",
-        "functionName": "div",
-        "functions": [
-        ],
-        "id": 21,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "div(FLOAT CONSTANT(-53.90288565077017),FLOAT INPUT(x))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 25,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "code": "return a0*a0;",
-        "desc": "sqr",
-        "expression": "function sqr (a0) {return a0*a0;}",
-        "functionName": "sqr",
-        "functions": [
-        ],
-        "id": 24,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "sqr(FLOAT INPUT(x))",
-        "parametersTypes": [
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
-      },
-      {
-        "children": [
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 27,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          },
-          {
-            "behavior": "CONSTANT",
-            "desc": "36.19462433302624",
-            "id": 28,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(36.19462433302624)",
-            "type": "FLOAT",
-            "value": 36.19462433302624
-          }
-        ],
-        "code": "return a1!=0?a0%a1:0;",
-        "desc": "mod",
-        "expression": "function mod (a0,a1) {return a1!=0?a0%a1:0;}",
-        "functionName": "mod",
-        "functions": [
-        ],
-        "id": 26,
-        "maxHeight": 0,
-        "minHeight": 0,
-        "name": "mod(FLOAT INPUT(x),FLOAT CONSTANT(36.19462433302624))",
-        "parametersTypes": [
-          "FLOAT",
-          "FLOAT"
-        ],
-        "terminals": [
-          {
-            "behavior": "CONSTANT",
-            "desc": "-67.93455536665846",
-            "id": 1,
-            "max": 100,
-            "min": -100,
-            "name": "FLOAT CONSTANT(-67.93455536665846)",
-            "type": "FLOAT",
-            "value": -67.93455536665846
-          },
-          {
-            "behavior": "INPUT",
-            "desc": "x",
-            "id": 2,
-            "inputName": "x",
-            "name": "FLOAT INPUT(x)",
-            "type": "FLOAT"
-          }
-        ],
-        "type": "FLOAT"
+        "minimumHeight": 0,
+        "name": "div",
+        "returnType": "NUMBER"
       }
     ],
-    "id": 53,
-    "maxHeight": 0,
-    "minHeight": 0,
-    "name": "I4(n_mod(FLOAT CONSTANT(-23.663727607782278),FLOAT CONSTANT(-78.77887385168347)))",
-    "parametersTypes": [
-      "FLOAT"
+    "code": "return i0;",
+    "id": 1,
+    "inputTypes": [
+      "NUMBER"
     ],
-    "terminals": [
-      {
-        "behavior": "CONSTANT",
-        "desc": "-67.93455536665846",
-        "id": 1,
-        "max": 100,
-        "min": -100,
-        "name": "FLOAT CONSTANT(-67.93455536665846)",
-        "type": "FLOAT",
-        "value": -67.93455536665846
-      },
-      {
-        "behavior": "INPUT",
-        "desc": "x",
-        "id": 2,
-        "inputName": "x",
-        "name": "FLOAT INPUT(x)",
-        "type": "FLOAT"
-      }
-    ],
-    "type": "FLOAT"
-  },
-  "terminals": [
-    {
-      "behavior": "CONSTANT",
-      "desc": "-67.93455536665846",
-      "id": 1,
-      "max": 100,
-      "min": -100,
-      "name": "FLOAT CONSTANT(-67.93455536665846)",
-      "type": "FLOAT",
-      "value": -67.93455536665846
-    },
-    {
-      "behavior": "INPUT",
-      "desc": "x",
-      "id": 2,
-      "inputName": "x",
-      "name": "FLOAT INPUT(x)",
-      "type": "FLOAT"
-    }
-  ]
+    "minimumHeight": 0,
+    "name": "",
+    "returnType": "NUMBER"
+  }
 }

@@ -41,7 +41,10 @@ export class GPNode {
     public id = ++GPNode.ID;
 
     public createCopy(): GPNode {
-        return new GPNode(this.name, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+        let ni = new GPNode(this.name, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+        ni.children = [];
+        this.children.forEach(c => ni.children.push(c.createCopy()));
+        return ni;
     }
 
     constructor(private name: string, private returnType: GPType, private code: string = Utils.floatRandom(-10, 10).toString(), private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
@@ -94,8 +97,8 @@ export class GPNode {
         }
     }
 
-    public value(extermal: any) {
-        return eval(this.getExpression());
+    public value(externals: any) {
+        return eval(GPNode.generateFunctions() + this.getExpression());
     }
 
     public getDot() {
@@ -112,10 +115,30 @@ export class GPNode {
     }
 
     private buildDot(current: GPNode, dot: string[]): any {
-        dot.push(`N${current.id} [label="${current.name != "CONSTANT" ? current.name : current.code}"];`);
+        dot.push(`N${current.id} [label="${current.label()}"];`);
         current.children.forEach(n => {
             dot.push(`N${current.id} -> N${n.id};`);
             this.buildDot(n, dot);
         });
     }
+
+
+    private addFunctions(current: GPNode, all: GPNode[]) {
+        if (current.children.length > 0) {
+            all.push(current);
+            current.children.forEach(c => this.addFunctions(c, all));
+        }
+    }
+
+    public getAllFunctions(): GPNode[] {
+        let tr: GPNode[] = [];
+        this.addFunctions(this, tr);
+        return tr;
+    }
+
+    public label(): string {
+        return `${this.name != "CONSTANT" ? this.name : this.code}`;
+    }
+
+
 }

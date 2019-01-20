@@ -1,24 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
-const node_expression_1 = require("./node-expression");
+const utils_1 = require("./utils");
+const gp_node_1 = require("./gp-node");
 class Individual {
-    constructor(inputType, outputType, terminals, functions, maxHeigth = 4) {
+    constructor(inputType, outputType, maxHeigth = 4) {
         this.inputType = inputType;
         this.outputType = outputType;
-        this.terminals = terminals;
-        this.functions = functions;
         this.maxHeigth = maxHeigth;
-        this.id = 0;
-        this.fitness = 0;
         this.id = ++Individual.ID;
-        this.rootExpression = new node_expression_1.NodeExpression("I" + this.id, this.inputType, "return a0;", [this.outputType], this.terminals, this.functions, maxHeigth, 0);
+        this.fitness = 0;
+        this.rootExpression = new gp_node_1.GPNode(``, "NUMBER", "return i0;", ["NUMBER"]);
+        this.rootExpression.initChildren([new gp_node_1.GPNode("x", "EXTERNAL")], maxHeigth);
     }
     getValue(input) {
-        return this.rootExpression.getValue(input);
-    }
-    writeDot() {
-        fs.writeFileSync(`report/i${this.id}.dot`, this.rootExpression.getDot(), "utf-8");
+        return this.rootExpression.value(input);
     }
     writeCSV(targetValues) {
         let csv = "";
@@ -36,29 +32,20 @@ class Individual {
             this.fitness += (dif * dif);
         });
     }
-    cut(ind) {
-        let cutPoint = 1 + Math.floor(Math.random() * (ind.length - 1));
-        return { begin: ind.slice(0, cutPoint), end: ind.slice(cutPoint) };
-    }
-    combine(mate1) {
-        let s1 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
-        let s2 = new Individual(this.inputType, this.outputType, this.terminals, this.functions, 0);
-        let m1R = this.rootExpression.copy();
-        let m2R = mate1.rootExpression.copy();
-        let mate1Array = m1R.getNodesAsArray();
-        let mate2Array = m2R.getNodesAsArray();
-        let { begin: mate1Begin, end: mate1End } = Object.assign({}, this.cut(mate1Array));
-        let { begin: mate2Begin, end: mate2End } = Object.assign({}, this.cut(mate2Array));
-        s1.rootExpression.children = [mate1Begin[1]];
-        s2.rootExpression.children = [mate2Begin[1]];
-        let s1re = s1.rootExpression.getAllSubNodeExpressions();
-        let s2re = s2.rootExpression.getAllSubNodeExpressions();
-        let a2 = s2re[Math.round(s2re.length / 2)];
-        let a1 = s1re[Math.round(s1re.length / 2)];
-        if (a1 && a2)
-            s1re[Math.round(s1re.length / 2)].children[0] = a2.copy();
-        if (a1 && a2)
-            s2re[Math.round(s2re.length / 2)].children[0] = a1.copy();
+    combine(other) {
+        let s1 = new Individual(this.inputType, this.outputType, this.maxHeigth);
+        s1.rootExpression = this.rootExpression.createCopy();
+        let s2 = new Individual(other.inputType, other.outputType, other.maxHeigth);
+        s2.rootExpression = other.rootExpression.createCopy();
+        let s1fcs = s1.rootExpression.getAllFunctions();
+        let a1 = s1fcs[utils_1.Utils.integerRandom(0, s1fcs.length - 1)];
+        let s2fcs = s2.rootExpression.getAllFunctions();
+        let a2 = s2fcs[utils_1.Utils.integerRandom(0, s2fcs.length - 1)];
+        let i1 = utils_1.Utils.integerRandom(0, a1.children.length - 1);
+        let i2 = utils_1.Utils.integerRandom(0, a2.children.length - 1);
+        let aux = a1.children[i1].createCopy();
+        a1.children[i1] = a2.children[i2].createCopy();
+        a2.children[i2] = aux;
         return { s1, s2 };
     }
 }
