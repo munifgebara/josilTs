@@ -18,6 +18,8 @@ class Individual {
     }
     writeCSV(targetValues) {
         let csv = "";
+        csv += `expressao,${this.rootExpression.getExpression()}\n`;
+        csv += `parametros,${process.argv}\n`;
         csv += `d,w,p,pg\n`;
         targetValues.forEach(v => {
             let value = this.getValue({ d: v.input[0], w: v.input[1] });
