@@ -9,23 +9,19 @@ console.log("teste");
 function testaProject() {
     let project = new project_1.Project("f2", "NUMBER", "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
     for (let x = -10; x <= 10; x += 0.5) {
-        project.targetValues.push({ x, f: x * x + 2 * x - 3 });
+        project.targetValues.push({ x, f: 5 * x * x + 2 * x - 3 });
     }
     let best = project.population[0];
     for (let ge = 0; ge <= parseInt(process.argv[4]); ge++) {
-        console.log("\nOffspring ", ge);
-        ;
+        process.stdout.write("                                                                           Offspring " + ge + " " + project.avgFit + "\r");
         best = project.getBest();
         fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
         fs.writeFileSync(`report/pior.dot`, project.population[project.populationSize - 1], "utf-8");
         project.evolve();
     }
     console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
-    project.targetValues = [];
-    for (let x = -10; x <= 15; x += 0.1) {
-        project.targetValues.push({ x, f: x * x + 2 * x - 3 });
-    }
     best.writeCSV(project.targetValues);
+    console.log(best.rootExpression.getExpression());
 }
 function testaCombina() {
     let mate1 = new individual_1.Individual("NUMBER", "NUMBER", parseInt(process.argv[2]));

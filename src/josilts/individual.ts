@@ -11,7 +11,7 @@ export class Individual {
 
     public rootExpression: GPNode;
 
-    public fitness: number = 0;
+    public fitness: number = -1;
 
     constructor(public inputType: GPType, public outputType: GPType, public maxHeigth: number = 4) {
         this.rootExpression = new GPNode(``, "NUMBER", "return i0;", ["NUMBER"]);
@@ -33,11 +33,13 @@ export class Individual {
     }
 
     public updateFitness(targetValues: TargetValue[]) {
-        this.fitness = 0;
-        targetValues.forEach(v => {
-            let dif = v.f - this.getValue({ x: v.x });
-            this.fitness += (dif * dif);
-        });
+        if (true) {
+            this.fitness = 0;
+            targetValues.forEach(v => {
+                let dif = v.f - this.getValue({ x: v.x });
+                this.fitness += (dif * dif);
+            });
+        }
     }
 
 

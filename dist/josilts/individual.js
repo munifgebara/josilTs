@@ -9,7 +9,7 @@ class Individual {
         this.outputType = outputType;
         this.maxHeigth = maxHeigth;
         this.id = ++Individual.ID;
-        this.fitness = 0;
+        this.fitness = -1;
         this.rootExpression = new gp_node_1.GPNode(``, "NUMBER", "return i0;", ["NUMBER"]);
         this.rootExpression.initChildren([new gp_node_1.GPNode("x", "EXTERNAL")], maxHeigth);
     }
@@ -26,11 +26,13 @@ class Individual {
         fs.writeFileSync(`report/i${this.id}.csv`, csv, "utf-8");
     }
     updateFitness(targetValues) {
-        this.fitness = 0;
-        targetValues.forEach(v => {
-            let dif = v.f - this.getValue({ x: v.x });
-            this.fitness += (dif * dif);
-        });
+        if (true) {
+            this.fitness = 0;
+            targetValues.forEach(v => {
+                let dif = v.f - this.getValue({ x: v.x });
+                this.fitness += (dif * dif);
+            });
+        }
     }
     combine(other) {
         let s1 = new Individual(this.inputType, this.outputType, this.maxHeigth);

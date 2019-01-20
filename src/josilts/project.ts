@@ -17,30 +17,35 @@ export class Project {
 
     public targetValues: TargetValue[];
 
+    public avgFit = 0;
+
     constructor(public title: string, public inputType: GPType, public outputType: GPType, public populationSize: number = 100, public maxHeigth = 5) {
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
         for (let i = 0; i < this.populationSize; i++) {
             process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new Individual(this.inputType, this.outputType, 1 + i % this.maxHeigth));
+            this.population.push(new Individual(this.inputType, this.outputType, this.maxHeigth));
         }
     }
 
     public getBest() {
         let best: Individual;
+        let summ = 0;
         this.population.forEach((ind, i) => {
-            ind.updateFitness(this.targetValues)
+            ind.updateFitness(this.targetValues);
+            summ += ind.fitness / this.populationSize;
             if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-                process.stdout.write("Best fit " + i + " " + ind.fitness + "                            \r");
+                process.stdout.write("Best fit " + i + " " + ind.fitness + "  \r");
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
             }
-            if (i % 100 == 0) {
-                process.stdout.write("Best fit " + i + " " + best.fitness + "                                 \r");
+            if (i % 1000 == 0) {
+                process.stdout.write("Best fit " + i + " " + best.fitness + " ID:" + best.id + "  \r");
             }
         });
         process.stdout.write("\n");
+        this.avgFit = Math.round(summ);
         return best;
     }
 
