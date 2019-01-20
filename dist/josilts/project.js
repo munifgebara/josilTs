@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const individual_1 = require("./individual");
 class Project {
-    constructor(title, inputType, outputType, populationSize = 100, maxHeigth = 5) {
+    constructor(title, inputTypes, outputType, populationSize = 100, maxHeigth = 5) {
         this.title = title;
-        this.inputType = inputType;
+        this.inputTypes = inputTypes;
         this.outputType = outputType;
         this.populationSize = populationSize;
         this.maxHeigth = maxHeigth;
@@ -15,7 +15,7 @@ class Project {
         this.population = [];
         for (let i = 0; i < this.populationSize; i++) {
             process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new individual_1.Individual(this.inputType, this.outputType, this.maxHeigth));
+            this.population.push(new individual_1.Individual(this.inputTypes, this.outputType, this.maxHeigth));
         }
     }
     getBest() {
@@ -26,11 +26,11 @@ class Project {
             summ += ind.fitness / this.populationSize;
             if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-                process.stdout.write("Best fit " + i + " " + ind.fitness + "  \r");
+                process.stdout.write("Best fit " + i + " " + Math.round(ind.fitness) + "  \r");
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
             }
             if (i % 1000 == 0) {
-                process.stdout.write("Best fit " + i + " " + best.fitness + " ID:" + best.id + "  \r");
+                process.stdout.write("Best fit " + i + " " + Math.round(best.fitness) + " ID:" + best.id + "  \r");
             }
         });
         process.stdout.write("\n");

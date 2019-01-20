@@ -12,10 +12,11 @@ console.log("teste");
 function testaProject() {
 
 
-    let project = new Project("f2", "NUMBER", "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
-
-    for (let x = -10; x <= 10; x += 0.5) {
-        project.targetValues.push({ x, f: 5 * x * x + 2 * x - 3 });
+    let project = new Project("f2", ["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
+    for (let y = -10; y <= 10; y += 1) {
+        for (let x = -10; x <= 10; x += 1) {
+            project.targetValues.push({ input: [x, y], output: x * y + 2 * x + 3 * y - 3 });
+        }
     }
     let best = project.population[0];
     for (let ge = 0; ge <= parseInt(process.argv[4]); ge++) {
@@ -34,8 +35,8 @@ function testaProject() {
 
 function testaCombina() {
 
-    let mate1 = new Individual("NUMBER", "NUMBER", parseInt(process.argv[2]));
-    let mate2 = new Individual("NUMBER", "NUMBER", parseInt(process.argv[2]));
+    let mate1 = new Individual(["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]));
+    let mate2 = new Individual(["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]));
 
     let { s1, s2 } = { ...mate1.combine(mate2) };
     fs.writeFileSync(`report/mates.dot`, " digraph G20 {" + mate1.rootExpression.getDotToCombine() + s1.rootExpression.getDotToCombine() + mate2.rootExpression.getDotToCombine() + s2.rootExpression.getDotToCombine() + "}", "utf-8");

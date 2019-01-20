@@ -13,9 +13,9 @@ export class Individual {
 
     public fitness: number = -1;
 
-    constructor(public inputType: GPType, public outputType: GPType, public maxHeigth: number = 4) {
-        this.rootExpression = new GPNode(``, "NUMBER", "return i0;", ["NUMBER"]);
-        this.rootExpression.initChildren([new GPNode("x", "EXTERNAL")], maxHeigth);
+    constructor(public inputTypes: GPType[], public outputType: GPType, public maxHeigth: number = 4) {
+        this.rootExpression = new GPNode(``, this.outputType, "return i0;", this.inputTypes);
+        this.rootExpression.initChildren([new GPNode("x", "EXTERNAL"), new GPNode("y", "EXTERNAL")], maxHeigth);
     }
 
     public getValue(input: any) {
@@ -24,10 +24,10 @@ export class Individual {
 
     public writeCSV(targetValues: TargetValue[]): void {
         let csv = "";
-        csv += `x,F,PG\n`;
+        csv += `x,y,F,PG\n`;
         targetValues.forEach(v => {
-            let value = this.getValue({ x: v.x });
-            csv += `${v.x},${v.f},${value}\n`;
+            let value = this.getValue({ x: v.input[0], y: v.input[1] });
+            csv += `${v.input[0]},${v.input[1]},${v.output},${value}\n`;
         });
         fs.writeFileSync(`report/i${this.id}.csv`, csv, "utf-8");
     }
@@ -36,7 +36,7 @@ export class Individual {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
-                let dif = v.f - this.getValue({ x: v.x });
+                let dif = v.output - this.getValue({ x: v.input[0], y: v.input[1] });
                 this.fitness += (dif * dif);
             });
         }
@@ -45,9 +45,9 @@ export class Individual {
 
 
     public combine(other: Individual): { s1: Individual, s2: Individual } {
-        let s1: Individual = new Individual(this.inputType, this.outputType, this.maxHeigth);
+        let s1: Individual = new Individual(this.inputTypes, this.outputType, this.maxHeigth);
         s1.rootExpression = this.rootExpression.createCopy();
-        let s2: Individual = new Individual(other.inputType, other.outputType, other.maxHeigth);
+        let s2: Individual = new Individual(other.inputTypes, other.outputType, other.maxHeigth);
         s2.rootExpression = other.rootExpression.createCopy();
 
         let s1fcs: GPNode[] = s1.rootExpression.getAllFunctions();
