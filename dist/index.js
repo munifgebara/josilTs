@@ -15,10 +15,9 @@ function testaProject() {
         process.stdout.write("                                                                           Offspring " + ge + " " + project.avgFit + "\r");
         best = project.getBest();
         best.writeCSV(project.targetValues);
-        fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
-        fs.writeFileSync(`report/pior.dot`, project.population[project.populationSize - 1], "utf-8");
         project.evolve();
     }
+    project_1.Project.writeSVGToDisk(`report/best.svg`, best.rootExpression.getDot());
     console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
     best.writeCSV(project.targetValues);
     console.log(best.rootExpression.getExpression());

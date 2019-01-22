@@ -31,11 +31,8 @@ class GPNode {
         //        toReturn.push(new GPNode("sqr", "NUMBER", "return i0*i0;", ["NUMBER"]));
         //      toReturn.push(new GPNode("sqr3", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
         toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("gt", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("lt", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("domingo", "NUMBER", "return Math.round(i0-1)==0?0:i0;", ["NUMBER"]));
-        toReturn.push(new GPNode("sabado", "NUMBER", "return Math.round(i0-7)==0?i0/2:i0;", ["NUMBER"]));
-        toReturn.push(new GPNode("diaDeSemana", "NUMBER", "return (i0>1 && i0<7)?i0:0;", ["NUMBER"]));
+        //toReturn.push(new GPNode("gt", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
+        //toReturn.push(new GPNode("lt", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
         return toReturn;
     }
     static generateFunctions(functions = GPNode.getGenericFunctions()) {

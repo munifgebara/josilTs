@@ -20,19 +20,20 @@ class Individual {
         let csv = "";
         csv += `expressao,${this.rootExpression.getExpression()}\n`;
         csv += `parametros,${process.argv}\n`;
-        csv += `d,w,p,pg\n`;
+        csv += `d,w,p,pg,distance\n`;
         targetValues.forEach(v => {
             let value = this.getValue({ d: v.input[0], w: v.input[1] });
-            csv += `${v.input[0]},${v.input[1]},${v.output},${value}\n`;
+            csv += `${v.input[0]},${v.input[1]},${v.output},${Math.round((value < 0 ? 0 : value))},${Math.abs(Math.round(v.output - (value < 0 ? 0 : value)))}\n`;
         });
-        fs.writeFileSync(`report/i${this.id}.csv`, csv, "utf-8");
+        fs.writeFileSync(`report/best.csv`, csv, "utf-8");
     }
     updateFitness(targetValues) {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
-                let dif = v.output - this.getValue({ d: v.input[0], w: v.input[1] });
-                this.fitness += (dif * dif);
+                let value = this.getValue({ d: v.input[0], w: v.input[1] });
+                let dif = v.output - (value < 0 ? 0 : value);
+                this.fitness += (dif * dif) / v.input[0];
             });
         }
     }

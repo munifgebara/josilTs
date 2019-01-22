@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 
+const Viz = require('viz.js');
+const { Module, render } = require('viz.js/full.render.js');
 
 import { Individual } from "./individual";
 import { GPType } from './gp-node';
@@ -11,6 +13,21 @@ export interface TargetValue {
 }
 
 export class Project {
+
+    public static viz = new Viz({ Module, render });
+
+
+    public static writeSVGToDisk(fileName: string, dot: string) {
+
+       Project.viz.renderString(dot)
+            .then(result => {
+                fs.writeFileSync(fileName, result, "utf-8");
+            })
+            .catch(error => {
+                Project.viz= new Viz({ Module, render })
+                console.error("ERROR:" + error + "\n");
+            });
+    }
 
 
     public population: Individual[];
@@ -25,7 +42,7 @@ export class Project {
         this.population = [];
         for (let i = 0; i < this.populationSize; i++) {
             process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new Individual(this.inputTypes, this.outputType, this.maxHeigth));
+            this.population.push(new Individual(this.inputTypes, this.outputType, 4+i%this.maxHeigth));
         }
     }
 
@@ -39,9 +56,6 @@ export class Project {
                 best = ind;
                 process.stdout.write("Best fit " + i + " " + Math.round(ind.fitness) + "  \r");
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
-            }
-            if (i % 1000 == 0) {
-                process.stdout.write("Best fit " + i + " " + Math.round(best.fitness) + " ID:" + best.id + "  \r");
             }
         });
         process.stdout.write("\n");

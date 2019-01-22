@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
+const Viz = require('viz.js');
+const { Module, render } = require('viz.js/full.render.js');
 const individual_1 = require("./individual");
 class Project {
     constructor(title, inputTypes, outputType, populationSize = 100, maxHeigth = 5) {
@@ -15,8 +17,18 @@ class Project {
         this.population = [];
         for (let i = 0; i < this.populationSize; i++) {
             process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new individual_1.Individual(this.inputTypes, this.outputType, this.maxHeigth));
+            this.population.push(new individual_1.Individual(this.inputTypes, this.outputType, 4 + i % this.maxHeigth));
         }
+    }
+    static writeSVGToDisk(fileName, dot) {
+        Project.viz.renderString(dot)
+            .then(result => {
+            fs.writeFileSync(fileName, result, "utf-8");
+        })
+            .catch(error => {
+            Project.viz = new Viz({ Module, render });
+            console.error("ERROR:" + error + "\n");
+        });
     }
     getBest() {
         let best;
@@ -28,9 +40,6 @@ class Project {
                 best = ind;
                 process.stdout.write("Best fit " + i + " " + Math.round(ind.fitness) + "  \r");
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
-            }
-            if (i % 1000 == 0) {
-                process.stdout.write("Best fit " + i + " " + Math.round(best.fitness) + " ID:" + best.id + "  \r");
             }
         });
         process.stdout.write("\n");
@@ -65,5 +74,6 @@ class Project {
         return l;
     }
 }
+Project.viz = new Viz({ Module, render });
 exports.Project = Project;
 //# sourceMappingURL=project.js.map
