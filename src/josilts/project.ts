@@ -16,37 +16,39 @@ export class Project {
 
     public static viz = new Viz({ Module, render });
 
+    public static tenArray: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 
     public static writeSVGToDisk(fileName: string, dot: string) {
 
-       Project.viz.renderString(dot)
+        Project.viz.renderString(dot)
             .then(result => {
                 fs.writeFileSync(fileName, result, "utf-8");
             })
             .catch(error => {
-                Project.viz= new Viz({ Module, render })
+                Project.viz = new Viz({ Module, render })
                 console.error("ERROR:" + error + "\n");
             });
     }
 
 
-    public population: Individual[];
-
     public targetValues: TargetValue[];
 
     public avgFit = 0;
 
-    constructor(public title: string, public inputTypes: GPType[], public outputType: GPType, public populationSize: number = 100, public maxHeigth = 5) {
+    constructor(public title: string, public inputTypes: GPType[], public outputType: GPType, public populationSize: number = 100, public maxHeigth = 5, public population: Individual[] = []) {
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
-        for (let i = 0; i < this.populationSize; i++) {
+        for (let i = population.length; i < this.populationSize; i++) {
             process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new Individual(this.inputTypes, this.outputType, 4+i%this.maxHeigth));
+            this.population.push(new Individual(this.inputTypes, this.outputType, i % this.maxHeigth));
         }
     }
 
     public getBest() {
+        let ctv = this.targetValues[Math.round(this.targetValues.length / 2)];
+        let external = { w: ctv.input[0], d: ctv.input[1] };
         let best: Individual;
         let summ = 0;
         this.population.forEach((ind, i) => {
@@ -54,8 +56,8 @@ export class Project {
             summ += ind.fitness / this.populationSize;
             if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-                process.stdout.write("Best fit " + i + " " + Math.round(ind.fitness) + "  \r");
-                fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
+                process.stdout.write(`Best fit ${i}  ${Math.round(ind.fitness)} ${JSON.stringify(external)}=>${best.rootExpression.value(external)} ~ ${ctv.output}  \r`);
+                fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
             }
         });
         process.stdout.write("\n");
@@ -76,7 +78,7 @@ export class Project {
 
     }
 
-    public static readSVG(name: string): any[] {
+    public static readCSV(name: string): any[] {
         let l = [];
         let data = fs.readFileSync(name).toString().split("\r\n");
         let fields = data[0].split(",");

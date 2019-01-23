@@ -14,7 +14,7 @@ export class Individual {
     public fitness: number = -1;
 
     constructor(public inputTypes: GPType[], public outputType: GPType, public maxHeigth: number = 4) {
-        this.rootExpression = new GPNode(``, this.outputType, "return i0;", this.inputTypes);
+        this.rootExpression = new GPNode(``, this.outputType, "return i0;", [this.outputType]);
         this.rootExpression.initChildren([new GPNode("d", "EXTERNAL"), new GPNode("w", "EXTERNAL")], maxHeigth);
     }
 
@@ -29,7 +29,7 @@ export class Individual {
         csv += `d,w,p,pg,distance\n`;
         targetValues.forEach(v => {
             let value = this.getValue({ d: v.input[0], w: v.input[1] });
-            csv += `${v.input[0]},${v.input[1]},${v.output},${Math.round((value<0?0:value))},${Math.abs(Math.round(v.output-(value<0?0:value)))}\n`;
+            csv += `${v.input[0]},${v.input[1]},${v.output},${Math.round((value < 0 ? 0 : value))},${Math.abs(Math.round(v.output - (value < 0 ? 0 : value)))}\n`;
         });
         fs.writeFileSync(`report/best.csv`, csv, "utf-8");
     }
@@ -38,9 +38,9 @@ export class Individual {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
-                let value=this.getValue({ d: v.input[0], w: v.input[1]});
-                let dif = v.output - (value<0?0:value) ;
-                this.fitness += (dif * dif)/v.input[0];
+                let value = this.getValue({ d: v.input[0], w: v.input[1] });
+                let dif = v.output - (value < 0 ? 0 : value);
+                this.fitness += (dif * dif) / v.input[0];
             });
         }
     }

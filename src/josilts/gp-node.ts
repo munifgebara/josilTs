@@ -22,6 +22,7 @@ export class GPNode {
 
     public static getGenericFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
+        toReturn.push(new GPNode("idt", "NUMBER", "return i0;", ["NUMBER"]));
         toReturn.push(new GPNode("add", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("sub", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("mul", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
@@ -104,10 +105,11 @@ export class GPNode {
         return eval(GPNode.generateFunctions() + this.getExpression());
     }
 
-    public getDot() {
+    public getDot(s: string = "s") {
         let dot = [` digraph G${this.id} {`];
         this.buildDot(this, dot);
         dot.push("}");
+        dot[1] = dot[1].replace(`label=""`, `label="${s}"`);
         return dot.reduce((p, c) => p + c + '\n', '');
     }
 
@@ -140,7 +142,7 @@ export class GPNode {
     }
 
     public label(): string {
-        return `${this.name != "CONSTANT" ? this.name : this.code}`;
+        return `${this.name != "CONSTANT" ? this.name : this.code.substr(0, 5)}`;
     }
 
 

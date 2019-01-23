@@ -5,19 +5,20 @@ const Viz = require('viz.js');
 const { Module, render } = require('viz.js/full.render.js');
 const individual_1 = require("./individual");
 class Project {
-    constructor(title, inputTypes, outputType, populationSize = 100, maxHeigth = 5) {
+    constructor(title, inputTypes, outputType, populationSize = 100, maxHeigth = 5, population = []) {
         this.title = title;
         this.inputTypes = inputTypes;
         this.outputType = outputType;
         this.populationSize = populationSize;
         this.maxHeigth = maxHeigth;
+        this.population = population;
         this.avgFit = 0;
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
-        for (let i = 0; i < this.populationSize; i++) {
+        for (let i = population.length; i < this.populationSize; i++) {
             process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new individual_1.Individual(this.inputTypes, this.outputType, 4 + i % this.maxHeigth));
+            this.population.push(new individual_1.Individual(this.inputTypes, this.outputType, i % this.maxHeigth));
         }
     }
     static writeSVGToDisk(fileName, dot) {
@@ -31,6 +32,8 @@ class Project {
         });
     }
     getBest() {
+        let ctv = this.targetValues[Math.round(this.targetValues.length / 2)];
+        let external = { w: ctv.input[0], d: ctv.input[1] };
         let best;
         let summ = 0;
         this.population.forEach((ind, i) => {
@@ -38,8 +41,8 @@ class Project {
             summ += ind.fitness / this.populationSize;
             if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-                process.stdout.write("Best fit " + i + " " + Math.round(ind.fitness) + "  \r");
-                fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(), "utf-8");
+                process.stdout.write(`Best fit ${i}  ${Math.round(ind.fitness)} ${JSON.stringify(external)}=>${best.rootExpression.value(external)} ~ ${ctv.output}  \r`);
+                fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
             }
         });
         process.stdout.write("\n");
@@ -56,7 +59,7 @@ class Project {
             this.population[j + 1] = r.s2;
         }
     }
-    static readSVG(name) {
+    static readCSV(name) {
         let l = [];
         let data = fs.readFileSync(name).toString().split("\r\n");
         let fields = data[0].split(",");
@@ -75,5 +78,6 @@ class Project {
     }
 }
 Project.viz = new Viz({ Module, render });
+Project.tenArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 exports.Project = Project;
 //# sourceMappingURL=project.js.map

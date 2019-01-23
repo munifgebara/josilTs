@@ -10,7 +10,7 @@ class Individual {
         this.maxHeigth = maxHeigth;
         this.id = ++Individual.ID;
         this.fitness = -1;
-        this.rootExpression = new gp_node_1.GPNode(``, this.outputType, "return i0;", this.inputTypes);
+        this.rootExpression = new gp_node_1.GPNode(``, this.outputType, "return i0;", [this.outputType]);
         this.rootExpression.initChildren([new gp_node_1.GPNode("d", "EXTERNAL"), new gp_node_1.GPNode("w", "EXTERNAL")], maxHeigth);
     }
     getValue(input) {
