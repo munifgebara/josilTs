@@ -34,7 +34,7 @@ class Project {
         });
     }
     getBest() {
-        let ctv2 = this.targetValues[Math.round(this.targetValues.length) / 2];
+        let ctv2 = this.targetValues[Math.round(this.targetValues.length / 2)];
         let external2 = ctv2;
         let best;
         let summ = 0;
@@ -45,7 +45,7 @@ class Project {
                 best = ind;
                 process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
                     `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
-                    ` \r`);
+                    `${summ} \r\n`);
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
             }
         });

@@ -41,6 +41,7 @@ export class Individual {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
+                
                 let value = this.getValue(v);
                 let dif = v.output-value;
                 this.fitness += (dif * dif);
