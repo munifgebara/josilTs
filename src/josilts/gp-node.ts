@@ -65,30 +65,29 @@ export class GPNode {
         let c1 = gpFunction4.getAllChildrenWithChildren();
         let c2 = gpFunction5.getAllChildrenWithChildren();
 
-
-
-        let n1 = c1[Utils.indexRandom(c1)];
-        let n2 = c2[Utils.indexRandom(c2)];
-        n1.dotStyle = "solid";
-        n2.dotStyle = "solid";
-
-        let i1 = Utils.indexRandom(n1.children);
-        let i2 = Utils.indexRandom(n2.children);
-
-
-        let n1c = n1.children[i1];
-        let n2c = n2.children[i2];
-
-        n1c.dotStyle = "dashed";
-        n2c.dotStyle = "dashed";
-
-        n1.children[i1] = n2c;
-        n2.children[i2] = n1c;
-
+        let count1 = 0;
+        while (count1 < c1.length * c2.length) {
+            let n1 = c1[Utils.indexRandom(c1)];
+            let i1 = Utils.indexRandom(n1.children);
+            let n1c = n1.children[i1];
+            let n2 = c2[Utils.indexRandom(c2)];
+            let i2 = Utils.indexRandom(n2.children);
+            let n2c = n2.children[i2];
+            if (n1c.returnType == n2c.returnType) {
+                n1.dotStyle = "solid";
+                n2.dotStyle = "solid";
+                n1c.dotStyle = "dashed";
+                n2c.dotStyle = "dashed";
+                n1.children[i1] = n2c;
+                n2.children[i2] = n1c;                
+                console.log("SIM");
+                return { i1: gpFunction4, i2: gpFunction5 };        
+            }            
+            count1++;
+        }
+        console.log("NAO");
         return { i1: gpFunction4, i2: gpFunction5 };
-
-
-
+        
     }
 
     public dotStyle = "filled";
@@ -96,6 +95,8 @@ export class GPNode {
     public children: GPNode[] = [];
 
     public id = ++GPNode.ID;
+
+    public h=0;
 
     public createCopy(): GPNode {
         let ni = new GPNode(this.name, this.behavior, this.returnType, this.code, this.inputTypes, this.minimumHeight);
@@ -137,7 +138,7 @@ export class GPNode {
         this.children = [];
 
         this.inputTypes.forEach(type => {
-            ;
+            
             let externals = nodes.filter(f => f.behavior == "EXTERNAL" && f.returnType == type);
             let possibileFunctions = GPNode.getGenericFunctions().filter(f => f.returnType == type);
             if (possibileFunctions && (maxHeigth >= 1 || externals.length == 0)) {
@@ -199,6 +200,27 @@ export class GPNode {
 
     public label(): string {
         return `${this.name ? this.name : "N" + this.id}`;
+    }
+
+    public height():number{
+        if (this.h>0){
+            return this.h;
+        }
+        if (this.children.length==0){
+            this.h=1;
+            return 1;
+        }
+        else{
+            let max=0;
+            this.children.forEach(c=>{
+                let al=c.height();
+                if (al>max){
+                    max=al;
+                }
+            });
+            this.h=1+max;
+            return 1+max;
+        }
     }
 
 

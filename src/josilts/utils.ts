@@ -12,10 +12,9 @@ export class Utils {
         return Math.round(Math.random() * (max - min + 0.999) + min - 0.499);
     }
     
-    public static indexRandom(array:any[]):number{
-        
+    public static indexRandom(array:any[]):number{        
         let r= Utils.integerRandom(0,array.length-1);
-        console.log("ir",r);
+        console.log("ir",0,array.length-1, r);
         return r;
     }
 
