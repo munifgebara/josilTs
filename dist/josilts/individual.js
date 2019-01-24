@@ -10,8 +10,8 @@ class Individual {
         this.maxHeigth = maxHeigth;
         this.id = ++Individual.ID;
         this.fitness = -1;
-        this.rootExpression = new gp_node_1.GPNode(``, this.outputType, "return i0;", [this.outputType]);
-        this.rootExpression.initChildren([new gp_node_1.GPNode("d", "EXTERNAL"), new gp_node_1.GPNode("w", "EXTERNAL")], maxHeigth);
+        this.rootExpression = new gp_node_1.GPNode(``, "FUNCTION", this.outputType, "return i0;", [this.outputType]);
+        this.rootExpression.initChildren([new gp_node_1.GPNode("d", "EXTERNAL", "NUMBER"), new gp_node_1.GPNode("w", "EXTERNAL", "NUMBER")], maxHeigth);
     }
     getValue(input) {
         let v = this.rootExpression.value(input);
@@ -43,9 +43,9 @@ class Individual {
         s1.rootExpression = this.rootExpression.createCopy();
         let s2 = new Individual(other.inputTypes, other.outputType, other.maxHeigth);
         s2.rootExpression = other.rootExpression.createCopy();
-        let s1fcs = s1.rootExpression.getAllFunctions();
+        let s1fcs = s1.rootExpression.getAllChildrenWithChildren();
         let a1 = s1fcs[utils_1.Utils.integerRandom(0, s1fcs.length - 1)];
-        let s2fcs = s2.rootExpression.getAllFunctions();
+        let s2fcs = s2.rootExpression.getAllChildrenWithChildren();
         let a2 = s2fcs[utils_1.Utils.integerRandom(0, s2fcs.length - 1)];
         let i1 = utils_1.Utils.integerRandom(0, a1.children.length - 1);
         let i2 = utils_1.Utils.integerRandom(0, a2.children.length - 1);

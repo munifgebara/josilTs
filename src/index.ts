@@ -8,17 +8,17 @@ import { GPNode } from './josilts/gp-node';
 
 
 function runProject() {
-    let project = new Project("f2", ["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
-    let serra = Project.readCSV("serra.csv");
-    serra.forEach(s => {
-        project.targetValues.push({ input: [s.d, s.w], output: s.p });
-    })
+    let project = new Project("serra", ["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
+    // let serra = Project.readCSV("serra.csv");
+    // serra.forEach(s => {
+    //     project.targetValues.push({ input: [s.d, s.w], output: s.p });
+    // })
 
-    // Project.tenArray.forEach(x => {
-    //     Project.tenArray.forEach(y => {
-    //         project.targetValues.push({ input: [x, y], output: x * x + y * y + x * y + x + y + 13 });
-    //     })
-    // });
+     Project.tenArray.forEach(x => {
+         Project.tenArray.forEach(y => {
+             project.targetValues.push({ input: [x, y], output: (x+y-2)*(x-y+3) });
+         })
+     });
 
 
     let best = project.population[0];

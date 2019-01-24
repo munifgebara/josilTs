@@ -32,9 +32,9 @@ class Project {
         });
     }
     getBest() {
-        let ctv1 = this.targetValues[Math.round(this.targetValues.length - 1)];
-        let ctv2 = this.targetValues[Math.round(this.targetValues.length - 2)];
-        let ctv3 = this.targetValues[Math.round(this.targetValues.length - 9)];
+        let ctv1 = this.targetValues[0];
+        let ctv2 = this.targetValues[Math.round(this.targetValues.length / 3)];
+        let ctv3 = this.targetValues[this.targetValues.length - 1];
         let external1 = { d: ctv1.input[0], w: ctv1.input[1] };
         let external2 = { d: ctv2.input[0], w: ctv2.input[1] };
         let external3 = { d: ctv3.input[0], w: ctv3.input[1] };

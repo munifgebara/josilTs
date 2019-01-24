@@ -7,6 +7,11 @@ class Utils {
     static integerRandom(min, max) {
         return Math.round(Math.random() * (max - min + 0.999) + min - 0.499);
     }
+    static indexRandom(array) {
+        let r = Utils.integerRandom(0, array.length - 1);
+        console.log("ir", r);
+        return r;
+    }
 }
 exports.Utils = Utils;
 //# sourceMappingURL=utils.js.map

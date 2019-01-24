@@ -14,8 +14,8 @@ export class Individual {
     public fitness: number = -1;
 
     constructor(public inputTypes: GPType[], public outputType: GPType, public maxHeigth: number = 4) {
-        this.rootExpression = new GPNode(``, this.outputType, "return i0;", [this.outputType]);
-        this.rootExpression.initChildren([new GPNode("d", "EXTERNAL"), new GPNode("w", "EXTERNAL")], maxHeigth);
+        this.rootExpression = new GPNode(``, "FUNCTION", this.outputType, "return i0;", [this.outputType]);
+        this.rootExpression.initChildren([new GPNode("d", "EXTERNAL","NUMBER"), new GPNode("w", "EXTERNAL","NUMBER")], maxHeigth);
     }
 
     public getValue(input: any) {
@@ -54,11 +54,11 @@ export class Individual {
         let s2: Individual = new Individual(other.inputTypes, other.outputType, other.maxHeigth);
         s2.rootExpression = other.rootExpression.createCopy();
 
-        let s1fcs: GPNode[] = s1.rootExpression.getAllFunctions();
+        let s1fcs: GPNode[] = s1.rootExpression.getAllChildrenWithChildren();
         let a1 = s1fcs[Utils.integerRandom(0, s1fcs.length - 1)];
 
 
-        let s2fcs: GPNode[] = s2.rootExpression.getAllFunctions();
+        let s2fcs: GPNode[] = s2.rootExpression.getAllChildrenWithChildren();
         let a2 = s2fcs[Utils.integerRandom(0, s2fcs.length - 1)];
 
 
