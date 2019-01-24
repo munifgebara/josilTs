@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
 class GPNode {
-    constructor(name, returnType, code = utils_1.Utils.floatRandom(-10, 10).toString(), inputTypes = [], minimumHeight = 0) {
+    constructor(name, returnType, code = utils_1.Utils.floatRandom(-1000, 1000).toString(), inputTypes = [], minimumHeight = 0) {
         this.name = name;
         this.returnType = returnType;
         this.code = code;
@@ -26,18 +26,23 @@ class GPNode {
         let toReturn = [];
         toReturn.push(new GPNode("idt", "NUMBER", "return i0;", ["NUMBER"]));
         toReturn.push(new GPNode("add", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("sub", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
+        //        toReturn.push(new GPNode("sub", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("mul", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("div", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
+        //      toReturn.push(new GPNode("div", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
         //        toReturn.push(new GPNode("sqr", "NUMBER", "return i0*i0;", ["NUMBER"]));
         //      toReturn.push(new GPNode("sqr3", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
-        toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
+        //toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("dom", "NUMBER", "return externals.w==1?0:i0", ["NUMBER"]));
         //toReturn.push(new GPNode("gt", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
         //toReturn.push(new GPNode("lt", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
         return toReturn;
     }
     static generateFunctions(functions = GPNode.getGenericFunctions()) {
-        return functions.reduce((p, c) => p + c.getFunction(), "");
+        if (!GPNode.FUNCTIONS) {
+            console.log("FUNC");
+            GPNode.FUNCTIONS = functions.reduce((p, c) => p + c.getFunction(), "");
+        }
+        return this.FUNCTIONS;
     }
     createCopy() {
         let ni = new GPNode(this.name, this.returnType, this.code, this.inputTypes, this.minimumHeight);

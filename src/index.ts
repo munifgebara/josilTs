@@ -7,25 +7,23 @@ import { GPNode } from './josilts/gp-node';
 
 
 
-
-
 function runProject() {
     let project = new Project("f2", ["NUMBER", "NUMBER"], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
-    // let serra = Project.readCSV("serra.csv");
-    // serra.forEach(s => {
-    //     project.targetValues.push({ input: [s.d, s.w], output: s.p });
-    // })
+    let serra = Project.readCSV("serra.csv");
+    serra.forEach(s => {
+        project.targetValues.push({ input: [s.d, s.w], output: s.p });
+    })
 
-    Project.tenArray.forEach(x => {
-        Project.tenArray.forEach(y => {
-            project.targetValues.push({ input: [x, y], output: x * x + y * y + x * y + x + y + 13 });
-        })
-    });
+    // Project.tenArray.forEach(x => {
+    //     Project.tenArray.forEach(y => {
+    //         project.targetValues.push({ input: [x, y], output: x * x + y * y + x * y + x + y + 13 });
+    //     })
+    // });
 
 
     let best = project.population[0];
     for (let ge = 0; ge <= parseInt(process.argv[4]); ge++) {
-        process.stdout.write("                                                                           Offspring " + ge + " " + project.avgFit + "\r");
+        process.stdout.write("                                                                                                                                Offspring " + ge + " " + project.avgFit + "\r");
         best = project.getBest();
         best.writeCSV(project.targetValues);
         project.evolve();

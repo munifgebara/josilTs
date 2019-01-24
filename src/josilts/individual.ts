@@ -19,7 +19,8 @@ export class Individual {
     }
 
     public getValue(input: any) {
-        return this.rootExpression.value(input);
+        let v = this.rootExpression.value(input);
+        return v;
     }
 
     public writeCSV(targetValues: TargetValue[]): void {
@@ -40,7 +41,7 @@ export class Individual {
             targetValues.forEach(v => {
                 let value = this.getValue({ d: v.input[0], w: v.input[1] });
                 let dif = v.output - (value < 0 ? 0 : value);
-                this.fitness += (dif * dif) / v.input[0];
+                this.fitness += (dif * dif);
             });
         }
     }

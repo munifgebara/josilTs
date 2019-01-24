@@ -47,8 +47,12 @@ export class Project {
     }
 
     public getBest() {
-        let ctv = this.targetValues[Math.round(this.targetValues.length / 2)];
-        let external = { w: ctv.input[0], d: ctv.input[1] };
+        let ctv1 = this.targetValues[Math.round(this.targetValues.length - 1)];
+        let ctv2 = this.targetValues[Math.round(this.targetValues.length - 2)];
+        let ctv3 = this.targetValues[Math.round(this.targetValues.length - 9)];
+        let external1 = { d: ctv1.input[0], w: ctv1.input[1] };
+        let external2 = { d: ctv2.input[0], w: ctv2.input[1] };
+        let external3 = { d: ctv3.input[0], w: ctv3.input[1] };
         let best: Individual;
         let summ = 0;
         this.population.forEach((ind, i) => {
@@ -56,7 +60,11 @@ export class Project {
             summ += ind.fitness / this.populationSize;
             if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-                process.stdout.write(`Best fit ${i}  ${Math.round(ind.fitness)} ${JSON.stringify(external)}=>${best.rootExpression.value(external)} ~ ${ctv.output}  \r`);
+                process.stdout.write(`Best fit ${i}  ${Math.round(ind.fitness)} ` +
+                    `${JSON.stringify(external1)}=>${Math.round(best.rootExpression.value(external1))}~${ctv1.output} ` +
+                    `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))}~${ctv2.output} ` +
+                    `${JSON.stringify(external3)}=>${Math.round(best.rootExpression.value(external3))}~${ctv3.output} ` +
+                    `\r`);
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
             }
         });

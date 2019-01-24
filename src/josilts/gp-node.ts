@@ -20,23 +20,30 @@ export class GPNode {
 
     }
 
+    public static FUNCTIONS: string;
+
     public static getGenericFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
         toReturn.push(new GPNode("idt", "NUMBER", "return i0;", ["NUMBER"]));
         toReturn.push(new GPNode("add", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("sub", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
+        //        toReturn.push(new GPNode("sub", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("mul", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("div", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
+        //      toReturn.push(new GPNode("div", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
         //        toReturn.push(new GPNode("sqr", "NUMBER", "return i0*i0;", ["NUMBER"]));
         //      toReturn.push(new GPNode("sqr3", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
-        toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
+        //toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("dom", "NUMBER", "return externals.w==1?0:i0", ["NUMBER"]));
         //toReturn.push(new GPNode("gt", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
         //toReturn.push(new GPNode("lt", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
         return toReturn;
     }
 
     public static generateFunctions(functions: GPNode[] = GPNode.getGenericFunctions()) {
-        return functions.reduce((p, c) => p + c.getFunction(), "");
+        if (!GPNode.FUNCTIONS) {
+            console.log("FUNC")
+            GPNode.FUNCTIONS = functions.reduce((p, c) => p + c.getFunction(), "");
+        }
+        return this.FUNCTIONS;
     }
 
 
@@ -51,7 +58,7 @@ export class GPNode {
         return ni;
     }
 
-    constructor(private name: string, private returnType: GPType, private code: string = Utils.floatRandom(-10, 10).toString(), private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
+    constructor(private name: string, private returnType: GPType, private code: string = Utils.floatRandom(-1000, 1000).toString(), private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
         this.initNode();
 
     }
