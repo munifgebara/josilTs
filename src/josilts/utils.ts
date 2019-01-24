@@ -14,7 +14,7 @@ export class Utils {
     
     public static indexRandom(array:any[]):number{        
         let r= Utils.integerRandom(0,array.length-1);
-        console.log("ir",0,array.length-1, r);
+        
         return r;
     }
 

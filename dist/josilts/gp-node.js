@@ -33,12 +33,12 @@ class GPNode {
         toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"]));
-        toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"]));
-        toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"]));
-        toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"]));
+        // toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"]));
+        // toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"]));
+        // toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"]));
         //toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"]));
         //
         //      toReturn.push(new GPNode("sqr3", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
@@ -73,12 +73,10 @@ class GPNode {
                 n2c.dotStyle = "dashed";
                 n1.children[i1] = n2c;
                 n2.children[i2] = n1c;
-                console.log("SIM");
                 return { i1: gpFunction4, i2: gpFunction5 };
             }
             count1++;
         }
-        console.log("NAO");
         return { i1: gpFunction4, i2: gpFunction5 };
     }
     createCopy() {

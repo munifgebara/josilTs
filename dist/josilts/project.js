@@ -5,21 +5,23 @@ const Viz = require('viz.js');
 const { Module, render } = require('viz.js/full.render.js');
 const individual_1 = require("./individual");
 class Project {
-    constructor(title, inputTypes, outputType, populationSize = 100, maxHeigth = 5, population = []) {
+    constructor(title, externalParameters, outputType, populationSize = 100, maxHeigth = 5, population = []) {
         this.title = title;
-        this.inputTypes = inputTypes;
+        this.externalParameters = externalParameters;
         this.outputType = outputType;
         this.populationSize = populationSize;
         this.maxHeigth = maxHeigth;
         this.population = population;
         this.avgFit = 0;
+        this.generation = 0;
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
         for (let i = population.length; i < this.populationSize; i++) {
-            process.stdout.write("Create Population " + i + "/" + this.populationSize + "                                 \r");
-            this.population.push(new individual_1.Individual(this.inputTypes, this.outputType, i % this.maxHeigth));
+            this.population.push(new individual_1.Individual(this.externalParameters, this.outputType, this.maxHeigth));
+            process.stdout.write("Create Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
+        console.log("");
     }
     static writeSVGToDisk(fileName, dot) {
         Project.viz.renderString(dot)
@@ -32,12 +34,8 @@ class Project {
         });
     }
     getBest() {
-        let ctv1 = this.targetValues[0];
-        let ctv2 = this.targetValues[Math.round(this.targetValues.length / 2)];
-        let ctv3 = this.targetValues[this.targetValues.length - 1];
-        let external1 = { d: ctv1.input[0], w: ctv1.input[1] };
-        let external2 = { d: ctv2.input[0], w: ctv2.input[1] };
-        let external3 = { d: ctv3.input[0], w: ctv3.input[1] };
+        let ctv2 = this.targetValues[Math.round(this.targetValues.length) / 2];
+        let external2 = ctv2;
         let best;
         let summ = 0;
         this.population.forEach((ind, i) => {
@@ -45,19 +43,20 @@ class Project {
             summ += ind.fitness / this.populationSize;
             if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-                process.stdout.write(`Best fit ${i}  ${Math.round(ind.fitness)} ` +
-                    `${JSON.stringify(external1)}=>${Math.round(best.rootExpression.value(external1))}~${ctv1.output} ` +
-                    `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))}~${ctv2.output} ` +
-                    `${JSON.stringify(external3)}=>${Math.round(best.rootExpression.value(external3))}~${ctv3.output} ` +
-                    `\r`);
+                process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
+                    `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
+                    ` \r`);
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
             }
         });
-        process.stdout.write("\n");
         this.avgFit = Math.round(summ);
+        process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
+            `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
+            `${summ} \r\n`);
         return best;
     }
     evolve() {
+        this.generation++;
         this.population.sort((a, b) => a.fitness - b.fitness);
         let metade = Math.floor(this.populationSize / 2);
         for (let i = 0; i < metade; i += 2) {

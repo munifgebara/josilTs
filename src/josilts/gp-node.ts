@@ -31,13 +31,13 @@ export class GPNode {
         toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
 
-        toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"]));
-        toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"]));
-        toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"]));
-        toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"]));
+        // toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"]));
+        // toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"]));
+        // toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
 
-        toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"]));
 
 
 
@@ -80,12 +80,10 @@ export class GPNode {
                 n2c.dotStyle = "dashed";
                 n1.children[i1] = n2c;
                 n2.children[i2] = n1c;                
-                console.log("SIM");
                 return { i1: gpFunction4, i2: gpFunction5 };        
             }            
             count1++;
         }
-        console.log("NAO");
         return { i1: gpFunction4, i2: gpFunction5 };
         
     }
@@ -135,6 +133,7 @@ export class GPNode {
     }
 
     public initChildren(nodes: GPNode[], maxHeigth: number = 4) {
+
         this.children = [];
 
         this.inputTypes.forEach(type => {
@@ -147,14 +146,11 @@ export class GPNode {
                 this.children.push(nc);
             }
             else if (type == "NUMBER" && Math.random() > 0.5) {
-
                 this.children.push(GPNode.getNumberConstantNode());
             }
             else {
                 this.children.push(externals[Utils.integerRandom(0, externals.length - 1)].createCopy());
-
             }
-
         });
     }
 
