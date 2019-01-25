@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Utils {
-    round(n) {
+    static round(n) {
         return Math.round(100 * n) / 100;
     }
     static floatRandom(min, max) {

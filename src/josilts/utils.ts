@@ -2,11 +2,9 @@
 
 export class Utils {
 
-    public round(n: number): number {
+    public static round(n: number): number {
         return Math.round(100 * n) / 100;
     }
-
-
 
     public static floatRandom(min: number, max: number) {
         return Math.random() * (max - min) + min;

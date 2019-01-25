@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
+const utils_1 = require("./utils");
 const gp_node_1 = require("./gp-node");
 class Individual {
     constructor(inputTypes, outputType, maxHeigth = 4) {
@@ -20,13 +21,15 @@ class Individual {
     }
     writeCSV(name, targetValues) {
         let csv = "";
-        csv += `expressao,${this.rootExpression.getExpression()}\n`;
-        csv += `parametros,${process.argv}\n`;
-        csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
+        //csv += `expressao,${this.rootExpression.getExpression()}\n`;
+        //csv += `parametros,${process.argv}\n`;
+        //csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
         targetValues.forEach((v, i) => {
             let value = this.getValue(v);
-            let corretude = Math.abs(Math.round(100 * (Math.abs(value) < Math.abs(v.output) ? value / v.output : v.output / value)) / 100);
-            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + v[c.name], "")},    ${v.output},     ${value},    ${corretude} \n`;
+            let c1 = Math.abs(value);
+            let c2 = Math.abs(v.output);
+            let corretude = c1 < c2 ? utils_1.Utils.round(c1 / c2) : utils_1.Utils.round(c2 / c1);
+            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + utils_1.Utils.round(v[c.name]), "")},    ${utils_1.Utils.round(v.output)},     ${utils_1.Utils.round(value)},    ${utils_1.Utils.round(corretude)} \n`;
         });
         fs.writeFileSync(`report/${name}_best.csv`, csv, "utf-8");
     }

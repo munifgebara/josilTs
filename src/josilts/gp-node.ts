@@ -1,4 +1,5 @@
 import { Utils } from "./utils";
+import { Project } from "./project";
 
 
 export type GPType = "NUMBER" | "BOOLEAN" | "STRING";
@@ -27,27 +28,26 @@ export class GPNode {
     public static getGenericFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
         toReturn.push(new GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"]));
-        //toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
         toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
-        //toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
+        toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
 
         // toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"]));
         // toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"]));
         // toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"]));
-        // toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
+        //toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
 
         // toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"]));
         // toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"]));
 
+        // toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"]));
+        // toReturn.push(new GPNode("sin", "FUNCTION", "NUMBER", "return Math.sin(i0);", ["NUMBER"]));
 
+        // toReturn.push(new GPNode("sqr3", "FUNCTION", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
+        // toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
 
-        //toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"]));
-        //
-        //      toReturn.push(new GPNode("sqr3", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
-        //toReturn.push(new GPNode("mod", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
-
-        //toReturn.push(new GPNode("gt", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
-        //toReturn.push(new GPNode("lt", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("gt", "FUNCTION", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
+        // toReturn.push(new GPNode("lt", "FUNCTION", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
         return toReturn;
     }
 
@@ -58,7 +58,6 @@ export class GPNode {
         return this.FUNCTIONS;
     }
 
-
     public static combine(gpFunction2: GPNode, gpFunction3: GPNode) {
         let gpFunction4 = gpFunction2.createCopy();
         let gpFunction5 = gpFunction3.createCopy();
@@ -66,11 +65,14 @@ export class GPNode {
         let c2 = gpFunction5.getAllChildrenWithChildren();
 
         let count1 = 0;
+        let n1 = c1[1 + Math.round(c1.length / 2)];
+        let n2 = c2[1 + Math.round(c2.length / 2)];
         while (count1 < c1.length * c2.length) {
-            let n1 = c1[Utils.indexRandom(c1)];
+
+
             let i1 = Utils.indexRandom(n1.children);
             let n1c = n1.children[i1];
-            let n2 = c2[Utils.indexRandom(c2)];
+
             let i2 = Utils.indexRandom(n2.children);
             let n2c = n2.children[i2];
             if (n1c.returnType == n2c.returnType) {
@@ -80,10 +82,26 @@ export class GPNode {
                 n2c.dotStyle = "dashed";
                 n1.children[i1] = n2c;
                 n2.children[i2] = n1c;
+                if (Math.random() < 0.01) {
+                    Project.mutate(gpFunction4);
+                }
+                if (Math.random() < 0.01) {
+                    Project.mutate(gpFunction5);
+                }
                 return { i1: gpFunction4, i2: gpFunction5 };
             }
+            n1 = c1[Utils.indexRandom(c1)];
+            n2 = c2[Utils.indexRandom(c2)];
+
             count1++;
         }
+        if (Math.random() < 0.5) {
+            Project.mutate(gpFunction4);
+        }
+        if (Math.random() < 0.5) {
+            Project.mutate(gpFunction5);
+        }
+
         return { i1: gpFunction4, i2: gpFunction5 };
 
     }
@@ -103,7 +121,7 @@ export class GPNode {
         return ni;
     }
 
-    constructor(private name: string, private behavior: GPBehavior, private returnType: GPType, private code: string = "", private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
+    constructor(public name: string, private behavior: GPBehavior, public returnType: GPType, public code: string = "", private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
         this.initNode();
     }
 

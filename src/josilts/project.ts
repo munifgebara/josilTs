@@ -4,7 +4,8 @@ const Viz = require('viz.js');
 const { Module, render } = require('viz.js/full.render.js');
 
 import { Individual } from "./individual";
-import { GPType } from './gp-node';
+import { GPType, GPNode } from './gp-node';
+import { Utils } from './utils';
 
 
 
@@ -15,6 +16,24 @@ export interface ExternalParameters {
 
 
 export class Project {
+
+
+    static mutate(gpFunction5: GPNode): void {
+        let pt: GPNode = gpFunction5;
+        let h = 0;
+        while (pt.children.length > 0) {
+            let pi = Utils.indexRandom(pt.children);
+            let prox = pt.children[pi];
+            if (prox.children.length > 0 && pt.returnType == prox.returnType && pt.children.length == prox.children.length) {
+                [prox.name, prox.code, pt.name, pt.code] = [pt.name, pt.code, prox.name, prox.code];
+            }
+            pt = pt.children[pi];
+            h++;
+
+        }
+
+
+    }
 
     public static viz = new Viz({ Module, render });
 
@@ -119,11 +138,9 @@ export class Project {
 
     insertTargetValuesFromExpression(expression: string): any {
         this.targetValues = [];
-        for (let x = -3; x <= 3; x += 0.1) {
-            let targetValue = { output: eval(expression) };
-            this.externalParameters.forEach(ep => {
-                targetValue[ep.name] = x;
-            })
+        for (let x = -4; x <= 5; x += 0.1) {
+            let targetValue = { output: Utils.round(eval(expression)) };
+            this.externalParameters.forEach(ep => { targetValue[ep.name] = Utils.round(x); });
             this.targetValues.push(targetValue);
         };
     }

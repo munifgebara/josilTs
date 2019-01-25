@@ -27,13 +27,15 @@ export class Individual {
 
     public writeCSV(name: string, targetValues: any[]): void {
         let csv = "";
-        csv += `expressao,${this.rootExpression.getExpression()}\n`;
-        csv += `parametros,${process.argv}\n`;
-        csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
+        //csv += `expressao,${this.rootExpression.getExpression()}\n`;
+        //csv += `parametros,${process.argv}\n`;
+        //csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
         targetValues.forEach((v, i) => {
             let value = this.getValue(v);
-            let corretude = Math.abs(Math.round(100 * (Math.abs(value) < Math.abs(v.output) ? value / v.output : v.output / value)) / 100);
-            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + v[c.name], "")},    ${v.output},     ${value},    ${corretude} \n`;
+            let c1 = Math.abs(value);
+            let c2 = Math.abs(v.output);
+            let corretude = c1 < c2 ? Utils.round(c1 / c2) : Utils.round(c2 / c1);
+            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + Utils.round(v[c.name]), "")},    ${Utils.round(v.output)},     ${Utils.round(value)},    ${Utils.round(corretude)} \n`;
         });
         fs.writeFileSync(`report/${name}_best.csv`, csv, "utf-8");
     }

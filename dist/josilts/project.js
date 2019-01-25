@@ -4,6 +4,7 @@ const fs = require("fs");
 const Viz = require('viz.js');
 const { Module, render } = require('viz.js/full.render.js');
 const individual_1 = require("./individual");
+const utils_1 = require("./utils");
 class Project {
     constructor(title, externalParameters, outputType, populationSize = 100, maxHeigth = 5, population = []) {
         this.title = title;
@@ -22,6 +23,19 @@ class Project {
             process.stdout.write("Create Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
         console.log("");
+    }
+    static mutate(gpFunction5) {
+        let pt = gpFunction5;
+        let h = 0;
+        while (pt.children.length > 0) {
+            let pi = utils_1.Utils.indexRandom(pt.children);
+            let prox = pt.children[pi];
+            if (prox.children.length > 0 && pt.returnType == prox.returnType && pt.children.length == prox.children.length) {
+                [prox.name, prox.code, pt.name, pt.code] = [pt.name, pt.code, prox.name, prox.code];
+            }
+            pt = pt.children[pi];
+            h++;
+        }
     }
     static writeSVGToDisk(fileName, dot) {
         Project.viz.renderString(dot)
@@ -92,11 +106,9 @@ class Project {
     }
     insertTargetValuesFromExpression(expression) {
         this.targetValues = [];
-        for (let x = -3; x <= 3; x += 0.1) {
-            let targetValue = { output: eval(expression) };
-            this.externalParameters.forEach(ep => {
-                targetValue[ep.name] = x;
-            });
+        for (let x = -4; x <= 5; x += 0.1) {
+            let targetValue = { output: utils_1.Utils.round(eval(expression)) };
+            this.externalParameters.forEach(ep => { targetValue[ep.name] = utils_1.Utils.round(x); });
             this.targetValues.push(targetValue);
         }
         ;
