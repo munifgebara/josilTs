@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import { ExternalParameters } from './project';
 import { Utils } from './utils';
-import { GPNode, GPType } from './gp-node';
+import { GPNode } from './gp-node';
+import { GPType, Support } from './support';
 
 export class Individual {
 
@@ -13,80 +14,45 @@ export class Individual {
 
     public fitness: number = -1;
 
-    constructor(public inputTypes: ExternalParameters[], public outputType: GPType, public maxHeigth: number = 4) {
-        this.rootExpression = new GPNode(``, "FUNCTION", this.outputType, "return i0;", [this.outputType]);
-        let nodes: GPNode[] = [];
-        inputTypes.forEach((c, i) => nodes.push(new GPNode(c.name, "EXTERNAL", c.type)));
+    public value: any = null;
+
+    constructor(public inputTypes: ExternalParameters[], public outputType: GPType, public maxHeigth: number, public nodes: GPNode[]) {
+        this.rootExpression = new GPNode(``, "FUNCTION", this.outputType, "return i0;", [this.outputType], 0);
+
         this.rootExpression.initChildren(nodes, maxHeigth);
     }
 
-    public getValue(input: any) {
-        let v = this.rootExpression.value(input);
+    public calculateValue(input: any) {
+        let v = this.rootExpression.value(input, this.nodes);
+        if (isNaN(v)) {
+            return 1000;
+        }
         return v;
     }
 
-    public writeCSV(name: string, targetValues: any[]): void {
+    public writeCSV(name: string, targetValues: any[], header: boolean = false): void {
         let csv = "";
-        //csv += `expressao,${this.rootExpression.getExpression()}\n`;
-        //csv += `parametros,${process.argv}\n`;
-        //csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
-        targetValues.forEach((v, i) => {
-            let value = this.getValue(v);
-            let c1 = Math.abs(value);
-            let c2 = Math.abs(v.output);
-            let corretude = c1 < c2 ? Utils.round(c1 / c2) : Utils.round(c2 / c1);
-            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + Utils.round(v[c.name]), "")},    ${Utils.round(v.output)},     ${Utils.round(value)},    ${Utils.round(corretude)} \n`;
-        });
-        fs.writeFileSync(`report/${name}_best.csv`, csv, "utf-8");
-    }
+        if (header) {
+            csv += `expressao,${this.rootExpression.getExpression()}\n`;
+            csv += `parametros,${process.argv}\n`;
+            csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
 
-    public updateFitness(targetValues: any[]) {
-        if (true) {
-            this.fitness = 0;
-            targetValues.forEach(v => {
-
-                let value = this.getValue(v);
-                //let corretude = Math.abs(Math.round(100 * (Math.abs(value) < Math.abs(v.output) ? value / v.output : v.output / value)) / 100);
-                let dif = v.output - value;
-                this.fitness += (dif * dif);
+            targetValues.forEach((v, i) => {
+                let value = this.calculateValue(v);
+                csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + (v[c.name]), "")},${(v.output)},${(value)}} \n`;
             });
+            fs.writeFileSync(`report/${name}.csv`, csv, "utf-8");
         }
     }
 
-
-
-    public combine(other: Individual): { s1: Individual, s2: Individual } {
-        let s1: Individual = new Individual(this.inputTypes, this.outputType, this.maxHeigth);
-        // s1.rootExpression = this.rootExpression.createCopy();
-        let s2: Individual = new Individual(other.inputTypes, other.outputType, other.maxHeigth);
-        // s2.rootExpression = other.rootExpression.createCopy();
-
-        // let s1fcs: GPNode[] = s1.rootExpression.getAllChildrenWithChildren();
-        // let a1 = s1fcs[Utils.integerRandom(0, s1fcs.length - 1)];
-
-
-        // let s2fcs: GPNode[] = s2.rootExpression.getAllChildrenWithChildren();
-        // let a2 = s2fcs[Utils.integerRandom(0, s2fcs.length - 1)];
-
-
-        // let i1 = Utils.integerRandom(0, a1.children.length - 1);
-        // let i2 = Utils.integerRandom(0, a2.children.length - 1);
-
-        // let aux: GPNode = a1.children[i1].createCopy();
-
-        // a1.children[i1] = a2.children[i2].createCopy();
-        // a2.children[i2] = aux;
-        let { i1, i2 } = GPNode.combine(this.rootExpression, other.rootExpression);
-        s1.rootExpression = i1;
-        s2.rootExpression = i2;
-
-
-
-        return { s1, s2 };
+    public updateFitness(targetValues: any[]) {
+        this.fitness = 0;
+        targetValues.forEach(v => {
+            let value = this.calculateValue(v);
+            let dif = v.output - value;
+            this.fitness += (dif * dif);
+        });
     }
-
-
-
 
 
 }

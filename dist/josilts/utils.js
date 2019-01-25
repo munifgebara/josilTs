@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Utils {
     static round(n) {
-        return Math.round(100 * n) / 100;
+        return n;
     }
     static floatRandom(min, max) {
         return Math.random() * (max - min) + min;
