@@ -38,42 +38,42 @@ export class Project {
 
     public avgFit = 0;
 
-    public generation=0;
+    public generation = 0;
 
     constructor(public title: string, public externalParameters: ExternalParameters[], public outputType: GPType, public populationSize: number = 100, public maxHeigth = 5, public population: Individual[] = []) {
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
         for (let i = population.length; i < this.populationSize; i++) {
-            this.population.push(new Individual(this.externalParameters, this.outputType,  this.maxHeigth));
-            process.stdout.write("Create Population " + (i+1) + "/" + this.populationSize + "\r");
+            this.population.push(new Individual(this.externalParameters, this.outputType, this.maxHeigth));
+            process.stdout.write("Create Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
         console.log("");
     }
 
     public getBest() {
-        
-        let ctv2 = this.targetValues[Math.round(this.targetValues.length/2)];
+
+        let ctv2 = this.targetValues[Math.round(this.targetValues.length / 2)];
         let external2 = ctv2;
-        let best: Individual;        
+        let best: Individual;
         let summ = 0;
         this.population.forEach((ind, i) => {
             ind.updateFitness(this.targetValues);
             summ += ind.fitness / this.populationSize;
-            if (i==0 || ind.fitness < best.fitness) {
+            if (i == 0 || ind.fitness < best.fitness) {
                 best = ind;
-        process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +                    
-        `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +                    
-          `${summ} \r\n`);
+                process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
+                    `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
+                    `${summ} \r\n`);
                 fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
             }
         });
-        
-        
+
+
         this.avgFit = Math.round(summ);
-        process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +                    
-        `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +                    
-          `${summ} \r\n`);
+        process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
+            `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
+            `${summ} \r\n`);
         return best;
     }
 
@@ -108,6 +108,38 @@ export class Project {
         console.log(`${l.length} rows imported`);
         return l;
     }
+
+    insertTargetValuesFromCSV(filename: string): any {
+        this.targetValues = [];
+        let serra = Project.readCSV(filename);
+        serra.forEach(s => {
+            this.targetValues.push(s);
+        });
+    }
+
+    insertTargetValuesFromExpression(expression: string): any {
+        this.targetValues = [];
+        for (let x = -3; x <= 3; x += 0.1) {
+            let targetValue = { output: eval(expression) };
+            this.externalParameters.forEach(ep => {
+                targetValue[ep.name] = x;
+            })
+            this.targetValues.push(targetValue);
+        };
+    }
+
+    evolveN(generations: number) {
+        let best = this.population[0];
+        for (let ge = 0; ge <= generations; ge++) {
+            best = this.getBest();
+            best.writeCSV(this.title, this.targetValues);
+            this.evolve();
+        }
+        Project.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
+        console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
+        best.writeCSV(this.title, this.targetValues);
+    }
+
 
 
 }

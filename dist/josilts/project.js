@@ -83,6 +83,35 @@ class Project {
         console.log(`${l.length} rows imported`);
         return l;
     }
+    insertTargetValuesFromCSV(filename) {
+        this.targetValues = [];
+        let serra = Project.readCSV(filename);
+        serra.forEach(s => {
+            this.targetValues.push(s);
+        });
+    }
+    insertTargetValuesFromExpression(expression) {
+        this.targetValues = [];
+        for (let x = -3; x <= 3; x += 0.1) {
+            let targetValue = { output: eval(expression) };
+            this.externalParameters.forEach(ep => {
+                targetValue[ep.name] = x;
+            });
+            this.targetValues.push(targetValue);
+        }
+        ;
+    }
+    evolveN(generations) {
+        let best = this.population[0];
+        for (let ge = 0; ge <= generations; ge++) {
+            best = this.getBest();
+            best.writeCSV(this.title, this.targetValues);
+            this.evolve();
+        }
+        Project.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
+        console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
+        best.writeCSV(this.title, this.targetValues);
+    }
 }
 Project.viz = new Viz({ Module, render });
 Project.tenArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

@@ -18,22 +18,24 @@ class Individual {
         let v = this.rootExpression.value(input);
         return v;
     }
-    writeCSV(targetValues) {
+    writeCSV(name, targetValues) {
         let csv = "";
         csv += `expressao,${this.rootExpression.getExpression()}\n`;
         csv += `parametros,${process.argv}\n`;
-        csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg\n`;
+        csv += `i` + this.inputTypes.reduce((p, c) => p + "," + c.name, "") + `,output,pg,corretude\n`;
         targetValues.forEach((v, i) => {
             let value = this.getValue(v);
-            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + "," + v[c.name], "")},${v.output},${value}\n`;
+            let corretude = Math.abs(Math.round(100 * (Math.abs(value) < Math.abs(v.output) ? value / v.output : v.output / value)) / 100);
+            csv += `${i + 1}${this.inputTypes.reduce((p, c) => p + ",    " + v[c.name], "")},    ${v.output},     ${value},    ${corretude} \n`;
         });
-        fs.writeFileSync(`report/best.csv`, csv, "utf-8");
+        fs.writeFileSync(`report/${name}_best.csv`, csv, "utf-8");
     }
     updateFitness(targetValues) {
         if (true) {
             this.fitness = 0;
             targetValues.forEach(v => {
                 let value = this.getValue(v);
+                //let corretude = Math.abs(Math.round(100 * (Math.abs(value) < Math.abs(v.output) ? value / v.output : v.output / value)) / 100);
                 let dif = v.output - value;
                 this.fitness += (dif * dif);
             });

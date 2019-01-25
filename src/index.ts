@@ -7,31 +7,20 @@ import { GPNode } from './josilts/gp-node';
 
 
 
-function runProject() {
-    let project = new Project("serra", [{name:"d",type:"NUMBER"},{name:"w",type:"NUMBER"}], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
-    let serra = Project.readCSV("serra.csv");
-    serra.forEach(s => {
-            project.targetValues.push(s);
-    });
-
-    //  Project.tenArray.forEach(x => {
-         
-    //          project.targetValues.push({ x,  output: x*x-4*x+4 });
-         
-    //  });
-
-
-    let best = project.population[0];
-    for (let ge = 0; ge <= parseInt(process.argv[4]); ge++) {
-        best = project.getBest();
-        best.writeCSV(project.targetValues);
-        project.evolve();
-    }
-    Project.writeSVGToDisk(`report/best.svg`, best.rootExpression.getDot());
-    console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
-    best.writeCSV(project.targetValues);
-    console.log(best.rootExpression.height());
+function runProject1() {
+    let project1 = new Project("serra", [{ name: "d", type: "NUMBER" }, { name: "w", type: "NUMBER" }], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
+    project1.insertTargetValuesFromCSV("serra.csv");
+    project1.evolveN(parseInt(process.argv[4]));
 }
 
 
-runProject();
+function runProject2() {
+    let project2 = new Project("polinomial", [{ name: "x", type: "NUMBER" }], "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]));
+    project2.insertTargetValuesFromExpression("Math.cos(x)");
+    project2.evolveN(parseInt(process.argv[4]));
+}
+
+
+runProject2();
+
+
