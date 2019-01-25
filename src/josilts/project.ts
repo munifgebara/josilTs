@@ -1,12 +1,8 @@
 import * as fs from 'fs';
-
-const Viz = require('viz.js');
-const { Module, render } = require('viz.js/full.render.js');
-
 import { Individual } from "./individual";
-import { GPType, GPNode } from './gp-node';
 import { Utils } from './utils';
-
+import { GPType, Support } from './support';
+import { GPNode } from './gp-node';
 
 
 export interface ExternalParameters {
@@ -17,39 +13,16 @@ export interface ExternalParameters {
 
 export class Project {
 
+    public static getInstance(data: any): Project {
+        let newInstance = new Project("_CLONE", data.externalParameters, data.outputType);
+        Object.assign(newInstance, data);
+        newInstance.population = [];
+        data.population.forEach(ind => newInstance.population.push(Individual.getInstance(ind)));
 
-    static mutate(gpFunction5: GPNode): void {
-        let pt: GPNode = gpFunction5;
-        let h = 0;
-        while (pt.children.length > 0) {
-            let pi = Utils.indexRandom(pt.children);
-            let prox = pt.children[pi];
-            if (prox.children.length > 0 && pt.returnType == prox.returnType && pt.children.length == prox.children.length) {
-                [prox.name, prox.code, pt.name, pt.code] = [pt.name, pt.code, prox.name, prox.code];
-            }
-            pt = pt.children[pi];
-            h++;
+        newInstance.projectBasicNodes = [];
+        data.projectBasicNodes.forEach(node => newInstance.projectBasicNodes.push(GPNode.getInstance(node)));
 
-        }
-
-
-    }
-
-    public static viz = new Viz({ Module, render });
-
-    public static tenArray: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-
-    public static writeSVGToDisk(fileName: string, dot: string) {
-
-        Project.viz.renderString(dot)
-            .then(result => {
-                fs.writeFileSync(fileName, result, "utf-8");
-            })
-            .catch(error => {
-                Project.viz = new Viz({ Module, render })
-                console.error("ERROR:" + error + "\n");
-            });
+        return newInstance;
     }
 
 
@@ -59,105 +32,75 @@ export class Project {
 
     public generation = 0;
 
-    constructor(public title: string, public externalParameters: ExternalParameters[], public outputType: GPType, public populationSize: number = 100, public maxHeigth = 5, public population: Individual[] = []) {
+    public repeat = 0;
+
+    constructor(public title: string,
+        public externalParameters: ExternalParameters[],
+        public outputType: GPType,
+        public populationSize: number = 100,
+        public maxHeigth = 5,
+        public projectBasicNodes: GPNode[] = Support.getBasicMatematicalFunctions(),
+        public population: Individual[] = [],
+    ) {
+        if (title == "_CLONE") return;
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
+        externalParameters.forEach((c, i) => this.projectBasicNodes.push(new GPNode(c.name, "EXTERNAL", c.type, ``, [], 0)));
         for (let i = population.length; i < this.populationSize; i++) {
-            this.population.push(new Individual(this.externalParameters, this.outputType, this.maxHeigth));
-            process.stdout.write("Create Population " + (i + 1) + "/" + this.populationSize + "\r");
+            const n = new Individual(this.externalParameters, this.outputType, this.maxHeigth, this.projectBasicNodes);
+            this.population.push(n);
+            process.stdout.write("Creating Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
-        console.log("");
+        process.stdout.write("\n");
     }
 
-    public getBest() {
-
-        let ctv2 = this.targetValues[Math.round(this.targetValues.length / 2)];
-        let external2 = ctv2;
-        let best: Individual;
-        let summ = 0;
-        this.population.forEach((ind, i) => {
-            ind.updateFitness(this.targetValues);
-            summ += ind.fitness / this.populationSize;
-            if (i == 0 || ind.fitness < best.fitness) {
-                best = ind;
-                process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
-                    `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
-                    `${summ} \r\n`);
-                fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
-            }
-        });
 
 
-        this.avgFit = Math.round(summ);
-        process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
-            `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
-            `${summ} \r\n`);
-        return best;
+    public updateAllFitness() {
+        this.population.forEach(ind => ind.updateFitness(this.targetValues));
+        this.population.sort((a, b) => a.fitness - b.fitness);
     }
 
     public evolve() {
         this.generation++;
-        this.population.sort((a, b) => a.fitness - b.fitness);
         let metade = Math.floor(this.populationSize / 2);
         for (let i = 0; i < metade; i += 2) {
             let j = metade + i;
-            let r = this.population[i].combine(this.population[i + 1]);
+            let r = Support.mixIndividuals(this.population[i], this.population[i + 1]);
             this.population[j] = r.s1;
             this.population[j + 1] = r.s2;
         }
-
-
-    }
-
-    public static readCSV(name: string): any[] {
-        let l = [];
-        let data = fs.readFileSync(name).toString().split("\r\n");
-        let fields = data[0].split(",");
-        for (let i = 1; i < data.length; i++) {
-            let row = data[i].split(",");
-            let obj = fields.reduce((p: any, c: string, ind) => {
-                p[c] = parseInt(row[ind]);
-                return p;
-            }, { index: i });
-            if (obj[fields[0]]) {
-                l.push(obj);
+        this.updateAllFitness();
+        let summ = 0;
+        this.population.forEach((ind, i) => { //TOCAR POR REDUCE
+            if (!isNaN(ind.fitness)) {
+                summ += ind.fitness / this.populationSize;
             }
-        }
-        console.log(`${l.length} rows imported`);
-        return l;
-    }
-
-    insertTargetValuesFromCSV(filename: string): any {
-        this.targetValues = [];
-        let serra = Project.readCSV(filename);
-        serra.forEach(s => {
-            this.targetValues.push(s);
         });
-    }
+        let best = this.population[0];
 
-    insertTargetValuesFromExpression(expression: string): any {
-        this.targetValues = [];
-        for (let x = -4; x <= 5; x += 0.1) {
-            let targetValue = { output: Utils.round(eval(expression)) };
-            this.externalParameters.forEach(ep => { targetValue[ep.name] = Utils.round(x); });
-            this.targetValues.push(targetValue);
-        };
+
+        this.avgFit = Math.round(summ);
+        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness}  A:${this.avgFit} \r\n`);
+        fs.writeFileSync(`report/${this.title}_best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
+
     }
 
     evolveN(generations: number) {
+        this.updateAllFitness();
         let best = this.population[0];
-        for (let ge = 0; ge <= generations; ge++) {
-            best = this.getBest();
-            best.writeCSV(this.title, this.targetValues);
+        for (let ge = 0; ge < generations; ge++) {
             this.evolve();
+            this.population[0].writeCSV(this.title, this.targetValues);
+            if (ge % 10 == 0) {
+                fs.writeFileSync(`bkp/${this.title}_BKP_project.json`, JSON.stringify(this, null, 2), "utf8");
+            }
         }
-        Project.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
-        console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
-        best.writeCSV(this.title, this.targetValues);
+        Support.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
+        console.log(`Fitness ${best.fitness}`);
+        console.log(best.rootExpression.getExpression());
     }
-
-
 
 }
 

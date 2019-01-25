@@ -3,7 +3,8 @@
 export class Utils {
 
     public static round(n: number): number {
-        return Math.round(100 * n) / 100;
+        return n;
+        return Math.round(n * 100) / 100;
     }
 
     public static floatRandom(min: number, max: number) {
@@ -18,6 +19,11 @@ export class Utils {
         let r = Utils.integerRandom(0, array.length - 1);
 
         return r;
+    }
+
+
+    public static fn(n: any, l: number = 20, d: number = 4): string {
+        return ("                    " + n.toFixed(d)).slice(-l);
     }
 
 }
