@@ -1,11 +1,21 @@
 import { Utils } from "./utils";
 import { Project } from "./project";
 import { GPBehavior, GPType, Support } from "./support";
+import { NOMEM } from "dns";
 
 
 
 
 export class GPNode {
+
+    public static getInstance(data: any): GPNode {
+        let newInstance = new GPNode("CLONE", "FUNCTION", "NUMBER");
+        Object.assign(newInstance, data);
+        newInstance.children = [];
+        data.children.forEach(c => newInstance.children.push(GPNode.getInstance(c)));
+        return newInstance;
+    }
+
 
     public static ID = 0;
 
@@ -17,14 +27,19 @@ export class GPNode {
 
     public h = 1;
 
+
     public createCopy(): GPNode {
-        let ni = new GPNode(this.name, this.behavior, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+        let code = this.behavior == "CONSTANT" ? "NOOP" : this.code;
+        let ni = new GPNode(this.name, this.behavior, this.returnType, code, this.inputTypes, this.minimumHeight);
         ni.children = [];
         this.children.forEach(c => ni.children.push(c.createCopy()));
         return ni;
     }
 
-    constructor(public name: string, public behavior: GPBehavior, public returnType: GPType, public code: string = "NOOP", private inputTypes: GPType[], private minimumHeight: number) {
+    constructor(public name: string, public behavior: GPBehavior, public returnType: GPType, public code: string = "NOOP", private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
+        if (name == "CLONE") {
+            return;
+        }
         this.initNode();
     }
 
@@ -53,26 +68,35 @@ export class GPNode {
     }
 
     public initChildren(nodes: GPNode[], maxHeigth: number = 4) {
-
         this.children = [];
-
         let higest = 1;
         this.inputTypes.forEach(type => {
             let externals = nodes.filter(f => f.behavior == "EXTERNAL" && f.returnType == type);
             let possibileFunctions = nodes.filter(f => f.behavior == "FUNCTION" && f.returnType == type);
-            if (possibileFunctions && (maxHeigth >= 1)) {
+
+            if (possibileFunctions && (maxHeigth > 2)) {
                 let nc: GPNode = possibileFunctions[Utils.indexRandom(possibileFunctions)].createCopy();
                 nc.initChildren(nodes, maxHeigth - 1);
+                this.children.push(nc);
                 if (nc.h > higest) {
                     higest = nc.h;
                 }
-                this.children.push(nc);
             }
-            else if (externals.length > 0) {
-                this.children.push(externals[Utils.integerRandom(0, externals.length - 1)].createCopy());
+            else if (maxHeigth > 1) {
+                let allNodes: GPNode[] = [...possibileFunctions, ...externals, ...Support.getConstantNodes(4, type)];
+                let nc: GPNode = allNodes[Utils.indexRandom(allNodes)].createCopy();
+                if (nc.behavior == "FUNCTION") {
+                    nc.initChildren(nodes, maxHeigth - 1);
+                }
+                this.children.push(nc);
+                if (nc.h > higest) {
+                    higest = nc.h;
+                }
             }
             else {
-                this.children.push(Support.getConstantNode(type));
+                let allNodes: GPNode[] = [...externals, ...Support.getConstantNodes(externals.length + 1, type)];
+                let nc: GPNode = allNodes[Utils.indexRandom(allNodes)].createCopy();
+                this.children.push(nc);
             }
         });
         this.h += higest;
@@ -138,4 +162,5 @@ export class GPNode {
             this.h = 1 + max;
         }
     }
+
 }

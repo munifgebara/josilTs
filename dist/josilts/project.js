@@ -16,6 +16,8 @@ class Project {
         this.avgFit = 0;
         this.generation = 0;
         this.repeat = 0;
+        if (title == "_CLONE")
+            return;
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
@@ -26,6 +28,15 @@ class Project {
             process.stdout.write("Creating Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
         process.stdout.write("\n");
+    }
+    static getInstance(data) {
+        let newInstance = new Project("_CLONE", data.externalParameters, data.outputType);
+        Object.assign(newInstance, data);
+        newInstance.population = [];
+        data.population.forEach(ind => newInstance.population.push(individual_1.Individual.getInstance(ind)));
+        newInstance.projectBasicNodes = [];
+        data.projectBasicNodes.forEach(node => newInstance.projectBasicNodes.push(gp_node_1.GPNode.getInstance(node)));
+        return newInstance;
     }
     updateAllFitness() {
         this.population.forEach(ind => ind.updateFitness(this.targetValues));
@@ -49,7 +60,7 @@ class Project {
         });
         let best = this.population[0];
         this.avgFit = Math.round(summ);
-        process.stdout.write(`${this.generation} ${best.id} ${this.avgFit} \r\n`);
+        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness}  A:${this.avgFit} \r\n`);
         fs.writeFileSync(`report/${this.title}_best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
     }
     evolveN(generations) {
@@ -57,9 +68,9 @@ class Project {
         let best = this.population[0];
         for (let ge = 0; ge < generations; ge++) {
             this.evolve();
+            this.population[0].writeCSV(this.title, this.targetValues);
         }
         support_1.Support.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
-        best.writeCSV(this.title, this.targetValues);
         console.log(`Fitness ${best.fitness}`);
         console.log(best.rootExpression.getExpression());
     }

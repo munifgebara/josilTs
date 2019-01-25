@@ -13,6 +13,18 @@ export interface ExternalParameters {
 
 export class Project {
 
+    public static getInstance(data: any): Project {
+        let newInstance = new Project("_CLONE", data.externalParameters, data.outputType);
+        Object.assign(newInstance, data);
+        newInstance.population = [];
+        data.population.forEach(ind => newInstance.population.push(Individual.getInstance(ind)));
+
+        newInstance.projectBasicNodes = [];
+        data.projectBasicNodes.forEach(node => newInstance.projectBasicNodes.push(GPNode.getInstance(node)));
+
+        return newInstance;
+    }
+
 
     public targetValues: any[];
 
@@ -30,6 +42,7 @@ export class Project {
         public projectBasicNodes: GPNode[] = Support.getBasicMatematicalFunctions(),
         public population: Individual[] = [],
     ) {
+        if (title == "_CLONE") return;
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
         this.population = [];
@@ -41,7 +54,6 @@ export class Project {
         }
         process.stdout.write("\n");
     }
-
 
 
 
@@ -70,7 +82,7 @@ export class Project {
 
 
         this.avgFit = Math.round(summ);
-        process.stdout.write(`${this.generation} ${best.id} ${this.avgFit} \r\n`);
+        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness}  A:${this.avgFit} \r\n`);
         fs.writeFileSync(`report/${this.title}_best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
 
     }
@@ -80,9 +92,9 @@ export class Project {
         let best = this.population[0];
         for (let ge = 0; ge < generations; ge++) {
             this.evolve();
+            this.population[0].writeCSV(this.title, this.targetValues);
         }
         Support.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
-        best.writeCSV(this.title, this.targetValues);
         console.log(`Fitness ${best.fitness}`);
         console.log(best.rootExpression.getExpression())
     }

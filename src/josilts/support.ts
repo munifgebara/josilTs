@@ -197,9 +197,10 @@ export class Support {
 
     public static createTargetValuesFromExpression(externalParameters: ExternalParameters[], expression: string): any[] {
         let targetValues = [];
-        for (let x = -5; x <= 5; x += 0.1) {
-            let targetValue = { output: Utils.round(eval(expression)) };
-            externalParameters.forEach(ep => { targetValue[ep.name] = (x); });
+        for (let x = -10; x < 10; x += 0.1) {
+            let targetValue: any = {};
+            externalParameters.forEach(ep => { targetValue[ep.name] = Utils.round(x); });
+            targetValue.output = Utils.round(eval(expression));
             targetValues.push(targetValue);
         };
         return targetValues;
