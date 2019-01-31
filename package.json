@@ -12,6 +12,7 @@
     "@types/node": "^10.12.18",
     "googleapis": "^27.0.0",
     "json-stable-stringify": "^1.0.1",
+    "prompt-sync": "^4.1.6",
     "source-map-support": "^0.5.10",
     "uuid": "^3.3.2",
     "viz.js": "^2.1.2"

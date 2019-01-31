@@ -1,7 +1,9 @@
 import { Jogo } from "./jogo";
 
+import * as fs from 'fs';
 
 
+let prompt = require('prompt-sync')();
 
 function teste1() {
     let j = new Jogo();
@@ -35,21 +37,29 @@ j2.displayState();
 console.log(j2.moveToToWin(1));
 console.log(j2.moveToToWin(2));
 
-let p = 1;
+let p = 2;
 
 let n = 100;
 while (n >= 0) {
-    n = j2.inteligentMove(p);
-    if (n >= 0) {
-        j2.state[n] = p;
-        p = p == 1 ? 2 : 1;
-        j2.displayState();
+    let ps = prompt('Your move:');
+    if (j2.state[ps] == 0) {
+        j2.state[ps] = 1;
+
+        n = j2.inteligentMove(p);
+        if (n >= 0) {
+            j2.state[n] = p;
+            //p = p == 1 ? 2 : 1;
+            j2.displayState();
+        }
+    }
+    else {
+        console.log("Movimento ilegal");
     }
 }
+j2.displayState();
 
 
 
 
 
-////console.log(j2.hasPossibiliteToWin(1));
-////console.log(j2.hasPossibiliteToWin(2));
+
