@@ -86,9 +86,9 @@ export class GPNode {
     }
 
     public deepSimplify(): GPNode {
-        this.children.forEach(c => c.deepSimplify());
+        //      this.children.forEach(c => c.deepSimplify());
 
-        this.simplify();
+        //        this.simplify();
         return this;
     }
 
@@ -142,7 +142,7 @@ export class GPNode {
     }
 
     public value(externals: any, nodes: GPNode[]) {
-        return eval(Support.generateFunctions(nodes) + this.getExpression());
+        return eval(Support.getSimpleExpression(this)); //eval(Support.generateFunctions(nodes) + this.getExpression());
     }
 
     public getDot(s: string = "s") {

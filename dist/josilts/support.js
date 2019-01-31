@@ -7,6 +7,10 @@ const gp_node_1 = require("./gp-node");
 const utils_1 = require("./utils");
 const individual_1 = require("./individual");
 class Support {
+    static createExternalParametersFromTargetValues(csv) {
+        let fields = Object.keys(csv[0]);
+        return fields.filter(f => f != "index" && f != "output").reduce((p, c) => [...p, { name: c, type: "NUMBER" }], []);
+    }
     static getConstantNode(type) {
         const toReturn = new gp_node_1.GPNode(type + " Constant", "CONSTANT", type, ``, [], 0);
         switch (type) {
@@ -34,8 +38,8 @@ class Support {
         toReturn.push(new gp_node_1.GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"], 0, "(i0+i1)"));
         toReturn.push(new gp_node_1.GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"], 0, "(i0-i1)"));
         toReturn.push(new gp_node_1.GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"], 0, "(i0*i1)"));
-        toReturn.push(new gp_node_1.GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
-        toReturn.push(new gp_node_1.GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
+        //toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
+        //toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
         return toReturn;
     }
     static getLogicalFunctions() {
@@ -48,15 +52,15 @@ class Support {
     }
     static getRelationalFunctions() {
         let toReturn = [];
-        toReturn.push(new gp_node_1.GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"], 0, "(i0>i1)"));
-        toReturn.push(new gp_node_1.GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"], 0, "(i0<i1)"));
+        //toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"], 0, "(i0>i1)"));
+        //toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"], 0, "(i0<i1)"));
         toReturn.push(new gp_node_1.GPNode("numberGt", "FUNCTION", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"], 0, "(i0>=i1?i0:i1)"));
         toReturn.push(new gp_node_1.GPNode("numberLt", "FUNCTION", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"], 0, "(i0<=i1?i0:i1)"));
         return toReturn;
     }
     static getAdvancedMatematicalFunctions() {
         let toReturn = [];
-        toReturn.push(new gp_node_1.GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"], 0, "(i0*i0)"));
+        //toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"], 0, "(i0*i0)"));
         toReturn.push(new gp_node_1.GPNode("sin", "FUNCTION", "NUMBER", "return i1*Math.sin(i0);", ["NUMBER", "NUMBER"], 0, "(i1*Math.sin(i0))"));
         //toReturn.push(new GPNode("atan", "FUNCTION", "NUMBER", "return Math.atan(i0);", ["NUMBER"], 0,"(i1*Math.atan(i0))"));
         //toReturn.push(new GPNode("exp", "FUNCTION", "NUMBER", "return Math.exp(i0);", ["NUMBER"], 0,,"Math.exp(i0)"));
@@ -186,7 +190,7 @@ class Support {
             return node.code;
         }
         if (node.behavior == "EXTERNAL") {
-            return node.name;
+            return node.code;
         }
         let e = node.simpleExpression;
         node.children.forEach((c, i) => {
@@ -194,6 +198,13 @@ class Support {
         });
         //return `${this.name}(${this.children.reduce((p, c, i) => p + c.getExpression() + (i < cInputs - 1 ? ',' : ''), "")})`;
         return e;
+    }
+    static readIndividual(initialPopulation, name) {
+        if (fs.existsSync(name)) {
+            let ind = individual_1.Individual.getInstance(JSON.parse(fs.readFileSync(name).toString()));
+            ind.rootExpression.children[0].deepSimplify();
+            initialPopulation.push(ind);
+        }
     }
 }
 Support.tenArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

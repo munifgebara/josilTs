@@ -72,8 +72,8 @@ class GPNode {
         this.children.forEach((ccc, i) => this.children[i] = ccc.getEquivalentConstant());
     }
     deepSimplify() {
-        this.children.forEach(c => c.deepSimplify());
-        this.simplify();
+        //      this.children.forEach(c => c.deepSimplify());
+        //        this.simplify();
         return this;
     }
     getFunction() {
@@ -121,7 +121,7 @@ class GPNode {
         this.h += higest;
     }
     value(externals, nodes) {
-        return eval(support_1.Support.generateFunctions(nodes) + this.getExpression());
+        return eval(support_1.Support.getSimpleExpression(this)); //eval(Support.generateFunctions(nodes) + this.getExpression());
     }
     getDot(s = "s") {
         let dot = [` digraph G${this.id} {`];

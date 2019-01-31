@@ -38,13 +38,67 @@ function runProject21() {
     let p3 = project_1.Project.getInstance(JSON.parse(fs.readFileSync("bkp/polinomial_BKP_project.json").toString()));
     p3.evolveN(parseInt(process.argv[4]));
 }
-function runProject3() {
-    let externalParameters = [{ name: "dia", type: "NUMBER" }];
-    let project3 = new project_1.Project("dolar", externalParameters, "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]), [...support_1.Support.getBasicMatematicalFunctions(), ...support_1.Support.getAdvancedMatematicalFunctions()]);
+function runProject31() {
+    let initialPopulation = [];
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar1_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar2_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar3_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar4_BKP_best.json');
+    let csv = support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv");
+    let externalParameters = support_1.Support.createExternalParametersFromTargetValues(csv);
+    let project1 = new project_1.Project("dolar1", externalParameters, "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]), [...support_1.Support.getBasicMatematicalFunctions()], initialPopulation);
+    support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv").forEach(vv => project1.targetValues.push(Object.assign({}, vv, { dia: vv.dia - 43125 })));
+    project1.population[0].fitness = -1;
+    //project1.evolveWithBest(4);
+    project1.evolveN(parseInt(process.argv[4]));
+}
+exports.runProject31 = runProject31;
+function runProject32() {
+    const sin = new gp_node_1.GPNode("sin", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
+    const cos = new gp_node_1.GPNode("cos", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
+    let initialPopulation = [];
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar2_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar1_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar3_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar4_BKP_best.json');
+    let csv = support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv");
+    let externalParameters = support_1.Support.createExternalParametersFromTargetValues(csv);
+    let project2 = new project_1.Project("dolar2", externalParameters, "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]), [...support_1.Support.getBasicMatematicalFunctions(), sin, cos], initialPopulation);
+    support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv").forEach(vv => project2.targetValues.push(Object.assign({}, vv, { dia: vv.dia - 43125 })));
+    project2.population[0].fitness = -1;
+    //project2.evolveWithBest(4);
+    project2.evolveN(parseInt(process.argv[4]));
+}
+exports.runProject32 = runProject32;
+function runProject33() {
+    let initialPopulation = [];
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar3_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar1_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar2_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar4_BKP_best.json');
+    let csv = support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv");
+    let externalParameters = support_1.Support.createExternalParametersFromTargetValues(csv);
+    let project3 = new project_1.Project("dolar3", externalParameters, "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]), [...support_1.Support.getBasicMatematicalFunctions(), ...support_1.Support.getAdvancedMatematicalFunctions()], initialPopulation);
     support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv").forEach(vv => project3.targetValues.push(Object.assign({}, vv, { dia: vv.dia - 43125 })));
+    project3.population[0].fitness = -1;
+    //project3.evolveWithBest(4);
     project3.evolveN(parseInt(process.argv[4]));
 }
-exports.runProject3 = runProject3;
+exports.runProject33 = runProject33;
+function runProject34() {
+    let initialPopulation = [];
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar4_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar2_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar3_BKP_best.json');
+    support_1.Support.readIndividual(initialPopulation, 'bkp/dolar1_BKP_best.json');
+    let csv = support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv");
+    let externalParameters = support_1.Support.createExternalParametersFromTargetValues(csv);
+    let project4 = new project_1.Project("dolar4", externalParameters, "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]), [...support_1.Support.getBasicMatematicalFunctions(), ...support_1.Support.getRelationalFunctions()], initialPopulation);
+    project4.population[0].fitness = -1;
+    //project4.evolveWithBest(4);
+    project4.evolveN(parseInt(process.argv[4]));
+}
+exports.runProject34 = runProject34;
 function runProject4() {
     let externalParameters = [{ name: "i", type: "NUMBER" }];
     let project1 = new project_1.Project("primos", externalParameters, "NUMBER", parseInt(process.argv[2]), parseInt(process.argv[3]), [...support_1.Support.getBasicMatematicalFunctions(), ...support_1.Support.getAdvancedMatematicalFunctions()]);
@@ -68,8 +122,8 @@ function exemploDidatio() {
         initialPopulation.push(ind);
     }
     let didatico = new project_1.Project("didatico", externalParameters, "NUMBER", 1000, 5, [...support_1.Support.getBasicMatematicalFunctions().filter(f => f.name != "mod" && f.name != "div"), sin, cos], initialPopulation);
-    //didatico.targetValues.push(...Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x+5)", -Math.PI, Math.PI, 0.1));
-    didatico.targetValues.push(...support_1.Support.createTargetValuesFromCSV("samples/serra.min.csv"));
+    didatico.targetValues.push(...support_1.Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x+5)", -Math.PI, Math.PI, 0.1));
+    //didatico.targetValues.push(...Support.createTargetValuesFromCSV("samples/serra.min.csv"));
     didatico.population[0].fitness = -1;
     didatico.evolveWithBest();
     didatico.evolveN(20, 0.01);
@@ -110,4 +164,8 @@ function test() {
     });
     console.log(`n ===> ${support_1.Support.getSimpleExpression(n)}`);
 }
+function dolar(dia) {
+    return ((0.8145545593930124 + ((((dia == 0 ? 1 : ((dia == 0 ? 1 : 0.13422154488305327 / dia) + (0.9828376938267065 + ((((dia == 0 ? 1 : 0.044742675869120285 / dia) + 0.3781506311397911) + 0.07564166092334146) + dia))) / dia) + 0.5660886616524758) + 0.21942237255193286) + (((dia == 0 ? 1 : (dia == 0 ? 1 : ((((dia == 0 ? 1 : 0.15258120062253688 / dia) + 0.9040615196782311) + 0.8623428496068903) == 0 ? 1 : ((((((dia + 0.1733562586321844) + 0.22055015231039898) + (dia + ((((((dia == 0 ? 1 : 0.8055764435324262 / dia) + (dia == 0 ? 1 : 0.5235131328987639 / dia)) + 0.8144868699620966) == 0 ? 1 : (((dia + (0.9091329708461711 + (0.624083898189441 + ((dia == 0 ? 1 : ((((dia + 0.3274168501911656) + 0.9938275244744488) + (((dia + 0.5239564330304838) + 0.8826371865477824) + 0.9935586627518622)) / 0.7102673185264368) / dia) + 0.9420784888421831)))) + 0.8699997796278887) + 0.6914727987515659) / (((dia == 0 ? 1 : 0.8055764435324262 / dia) + (dia == 0 ? 1 : 0.5235131328987639 / dia)) + 0.8144868699620966)) + 0.2553712175020164) + 0.1264880687769654))) + 0.45300717950917213) + 0.6370594272942034) + 0.9271422923198092) / (((dia == 0 ? 1 : 0.15258120062253688 / dia) + 0.9040615196782311) + 0.8623428496068903)) / dia) / dia) + 0.41612083161345437) == 0 ? 1 : 0.684397582833745 / ((dia == 0 ? 1 : (dia == 0 ? 1 : ((((dia == 0 ? 1 : 0.15258120062253688 / dia) + 0.9040615196782311) + 0.8623428496068903) == 0 ? 1 : ((((((dia + 0.1733562586321844) + 0.22055015231039898) + (dia + ((((((dia == 0 ? 1 : 0.8055764435324262 / dia) + (dia == 0 ? 1 : 0.5235131328987639 / dia)) + 0.8144868699620966) == 0 ? 1 : (((dia + (0.9091329708461711 + (0.624083898189441 + (1 + 0.9420784888421831)))) + 0.8699997796278887) + 0.6914727987515659) / (((dia == 0 ? 1 : 0.8055764435324262 / dia) + (dia == 0 ? 1 : 0.5235131328987639 / dia)) + 0.8144868699620966)) + 0.2553712175020164) + 0.1264880687769654))) + 0.45300717950917213) + 0.6370594272942034) + 0.9271422923198092) / (((dia == 0 ? 1 : 0.15258120062253688 / dia) + 0.9040615196782311) + 0.8623428496068903)) / dia) / dia) + 0.41612083161345437)))));
+}
+console.log(dolar(1));
 //# sourceMappingURL=index.js.map

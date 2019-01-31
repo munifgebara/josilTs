@@ -47,7 +47,7 @@ class Individual {
         fs.writeFileSync(`report/${name}.csv`, csv, "utf-8");
     }
     updateFitness(targetValues, force = false) {
-        if (this.fitness >= 0 || force) {
+        if (this.fitness > 0) {
             return this.fitness;
         }
         this.fitness = 0;
@@ -56,6 +56,9 @@ class Individual {
             let dif = v.output - value;
             this.fitness += Math.sqrt(dif * dif) / targetValues.length;
         });
+        if (this.fitness == 0) {
+            this.fitness = 10000;
+        }
     }
     getInfo() {
         let fieldsOfInterest = ['id', 'outputType', 'inputTypes', 'fitness'];
