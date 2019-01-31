@@ -137,12 +137,13 @@ export class Project {
             this.evolve(` Time:${telapsed.toFixed(3)}s ${((1 + ge) * this.populationSize / telapsed).toFixed(3)}ind/s EvolveTime:${this.lastEvolve}s`);
             this.population[0].writeCSV(this.title, this.targetValues);
             fs.writeFileSync(`bkp/${this.title}_BKP_best.json`, JSON.stringify(this.population[0], null, 2), "utf8");
-            //if (this.population[0].fitness < minFitnes) break;
+            if (this.population[0].fitness < minFitnes) break;
+            //fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
         }
         Support.writeSVGToDisk(`report/${this.title} _best.svg`, this.population[0].rootExpression.getDot());
         console.log(`Fitness ${this.population[0].fitness} `);
         console.log(this.population[0].rootExpression.getExpression());
-        fs.writeFileSync(`report/${this.title} _best.js`, Support.getSimpleExpression(this.population[0].rootExpression.createCopy().deepSimplify()) + "\n" + this.population[0].rootExpression.getExpression() + "\n" + this.population[0].rootExpression.getFunction());
+        fs.writeFileSync(`report/${this.title} _best.js`, Utils.replaceAll(Support.getSimpleExpression(this.population[0].rootExpression.createCopy().deepSimplify()), "externals['x']", "x") + "\n" + this.population[0].rootExpression.getExpression() + "\n" + this.population[0].rootExpression.getFunction());
         const end = process.hrtime(start);
         const elapsed = (end[0] + end[1] / 1e9).toFixed(3);
         console.log(elapsed, "s");

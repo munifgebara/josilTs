@@ -99,13 +99,16 @@ class Support {
                 if (utils_1.Utils.random() < 0.01) {
                     //Project.mutate(gpFunction5);
                 }
-                let dot = `digraph Population_${gpFunction2.id}__${gpFunction3.id} {\n`;
-                dot += gpFunction2.getDotToCombine() + "\n";
-                dot += gpFunction3.getDotToCombine() + "\n";
-                dot += gpFunction4.getDotToCombine() + "\n";
-                dot += gpFunction5.getDotToCombine() + "\n";
-                dot += "}\n";
-                fs.writeFileSync(`pop/C_${gpFunction2.id}__${gpFunction3.id}.dot`, dot);
+                /*
+                                let dot = `digraph Population_${gpFunction2.id}__${gpFunction3.id} {\n`;
+                                dot += gpFunction2.getDotToCombine() + "\n";
+                                dot += gpFunction3.getDotToCombine() + "\n";
+                                dot += gpFunction4.getDotToCombine() + "\n";
+                                dot += gpFunction5.getDotToCombine() + "\n";
+                
+                                dot += "}\n";
+                                fs.writeFileSync(`pop/C_${gpFunction2.id}__${gpFunction3.id}.dot`, dot);
+                */
                 return { i1: gpFunction4, i2: gpFunction5 };
             }
             count1++;

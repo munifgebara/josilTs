@@ -7,7 +7,7 @@ export class Utils {
 
     public static round(n: number): number {
         return n;
-        return Math.round(n * 100) / 100;
+        //return Math.round(n * 100) / 100;
     }
 
     public static floatRandom(min: number, max: number) {

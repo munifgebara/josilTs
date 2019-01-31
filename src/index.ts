@@ -148,15 +148,12 @@ export function exemploDidatio() {
     //const sin = new GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
     //const cos = new GPNode("COS", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
     let initialPopulation: Individual[] = [];
-    //Support.readIndividual(initialPopulation, 'bkp/didatico_BKP_best.json');
+    Support.readIndividual(initialPopulation, 'bkp/didatico_BKP_best.json');
 
-    let didatico = new Project("didatico", externalParameters, "NUMBER", 8, 3, [...Support.getBasicMatematicalFunctions()], initialPopulation);
+    let didatico = new Project("didatico", externalParameters, "NUMBER", 3000, 6, [...Support.getBasicMatematicalFunctions()], initialPopulation);
     didatico.targetValues.push(...Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x)", -Math.PI, Math.PI, 0.1));
-    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
-    didatico.evolve();
-    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
-    //    didatico.evolve();
-    //    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    //fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    didatico.evolveN(12, 0.001);
 
 
     //    didatico.evolveN(1, 0.01);
