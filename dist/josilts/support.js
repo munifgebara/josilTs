@@ -195,6 +195,9 @@ class Support {
         ;
         return targetValues;
     }
+    static getSimpleExpression2(node) {
+        return utils_1.Utils.replaceAll(utils_1.Utils.replaceAll(Support.getSimpleExpression(node), "externals['", ""), "']", "");
+    }
     static getSimpleExpression(node) {
         if (node.behavior == "CONSTANT") {
             return node.code;

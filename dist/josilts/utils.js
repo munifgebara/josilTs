@@ -25,6 +25,7 @@ class Utils {
         return ("                    " + n.toFixed(d)).slice(-l);
     }
     static random() {
+        //return Math.random();
         Utils.seed = Utils.seed * 16807 % 2147483647;
         return (Utils.seed - 1) / 2147483646;
     }

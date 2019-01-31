@@ -76,8 +76,8 @@ class GPNode {
         this.children.forEach((ccc, i) => this.children[i] = ccc.getEquivalentConstant());
     }
     deepSimplify() {
-        //      this.children.forEach(c => c.deepSimplify());
-        //        this.simplify();
+        this.children.forEach(c => c.deepSimplify());
+        this.simplify();
         return this;
     }
     getFunction() {

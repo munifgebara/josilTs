@@ -112,14 +112,14 @@ function runProject4() {
 exports.runProject4 = runProject4;
 function exemploDidatio() {
     let externalParameters = [{ name: "x", type: "NUMBER" }];
-    //const sin = new GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
+    const sin = new gp_node_1.GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
     //const cos = new GPNode("COS", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
     let initialPopulation = [];
     support_1.Support.readIndividual(initialPopulation, 'bkp/didatico_BKP_best.json');
-    let didatico = new project_1.Project("didatico", externalParameters, "NUMBER", 3000, 6, [...support_1.Support.getBasicMatematicalFunctions()], initialPopulation);
-    didatico.targetValues.push(...support_1.Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x)", -Math.PI, Math.PI, 0.1));
+    let didatico = new project_1.Project("didatico", externalParameters, "NUMBER", 1000, 5, [...support_1.Support.getBasicMatematicalFunctions(), sin], initialPopulation);
+    didatico.targetValues.push(...support_1.Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x)", -2 * Math.PI, 2 * Math.PI, 0.1));
     //fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
-    didatico.evolveN(12, 0.001);
+    didatico.evolveN(15, 0.001);
     //    didatico.evolveN(1, 0.01);
     //  console.log(`s  ===>  ${didatico.population[0].id}  ${Support.getSimpleExpression(didatico.population[0].rootExpression)}`);
 }

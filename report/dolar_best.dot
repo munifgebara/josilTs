@@ -1,5 +1,0 @@
- digraph G62988 {
-N62988[ style="filled"  label="N6298..."];
-N62988 -> N7;
-N7[ style="filled"  label="N7"];
-}

@@ -6,7 +6,7 @@ const utils_1 = require("./utils");
 const support_1 = require("./support");
 const gp_node_1 = require("./gp-node");
 class Project {
-    constructor(title, externalParameters, outputType, populationSize = 100, maxHeigth = 5, projectBasicNodes = support_1.Support.getBasicMatematicalFunctions(), population = []) {
+    constructor(title = "new_project", externalParameters = [{ name: "x", type: "NUMBER" }], outputType = "NUMBER", populationSize = 100, maxHeigth = 5, projectBasicNodes = support_1.Support.getBasicMatematicalFunctions(), population = []) {
         this.title = title;
         this.externalParameters = externalParameters;
         this.outputType = outputType;
@@ -94,7 +94,7 @@ class Project {
         this.avgFit = utils_1.Utils.round(summ);
         let exp = support_1.Support.getSimpleExpression(best.rootExpression.createCopy().deepSimplify());
         exp = utils_1.Utils.replaceAll(exp, "Math.", "");
-        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness.toFixed(3)}  ${extra}  A:${this.avgFit.toFixed(3)} EXP:${utils_1.Utils.resume(exp, 120)}  \r`);
+        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness.toFixed(3)}  ${extra}  A:${this.avgFit.toFixed(3)}  \r`);
         fs.writeFileSync(`report/${this.title}_best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
         const e = process.hrtime(s);
         this.lastEvolve = (e[0] + e[1] / 1e9).toFixed(3);
@@ -102,20 +102,24 @@ class Project {
     evolveN(generations, minFitnes = -0.1) {
         const start = process.hrtime();
         this.updateAllFitness();
+        let af = 10000;
         for (let ge = 0; ge < generations; ge++) {
             const tnow = process.hrtime(start);
             const telapsed = (tnow[0] + tnow[1] / 1e9);
             ;
             this.evolve(` Time:${telapsed.toFixed(3)}s ${((1 + ge) * this.populationSize / telapsed).toFixed(3)}ind/s EvolveTime:${this.lastEvolve}s`);
-            this.population[0].writeCSV(this.title, this.targetValues);
-            fs.writeFileSync(`bkp/${this.title}_BKP_best.json`, JSON.stringify(this.population[0], null, 2), "utf8");
-            if (this.population[0].fitness < minFitnes)
-                break;
-            //fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
+            if (this.population[0].fitness < af) {
+                this.population[0].writeCSV(this.title, this.targetValues);
+                fs.writeFileSync(`bkp/${this.title}_BKP_best.json`, JSON.stringify(this.population[0], null, 2), "utf8");
+                if (this.population[0].fitness < minFitnes)
+                    break;
+                fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
+                af = this.population[0].fitness;
+                console.log("");
+            }
         }
         support_1.Support.writeSVGToDisk(`report/${this.title} _best.svg`, this.population[0].rootExpression.getDot());
         console.log(`Fitness ${this.population[0].fitness} `);
-        console.log(this.population[0].rootExpression.getExpression());
         fs.writeFileSync(`report/${this.title} _best.js`, utils_1.Utils.replaceAll(support_1.Support.getSimpleExpression(this.population[0].rootExpression.createCopy().deepSimplify()), "externals['x']", "x") + "\n" + this.population[0].rootExpression.getExpression() + "\n" + this.population[0].rootExpression.getFunction());
         const end = process.hrtime(start);
         const elapsed = (end[0] + end[1] / 1e9).toFixed(3);

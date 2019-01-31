@@ -228,6 +228,9 @@ export class Support {
         };
         return targetValues;
     }
+    public static getSimpleExpression2(node: GPNode) {
+        return Utils.replaceAll(Utils.replaceAll(Support.getSimpleExpression(node), "externals['", ""), "']", "");
+    }
 
     public static getSimpleExpression(node: GPNode) {
         if (node.behavior == "CONSTANT") {

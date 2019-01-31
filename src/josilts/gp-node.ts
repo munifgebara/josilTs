@@ -90,9 +90,9 @@ export class GPNode {
     }
 
     public deepSimplify(): GPNode {
-        //      this.children.forEach(c => c.deepSimplify());
+        this.children.forEach(c => c.deepSimplify());
 
-        //        this.simplify();
+        this.simplify();
         return this;
     }
 
