@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const project_1 = require("./josilts/project");
+const gp_node_1 = require("./josilts/gp-node");
+const support_1 = require("./josilts/support");
+const targetValues = support_1.Support.createTargetValuesFromCSV("samples/USD_BRL21.csv").map(v => ({ vi: v.index, output: v.output }));
+//console.log(targetValues);
+const externalParameters = support_1.Support.createExternalParametersFromTargetValues(targetValues);
+console.log(externalParameters);
+const domainFunctions = [];
+domainFunctions.push(new gp_node_1.GPNode("sin", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0));
+domainFunctions.push(new gp_node_1.GPNode("cos", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0));
+domainFunctions.push(...support_1.Support.getBasicMatematicalFunctions());
+let pop = [];
+support_1.Support.readIndividual(pop, "bkp/dollar_BKP_best.json");
+let project = new project_1.Project("dollar", externalParameters, "NUMBER", 1000, 3, domainFunctions, pop);
+project.targetValues.push(...targetValues);
+project.evolveN(12);
+let best = project.population[0];
+let bestExpression = best.rootExpression;
+let clone = bestExpression.createCopy();
+console.log(support_1.Support.getSimpleExpression2(bestExpression));
+clone.deepSimplify();
+console.log(support_1.Support.getSimpleExpression2(clone));
+//# sourceMappingURL=runDollar.js.map

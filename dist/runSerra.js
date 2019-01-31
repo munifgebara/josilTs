@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const project_1 = require("./josilts/project");
 const gp_node_1 = require("./josilts/gp-node");
 const support_1 = require("./josilts/support");
+const utils_1 = require("./josilts/utils");
 const targetValues = support_1.Support.createTargetValuesFromCSV("samples/serra.min.csv");
 const externalParameters = support_1.Support.createExternalParametersFromTargetValues(targetValues);
 console.log(externalParameters);
@@ -13,7 +14,8 @@ domainFunctions.push(new gp_node_1.GPNode("SIN", "FUNCTION", "NUMBER", "return M
 domainFunctions.push(...support_1.Support.getBasicMatematicalFunctions());
 let pop = [];
 support_1.Support.readIndividual(pop, "bkp/serra_BKP_best.json");
-let project = new project_1.Project("serra", externalParameters, "NUMBER", 3000, 10, domainFunctions, pop);
+utils_1.Utils.seed = utils_1.Utils.seed + Math.round(Math.random() * 1000);
+let project = new project_1.Project("serra", externalParameters, "NUMBER", 300, 10, domainFunctions, pop);
 project.targetValues.push(...targetValues);
-project.evolveN(12);
+project.evolveN(22);
 //# sourceMappingURL=runSerra.js.map

@@ -43,7 +43,10 @@ class Project {
         this.population.forEach(ind => ind.rootExpression.children[0].deepSimplify());
     }
     updateAllFitness() {
-        this.population.forEach(ind => ind.updateFitness(this.targetValues));
+        this.population.forEach((ind, i) => {
+            ind.updateFitness(this.targetValues);
+            process.stdout.write(`G:${this.generation} updating fitness ${i}  \r`);
+        });
         this.population.sort((a, b) => a.fitness - b.fitness);
     }
     evolveWithBest(inicial = 1, extra = "") {
@@ -81,6 +84,7 @@ class Project {
             let r = support_1.Support.mixIndividuals(this.population[i], this.population[i + 1]);
             this.population[j] = r.s1;
             this.population[j + 1] = r.s2;
+            process.stdout.write(`G:${this.generation} mixIndividuals ${i}  \r`);
         }
         //this.simplifyAll();
         this.updateAllFitness();
