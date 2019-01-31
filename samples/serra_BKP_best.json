@@ -1,0 +1,600 @@
+{
+  "inputTypes": [
+    {
+      "name": "d",
+      "type": "NUMBER"
+    },
+    {
+      "name": "w",
+      "type": "NUMBER"
+    }
+  ],
+  "outputType": "NUMBER",
+  "maxHeigth": 5,
+  "nodes": [
+    {
+      "name": "add",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i0+i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 4,
+      "h": 1
+    },
+    {
+      "name": "sub",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i0-i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 5,
+      "h": 1
+    },
+    {
+      "name": "mul",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i0*i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 6,
+      "h": 1
+    },
+    {
+      "name": "div",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i1==0?1:i0/i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 7,
+      "h": 1
+    },
+    {
+      "name": "mod",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i1==0?i0:i0%i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 8,
+      "h": 1
+    },
+    {
+      "name": "domingo",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return externals['w']==1?1:i0",
+      "inputTypes": [
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 1,
+      "h": 1
+    },
+    {
+      "name": "SIN",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return Math.sin(i0)",
+      "inputTypes": [
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 2,
+      "h": 1
+    },
+    {
+      "name": "SIN",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return Math.cos(i0)",
+      "inputTypes": [
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 3,
+      "h": 1
+    },
+    {
+      "name": "d",
+      "behavior": "EXTERNAL",
+      "returnType": "NUMBER",
+      "code": "externals['d']",
+      "inputTypes": [],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 9,
+      "h": 1
+    },
+    {
+      "name": "w",
+      "behavior": "EXTERNAL",
+      "returnType": "NUMBER",
+      "code": "externals['w']",
+      "inputTypes": [],
+      "minimumHeight": 0,
+      "dotStyle": "filled",
+      "children": [],
+      "id": 10,
+      "h": 1
+    }
+  ],
+  "id": 97510,
+  "fitness": 6469271.853473516,
+  "value": null,
+  "rootExpression": {
+    "name": "",
+    "behavior": "FUNCTION",
+    "returnType": "NUMBER",
+    "code": "return i0;",
+    "inputTypes": [
+      "NUMBER"
+    ],
+    "minimumHeight": 0,
+    "dotStyle": "filled",
+    "children": [
+      {
+        "name": "mul",
+        "behavior": "FUNCTION",
+        "returnType": "NUMBER",
+        "code": "return i0*i1;",
+        "inputTypes": [
+          "NUMBER",
+          "NUMBER"
+        ],
+        "minimumHeight": 0,
+        "dotStyle": "filled",
+        "children": [
+          {
+            "name": "domingo",
+            "behavior": "FUNCTION",
+            "returnType": "NUMBER",
+            "code": "return externals['w']==1?1:i0",
+            "inputTypes": [
+              "NUMBER"
+            ],
+            "minimumHeight": 0,
+            "dotStyle": "solid",
+            "children": [
+              {
+                "name": "add",
+                "behavior": "FUNCTION",
+                "returnType": "NUMBER",
+                "code": "return i0+i1;",
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "dotStyle": "dashed",
+                "children": [
+                  {
+                    "name": "add",
+                    "behavior": "FUNCTION",
+                    "returnType": "NUMBER",
+                    "code": "return i0+i1;",
+                    "inputTypes": [
+                      "NUMBER",
+                      "NUMBER"
+                    ],
+                    "minimumHeight": 0,
+                    "dotStyle": "filled",
+                    "children": [
+                      {
+                        "name": "d",
+                        "behavior": "EXTERNAL",
+                        "returnType": "NUMBER",
+                        "code": "externals['d']",
+                        "inputTypes": [],
+                        "minimumHeight": 0,
+                        "dotStyle": "filled",
+                        "children": [],
+                        "id": 6828296,
+                        "h": 1
+                      },
+                      {
+                        "name": "SIN",
+                        "behavior": "FUNCTION",
+                        "returnType": "NUMBER",
+                        "code": "return Math.cos(i0)",
+                        "inputTypes": [
+                          "NUMBER"
+                        ],
+                        "minimumHeight": 0,
+                        "dotStyle": "filled",
+                        "children": [
+                          {
+                            "name": "mul",
+                            "behavior": "FUNCTION",
+                            "returnType": "NUMBER",
+                            "code": "return i0*i1;",
+                            "inputTypes": [
+                              "NUMBER",
+                              "NUMBER"
+                            ],
+                            "minimumHeight": 0,
+                            "dotStyle": "filled",
+                            "children": [
+                              {
+                                "name": "d",
+                                "behavior": "EXTERNAL",
+                                "returnType": "NUMBER",
+                                "code": "externals['d']",
+                                "inputTypes": [],
+                                "minimumHeight": 0,
+                                "dotStyle": "filled",
+                                "children": [],
+                                "id": 6828299,
+                                "h": 1
+                              },
+                              {
+                                "name": "SIN",
+                                "behavior": "FUNCTION",
+                                "returnType": "NUMBER",
+                                "code": "return Math.sin(i0)",
+                                "inputTypes": [
+                                  "NUMBER"
+                                ],
+                                "minimumHeight": 0,
+                                "dotStyle": "filled",
+                                "children": [
+                                  {
+                                    "name": "SIN",
+                                    "behavior": "FUNCTION",
+                                    "returnType": "NUMBER",
+                                    "code": "return Math.cos(i0)",
+                                    "inputTypes": [
+                                      "NUMBER"
+                                    ],
+                                    "minimumHeight": 0,
+                                    "dotStyle": "filled",
+                                    "children": [
+                                      {
+                                        "name": "SIN",
+                                        "behavior": "FUNCTION",
+                                        "returnType": "NUMBER",
+                                        "code": "return Math.cos(i0)",
+                                        "inputTypes": [
+                                          "NUMBER"
+                                        ],
+                                        "minimumHeight": 0,
+                                        "dotStyle": "filled",
+                                        "children": [
+                                          {
+                                            "name": "add",
+                                            "behavior": "FUNCTION",
+                                            "returnType": "NUMBER",
+                                            "code": "return i0+i1;",
+                                            "inputTypes": [
+                                              "NUMBER",
+                                              "NUMBER"
+                                            ],
+                                            "minimumHeight": 0,
+                                            "dotStyle": "filled",
+                                            "children": [
+                                              {
+                                                "name": "0.5379087708413497",
+                                                "behavior": "CONSTANT",
+                                                "returnType": "NUMBER",
+                                                "code": "0.5379087708413497",
+                                                "inputTypes": [],
+                                                "minimumHeight": 0,
+                                                "dotStyle": "filled",
+                                                "children": [],
+                                                "id": 6828304,
+                                                "h": 1
+                                              },
+                                              {
+                                                "name": "w",
+                                                "behavior": "EXTERNAL",
+                                                "returnType": "NUMBER",
+                                                "code": "externals['w']",
+                                                "inputTypes": [],
+                                                "minimumHeight": 0,
+                                                "dotStyle": "filled",
+                                                "children": [],
+                                                "id": 6828305,
+                                                "h": 1
+                                              }
+                                            ],
+                                            "id": 6828303,
+                                            "h": 1
+                                          }
+                                        ],
+                                        "id": 6828302,
+                                        "h": 1
+                                      }
+                                    ],
+                                    "id": 6828301,
+                                    "h": 1
+                                  }
+                                ],
+                                "id": 6828300,
+                                "h": 1
+                              }
+                            ],
+                            "id": 6828298,
+                            "h": 1
+                          }
+                        ],
+                        "id": 6828297,
+                        "h": 1
+                      }
+                    ],
+                    "id": 6828295,
+                    "h": 1
+                  },
+                  {
+                    "name": "div",
+                    "behavior": "FUNCTION",
+                    "returnType": "NUMBER",
+                    "code": "return i1==0?1:i0/i1;",
+                    "inputTypes": [
+                      "NUMBER",
+                      "NUMBER"
+                    ],
+                    "minimumHeight": 0,
+                    "dotStyle": "filled",
+                    "children": [
+                      {
+                        "name": "div",
+                        "behavior": "FUNCTION",
+                        "returnType": "NUMBER",
+                        "code": "return i1==0?1:i0/i1;",
+                        "inputTypes": [
+                          "NUMBER",
+                          "NUMBER"
+                        ],
+                        "minimumHeight": 0,
+                        "dotStyle": "filled",
+                        "children": [
+                          {
+                            "name": "sub",
+                            "behavior": "FUNCTION",
+                            "returnType": "NUMBER",
+                            "code": "return i0-i1;",
+                            "inputTypes": [
+                              "NUMBER",
+                              "NUMBER"
+                            ],
+                            "minimumHeight": 0,
+                            "dotStyle": "filled",
+                            "children": [
+                              {
+                                "name": "0.8073593430089785",
+                                "behavior": "CONSTANT",
+                                "returnType": "NUMBER",
+                                "code": "0.8073593430089785",
+                                "inputTypes": [],
+                                "minimumHeight": 0,
+                                "dotStyle": "filled",
+                                "children": [],
+                                "id": 6828309,
+                                "h": 1
+                              },
+                              {
+                                "name": "w",
+                                "behavior": "EXTERNAL",
+                                "returnType": "NUMBER",
+                                "code": "externals['w']",
+                                "inputTypes": [],
+                                "minimumHeight": 0,
+                                "dotStyle": "filled",
+                                "children": [],
+                                "id": 6828310,
+                                "h": 1
+                              }
+                            ],
+                            "id": 6828308,
+                            "h": 1
+                          },
+                          {
+                            "name": "mod",
+                            "behavior": "FUNCTION",
+                            "returnType": "NUMBER",
+                            "code": "return i1==0?i0:i0%i1;",
+                            "inputTypes": [
+                              "NUMBER",
+                              "NUMBER"
+                            ],
+                            "minimumHeight": 0,
+                            "dotStyle": "filled",
+                            "children": [
+                              {
+                                "name": "0.6636372971853144",
+                                "behavior": "CONSTANT",
+                                "returnType": "NUMBER",
+                                "code": "0.6636372971853144",
+                                "inputTypes": [],
+                                "minimumHeight": 0,
+                                "dotStyle": "filled",
+                                "children": [],
+                                "id": 6828312,
+                                "h": 1
+                              },
+                              {
+                                "name": "0.23362629149786418",
+                                "behavior": "CONSTANT",
+                                "returnType": "NUMBER",
+                                "code": "0.23362629149786418",
+                                "inputTypes": [],
+                                "minimumHeight": 0,
+                                "dotStyle": "filled",
+                                "children": [],
+                                "id": 6828313,
+                                "h": 1
+                              }
+                            ],
+                            "id": 6828311,
+                            "h": 1
+                          }
+                        ],
+                        "id": 6828307,
+                        "h": 1
+                      },
+                      {
+                        "name": "mul",
+                        "behavior": "FUNCTION",
+                        "returnType": "NUMBER",
+                        "code": "return i0*i1;",
+                        "inputTypes": [
+                          "NUMBER",
+                          "NUMBER"
+                        ],
+                        "minimumHeight": 0,
+                        "dotStyle": "filled",
+                        "children": [
+                          {
+                            "name": "0.4926805107223682",
+                            "behavior": "CONSTANT",
+                            "returnType": "NUMBER",
+                            "code": "0.4926805107223682",
+                            "inputTypes": [],
+                            "minimumHeight": 0,
+                            "dotStyle": "filled",
+                            "children": [],
+                            "id": 6828315,
+                            "h": 1
+                          },
+                          {
+                            "name": "0.14870871632831317",
+                            "behavior": "CONSTANT",
+                            "returnType": "NUMBER",
+                            "code": "0.14870871632831317",
+                            "inputTypes": [],
+                            "minimumHeight": 0,
+                            "dotStyle": "filled",
+                            "children": [],
+                            "id": 6828316,
+                            "h": 1
+                          }
+                        ],
+                        "id": 6828314,
+                        "h": 1
+                      }
+                    ],
+                    "id": 6828306,
+                    "h": 1
+                  }
+                ],
+                "id": 6828294,
+                "h": 1
+              }
+            ],
+            "id": 6828319,
+            "h": 1
+          },
+          {
+            "name": "SIN",
+            "behavior": "FUNCTION",
+            "returnType": "NUMBER",
+            "code": "return Math.sin(i0)",
+            "inputTypes": [
+              "NUMBER"
+            ],
+            "minimumHeight": 0,
+            "dotStyle": "filled",
+            "children": [
+              {
+                "name": "SIN",
+                "behavior": "FUNCTION",
+                "returnType": "NUMBER",
+                "code": "return Math.sin(i0)",
+                "inputTypes": [
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "dotStyle": "filled",
+                "children": [
+                  {
+                    "name": "mul",
+                    "behavior": "FUNCTION",
+                    "returnType": "NUMBER",
+                    "code": "return i0*i1;",
+                    "inputTypes": [
+                      "NUMBER",
+                      "NUMBER"
+                    ],
+                    "minimumHeight": 0,
+                    "dotStyle": "filled",
+                    "children": [
+                      {
+                        "name": "w",
+                        "behavior": "EXTERNAL",
+                        "returnType": "NUMBER",
+                        "code": "externals['w']",
+                        "inputTypes": [],
+                        "minimumHeight": 0,
+                        "dotStyle": "filled",
+                        "children": [],
+                        "id": 6828341,
+                        "h": 1
+                      },
+                      {
+                        "name": "0.35845443584378844",
+                        "behavior": "CONSTANT",
+                        "returnType": "NUMBER",
+                        "code": "0.35845443584378844",
+                        "inputTypes": [],
+                        "minimumHeight": 0,
+                        "dotStyle": "filled",
+                        "children": [],
+                        "id": 6828342,
+                        "h": 1
+                      }
+                    ],
+                    "id": 6828340,
+                    "h": 1
+                  }
+                ],
+                "id": 6828339,
+                "h": 1
+              }
+            ],
+            "id": 6828338,
+            "h": 1
+          }
+        ],
+        "id": 6828318,
+        "h": 1
+      }
+    ],
+    "id": 6828317,
+    "h": 1
+  }
+}

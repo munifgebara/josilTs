@@ -1,101 +1,39 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
-const project_1 = require("./project");
+const support_1 = require("./support");
 class GPNode {
-    constructor(name, behavior, returnType, code = "", inputTypes = [], minimumHeight = 0) {
+    constructor(name, behavior, returnType, code = "NOOP", inputTypes = [], minimumHeight = 0, simpleExpression = null) {
         this.name = name;
         this.behavior = behavior;
         this.returnType = returnType;
         this.code = code;
         this.inputTypes = inputTypes;
         this.minimumHeight = minimumHeight;
+        this.simpleExpression = simpleExpression;
         this.dotStyle = "filled";
         this.children = [];
         this.id = ++GPNode.ID;
-        this.h = 0;
+        this.h = 1;
+        GPNode.ALL.push(this);
+        if (name == "CLONE") {
+            return;
+        }
+        if (simpleExpression == null) {
+            this.simpleExpression = "(" + utils_1.Utils.replaceAll(utils_1.Utils.replaceAll(code, "return ", ""), ";", "") + ")";
+        }
         this.initNode();
     }
-    static getNumberConstantNode(min = -1, max = 1) {
-        let c = new GPNode("New Constant", "CONSTANT", "NUMBER");
-        c.code = (min + (Math.random() * (max - min))).toString();
-        return c;
-    }
-    static getNumberConstantNodes(quantity, min = -1, max = 1) {
-        let toReturn = [];
-        for (let i = 0; i < quantity; i++) {
-            toReturn.push(GPNode.getNumberConstantNode(min, max));
-        }
-        return toReturn;
-    }
-    static getGenericFunctions() {
-        let toReturn = [];
-        toReturn.push(new GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"]));
-        toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"]));
-        // toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"]));
-        // toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"]));
-        // toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"]));
-        //toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"]));
-        // toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"]));
-        // toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"]));
-        // toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"]));
-        // toReturn.push(new GPNode("sin", "FUNCTION", "NUMBER", "return Math.sin(i0);", ["NUMBER"]));
-        // toReturn.push(new GPNode("sqr3", "FUNCTION", "NUMBER", "return i0*i0*i0;", ["NUMBER"]));
-        // toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"]));
-        // toReturn.push(new GPNode("gt", "FUNCTION", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"]));
-        // toReturn.push(new GPNode("lt", "FUNCTION", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"]));
-        return toReturn;
-    }
-    static generateFunctions(functions = GPNode.getGenericFunctions()) {
-        if (!GPNode.FUNCTIONS) {
-            GPNode.FUNCTIONS = functions.reduce((p, c) => p + c.getFunction(), "");
-        }
-        return this.FUNCTIONS;
-    }
-    static combine(gpFunction2, gpFunction3) {
-        let gpFunction4 = gpFunction2.createCopy();
-        let gpFunction5 = gpFunction3.createCopy();
-        let c1 = gpFunction4.getAllChildrenWithChildren();
-        let c2 = gpFunction5.getAllChildrenWithChildren();
-        let count1 = 0;
-        let n1 = c1[1 + Math.round(c1.length / 2)];
-        let n2 = c2[1 + Math.round(c2.length / 2)];
-        while (count1 < c1.length * c2.length) {
-            let i1 = utils_1.Utils.indexRandom(n1.children);
-            let n1c = n1.children[i1];
-            let i2 = utils_1.Utils.indexRandom(n2.children);
-            let n2c = n2.children[i2];
-            if (n1c.returnType == n2c.returnType) {
-                n1.dotStyle = "solid";
-                n2.dotStyle = "solid";
-                n1c.dotStyle = "dashed";
-                n2c.dotStyle = "dashed";
-                n1.children[i1] = n2c;
-                n2.children[i2] = n1c;
-                if (Math.random() < 0.01) {
-                    project_1.Project.mutate(gpFunction4);
-                }
-                if (Math.random() < 0.01) {
-                    project_1.Project.mutate(gpFunction5);
-                }
-                return { i1: gpFunction4, i2: gpFunction5 };
-            }
-            n1 = c1[utils_1.Utils.indexRandom(c1)];
-            n2 = c2[utils_1.Utils.indexRandom(c2)];
-            count1++;
-        }
-        if (Math.random() < 0.5) {
-            project_1.Project.mutate(gpFunction4);
-        }
-        if (Math.random() < 0.5) {
-            project_1.Project.mutate(gpFunction5);
-        }
-        return { i1: gpFunction4, i2: gpFunction5 };
+    static getInstance(data) {
+        let newInstance = new GPNode("CLONE", "FUNCTION", "NUMBER");
+        Object.assign(newInstance, data);
+        newInstance.children = [];
+        data.children.forEach(c => newInstance.children.push(GPNode.getInstance(c)));
+        return newInstance;
     }
     createCopy() {
-        let ni = new GPNode(this.name, this.behavior, this.returnType, this.code, this.inputTypes, this.minimumHeight);
+        let code = this.behavior == "CONSTANT" ? "NOOP" : this.code;
+        let ni = new GPNode(this.name, this.behavior, this.returnType, code, this.inputTypes, this.minimumHeight);
         ni.children = [];
         this.children.forEach(c => ni.children.push(c.createCopy()));
         return ni;
@@ -104,11 +42,39 @@ class GPNode {
         if (this.behavior == "EXTERNAL") {
             this.code = `externals['${this.name}']`;
         }
-        else if (this.behavior == "CONSTANT" && !this.code) {
+        else if (this.behavior == "CONSTANT" && this.code == "NOOP") {
             let v = Math.random();
             this.code = v.toString();
-            this.name = (Math.round(v * 100) / 100).toString();
+            this.name = v.toString();
         }
+    }
+    isPureConstant() {
+        if (this.behavior == "CONSTANT") {
+            return true;
+        }
+        if (this.behavior == "EXTERNAL") {
+            return false;
+        }
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i].behavior != "CONSTANT") {
+                return false;
+            }
+        }
+        return true;
+    }
+    getEquivalentConstant() {
+        if (this.isPureConstant()) {
+            return new GPNode("", "CONSTANT", this.returnType, "" + eval(support_1.Support.getSimpleExpression(this)));
+        }
+        return this;
+    }
+    simplify() {
+        this.children.forEach((ccc, i) => this.children[i] = ccc.getEquivalentConstant());
+    }
+    deepSimplify() {
+        this.children.forEach(c => c.deepSimplify());
+        this.simplify();
+        return this;
     }
     getFunction() {
         const cInputs = this.inputTypes.length;
@@ -123,24 +89,39 @@ class GPNode {
     }
     initChildren(nodes, maxHeigth = 4) {
         this.children = [];
+        let higest = 1;
         this.inputTypes.forEach(type => {
             let externals = nodes.filter(f => f.behavior == "EXTERNAL" && f.returnType == type);
-            let possibileFunctions = GPNode.getGenericFunctions().filter(f => f.returnType == type);
-            if (possibileFunctions && (maxHeigth >= 1 || externals.length == 0)) {
-                let nc = possibileFunctions[utils_1.Utils.integerRandom(0, possibileFunctions.length - 1)].createCopy();
+            let possibileFunctions = nodes.filter(f => f.behavior == "FUNCTION" && f.returnType == type);
+            if (possibileFunctions && (maxHeigth > 2)) {
+                let nc = possibileFunctions[utils_1.Utils.indexRandom(possibileFunctions)].createCopy();
                 nc.initChildren(nodes, maxHeigth - 1);
                 this.children.push(nc);
+                if (nc.h > higest) {
+                    higest = nc.h;
+                }
             }
-            else if (type == "NUMBER" && Math.random() > 0.5) {
-                this.children.push(GPNode.getNumberConstantNode());
+            else if (maxHeigth > 1) {
+                let allNodes = [...possibileFunctions, ...externals, ...support_1.Support.getConstantNodes(4, type)];
+                let nc = allNodes[utils_1.Utils.indexRandom(allNodes)].createCopy();
+                if (nc.behavior == "FUNCTION") {
+                    nc.initChildren(nodes, maxHeigth - 1);
+                }
+                this.children.push(nc);
+                if (nc.h > higest) {
+                    higest = nc.h;
+                }
             }
             else {
-                this.children.push(externals[utils_1.Utils.integerRandom(0, externals.length - 1)].createCopy());
+                let allNodes = [...externals, ...support_1.Support.getConstantNodes(externals.length + 1, type)];
+                let nc = allNodes[utils_1.Utils.indexRandom(allNodes)].createCopy();
+                this.children.push(nc);
             }
         });
+        this.h += higest;
     }
-    value(externals) {
-        return eval(GPNode.generateFunctions() + this.getExpression());
+    value(externals, nodes) {
+        return eval(support_1.Support.generateFunctions(nodes) + this.getExpression());
     }
     getDot(s = "s") {
         let dot = [` digraph G${this.id} {`];
@@ -155,7 +136,7 @@ class GPNode {
         return dot.reduce((p, c) => p + c + '\n', '');
     }
     buildDot(current, dot) {
-        dot.push(`N${current.id}[ style=${current.dotStyle}  label="${current.label()}"];`);
+        dot.push(`N${current.id}[ style="${current.dotStyle}"  label="${current.label()}"];`);
         current.children.forEach(n => {
             dot.push(`N${current.id} -> N${n.id};`);
             this.buildDot(n, dot);
@@ -173,29 +154,34 @@ class GPNode {
         return tr;
     }
     label() {
-        return `${this.name ? this.name : "N" + this.id}`;
+        let label = `${this.name ? this.name : "N" + this.id}`;
+        return label.length < 5 ? label : (label.substr(0, 5) + "...");
     }
-    height() {
-        if (this.h > 0) {
-            return this.h;
-        }
+    updateH() {
         if (this.children.length == 0) {
             this.h = 1;
-            return 1;
         }
         else {
             let max = 0;
             this.children.forEach(c => {
-                let al = c.height();
-                if (al > max) {
-                    max = al;
+                c.updateH();
+                if (c.h > max) {
+                    max = c.h;
                 }
             });
             this.h = 1 + max;
-            return 1 + max;
         }
     }
+    getInfo() {
+        let fieldsOfInterest = ['id', 'name', 'behavior', 'h', 'returnType', 'inputTypes'];
+        let info = fieldsOfInterest.reduce((p, c) => p + c.toUpperCase() + ":" + this[c] + " ", "");
+        info += `Number of children:${this.children.length} `;
+        if (this.getExpression())
+            info += `RootExpression:(${this.getExpression().substr(0, 20)}...)`;
+        return info;
+    }
 }
+GPNode.ALL = [];
 GPNode.ID = 0;
 exports.GPNode = GPNode;
 //# sourceMappingURL=gp-node.js.map

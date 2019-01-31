@@ -1,131 +1,124 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
-const Viz = require('viz.js');
-const { Module, render } = require('viz.js/full.render.js');
 const individual_1 = require("./individual");
 const utils_1 = require("./utils");
+const support_1 = require("./support");
+const gp_node_1 = require("./gp-node");
 class Project {
-    constructor(title, externalParameters, outputType, populationSize = 100, maxHeigth = 5, population = []) {
+    constructor(title, externalParameters, outputType, populationSize = 100, maxHeigth = 5, projectBasicNodes = support_1.Support.getBasicMatematicalFunctions(), population = []) {
         this.title = title;
         this.externalParameters = externalParameters;
         this.outputType = outputType;
         this.populationSize = populationSize;
         this.maxHeigth = maxHeigth;
+        this.projectBasicNodes = projectBasicNodes;
         this.population = population;
+        this.lastEvolve = "";
         this.avgFit = 0;
         this.generation = 0;
+        this.repeat = 0;
+        if (title == "_CLONE")
+            return;
         console.log(this.title, this.populationSize, this.maxHeigth);
         this.targetValues = [];
-        this.population = [];
+        externalParameters.forEach((c, i) => this.projectBasicNodes.push(new gp_node_1.GPNode(c.name, "EXTERNAL", c.type, ``, [], 0)));
         for (let i = population.length; i < this.populationSize; i++) {
-            this.population.push(new individual_1.Individual(this.externalParameters, this.outputType, this.maxHeigth));
-            process.stdout.write("Create Population " + (i + 1) + "/" + this.populationSize + "\r");
+            const n = new individual_1.Individual(this.externalParameters, this.outputType, 2 + (i % (this.maxHeigth - 1)), this.projectBasicNodes);
+            this.population.push(n);
+            process.stdout.write("Creating Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
-        console.log("");
+        process.stdout.write("\n");
     }
-    static mutate(gpFunction5) {
-        let pt = gpFunction5;
-        let h = 0;
-        while (pt.children.length > 0) {
-            let pi = utils_1.Utils.indexRandom(pt.children);
-            let prox = pt.children[pi];
-            if (prox.children.length > 0 && pt.returnType == prox.returnType && pt.children.length == prox.children.length) {
-                [prox.name, prox.code, pt.name, pt.code] = [pt.name, pt.code, prox.name, prox.code];
-            }
-            pt = pt.children[pi];
-            h++;
+    static getInstance(data) {
+        let newInstance = new Project("_CLONE", data.externalParameters, data.outputType);
+        Object.assign(newInstance, data);
+        newInstance.population = [];
+        data.population.forEach(ind => newInstance.population.push(individual_1.Individual.getInstance(ind)));
+        newInstance.projectBasicNodes = [];
+        data.projectBasicNodes.forEach(node => newInstance.projectBasicNodes.push(gp_node_1.GPNode.getInstance(node)));
+        return newInstance;
+    }
+    simplifyAll() {
+        this.population.forEach(ind => ind.rootExpression.deepSimplify());
+    }
+    updateAllFitness() {
+        this.population.forEach(ind => ind.updateFitness(this.targetValues));
+        this.population.sort((a, b) => a.fitness - b.fitness);
+    }
+    evolveWithBest(extra = "") {
+        console.log("Evolve with best");
+        const s = process.hrtime();
+        this.generation++;
+        let metade = Math.floor(this.populationSize / 2);
+        for (let i = 1; i < this.populationSize - 1; i += 2) {
+            let r = support_1.Support.mixIndividuals(this.population[0], this.population[i]);
+            this.population[i] = r.s1;
+            this.population[i + 2] = r.s2;
         }
-    }
-    static writeSVGToDisk(fileName, dot) {
-        Project.viz.renderString(dot)
-            .then(result => {
-            fs.writeFileSync(fileName, result, "utf-8");
-        })
-            .catch(error => {
-            Project.viz = new Viz({ Module, render });
-            console.error("ERROR:" + error + "\n");
-        });
-    }
-    getBest() {
-        let ctv2 = this.targetValues[Math.round(this.targetValues.length / 2)];
-        let external2 = ctv2;
-        let best;
+        this.updateAllFitness();
         let summ = 0;
         this.population.forEach((ind, i) => {
-            ind.updateFitness(this.targetValues);
-            summ += ind.fitness / this.populationSize;
-            if (i == 0 || ind.fitness < best.fitness) {
-                best = ind;
-                process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
-                    `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
-                    `${summ} \r\n`);
-                fs.writeFileSync(`report/best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
+            if (!isNaN(ind.fitness)) {
+                summ += ind.fitness / this.populationSize;
             }
         });
-        this.avgFit = Math.round(summ);
-        process.stdout.write(`${this.generation} ${best.id} ${Math.round(best.fitness)} ` +
-            `${JSON.stringify(external2)}=>${Math.round(best.rootExpression.value(external2))} ` +
-            `${summ} \r\n`);
-        return best;
+        let best = this.population[0];
+        this.avgFit = utils_1.Utils.round(summ);
+        let exp = support_1.Support.getSimpleExpression(best.rootExpression.createCopy().deepSimplify());
+        exp = utils_1.Utils.replaceAll(exp, "Math.", "");
+        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness.toFixed(3)}  ${extra}  A:${this.avgFit.toFixed(3)} EXP:${utils_1.Utils.resume(exp, 120)}  \r\n`);
+        fs.writeFileSync(`report/${this.title}_best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
+        const e = process.hrtime(s);
+        this.lastEvolve = (e[0] + e[1] / 1e9).toFixed(3);
     }
-    evolve() {
+    evolve(extra = "") {
+        const s = process.hrtime();
         this.generation++;
-        this.population.sort((a, b) => a.fitness - b.fitness);
         let metade = Math.floor(this.populationSize / 2);
         for (let i = 0; i < metade; i += 2) {
             let j = metade + i;
-            let r = this.population[i].combine(this.population[i + 1]);
+            let r = support_1.Support.mixIndividuals(this.population[i], this.population[i + 1]);
             this.population[j] = r.s1;
             this.population[j + 1] = r.s2;
         }
-    }
-    static readCSV(name) {
-        let l = [];
-        let data = fs.readFileSync(name).toString().split("\r\n");
-        let fields = data[0].split(",");
-        for (let i = 1; i < data.length; i++) {
-            let row = data[i].split(",");
-            let obj = fields.reduce((p, c, ind) => {
-                p[c] = parseInt(row[ind]);
-                return p;
-            }, { index: i });
-            if (obj[fields[0]]) {
-                l.push(obj);
+        //this.simplifyAll();
+        this.updateAllFitness();
+        let summ = 0;
+        this.population.forEach((ind, i) => {
+            if (!isNaN(ind.fitness)) {
+                summ += ind.fitness / this.populationSize;
             }
-        }
-        console.log(`${l.length} rows imported`);
-        return l;
-    }
-    insertTargetValuesFromCSV(filename) {
-        this.targetValues = [];
-        let serra = Project.readCSV(filename);
-        serra.forEach(s => {
-            this.targetValues.push(s);
         });
-    }
-    insertTargetValuesFromExpression(expression) {
-        this.targetValues = [];
-        for (let x = -4; x <= 5; x += 0.1) {
-            let targetValue = { output: utils_1.Utils.round(eval(expression)) };
-            this.externalParameters.forEach(ep => { targetValue[ep.name] = utils_1.Utils.round(x); });
-            this.targetValues.push(targetValue);
-        }
-        ;
-    }
-    evolveN(generations) {
         let best = this.population[0];
-        for (let ge = 0; ge <= generations; ge++) {
-            best = this.getBest();
-            best.writeCSV(this.title, this.targetValues);
-            this.evolve();
+        this.avgFit = utils_1.Utils.round(summ);
+        let exp = support_1.Support.getSimpleExpression(best.rootExpression.createCopy().deepSimplify());
+        exp = utils_1.Utils.replaceAll(exp, "Math.", "");
+        process.stdout.write(`G:${this.generation} B:${best.id} BF:${best.fitness.toFixed(3)}  ${extra}  A:${this.avgFit.toFixed(3)} EXP:${utils_1.Utils.resume(exp, 120)}  \r\n`);
+        fs.writeFileSync(`report/${this.title}_best.dot`, best.rootExpression.getDot(best.rootExpression.getExpression()), "utf-8");
+        const e = process.hrtime(s);
+        this.lastEvolve = (e[0] + e[1] / 1e9).toFixed(3);
+    }
+    evolveN(generations, minFitnes = 0.1) {
+        const start = process.hrtime();
+        this.updateAllFitness();
+        for (let ge = 0; ge < generations; ge++) {
+            const tnow = process.hrtime(start);
+            const telapsed = (tnow[0] + tnow[1] / 1e9);
+            ;
+            this.evolve(` Time:${telapsed.toFixed(3)}s ${((1 + ge) * this.populationSize / telapsed).toFixed(3)}ind/s EvolveTime:${this.lastEvolve}s`);
+            this.population[0].writeCSV(this.title, this.targetValues);
+            fs.writeFileSync(`bkp/${this.title}_BKP_best.json`, JSON.stringify(this.population[0], null, 2), "utf8");
+            if (this.population[0].fitness < minFitnes)
+                break;
         }
-        Project.writeSVGToDisk(`report/${this.title}_best.svg`, best.rootExpression.getDot());
-        console.log(parseInt(process.argv[2]), parseInt(process.argv[3]), best.fitness);
-        best.writeCSV(this.title, this.targetValues);
+        support_1.Support.writeSVGToDisk(`report/${this.title} _best.svg`, this.population[0].rootExpression.getDot());
+        console.log(`Fitness ${this.population[0].fitness} `);
+        console.log(this.population[0].rootExpression.getExpression());
+        const end = process.hrtime(start);
+        const elapsed = (end[0] + end[1] / 1e9).toFixed(3);
+        console.log(elapsed, "s");
     }
 }
-Project.viz = new Viz({ Module, render });
-Project.tenArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 exports.Project = Project;
 //# sourceMappingURL=project.js.map

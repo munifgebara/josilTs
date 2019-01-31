@@ -40,39 +40,39 @@ export class Support {
 
     public static getBasicMatematicalFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
-        toReturn.push(new GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0));
+        toReturn.push(new GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"], 0, "(i0+i1)"));
+        toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"], 0, "(i0-i1)"));
+        toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"], 0, "(i0*i1)"));
+        toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
+        toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
         return toReturn;
     }
 
     public static getLogicalFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
-        toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"], 0));
-        toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"], 0));
-        toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"], 0));
-        toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"], 0));
+        toReturn.push(new GPNode("and", "FUNCTION", "BOOLEAN", "return i0&&i1;", ["BOOLEAN", "BOOLEAN"], 0, "(i0&&i1)"));
+        toReturn.push(new GPNode("or", "FUNCTION", "BOOLEAN", "return i0||i1;", ["BOOLEAN", "BOOLEAN"], 0, "(i0||i1)"));
+        toReturn.push(new GPNode("not", "FUNCTION", "BOOLEAN", "return !i0;", ["BOOLEAN"], 0, "(!i0)"));
+        toReturn.push(new GPNode("ifthenelse", "FUNCTION", "NUMBER", "return i0?i1:i2;", ["BOOLEAN", "NUMBER", "NUMBER"], 0, "(i0?i1:i2)"));
         return toReturn;
     }
     public static getRelationalFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
-        toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("numberGt", "FUNCTION", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"], 0));
-        toReturn.push(new GPNode("numberLt", "FUNCTION", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"], 0));
+        toReturn.push(new GPNode("gt", "FUNCTION", "BOOLEAN", "return i0>i1;", ["NUMBER", "NUMBER"], 0, "(i0>i1)"));
+        toReturn.push(new GPNode("lt", "FUNCTION", "BOOLEAN", "return i0<i1;", ["NUMBER", "NUMBER"], 0, "(i0<i1)"));
+        toReturn.push(new GPNode("numberGt", "FUNCTION", "NUMBER", "return i0>=i1?i0:i1;", ["NUMBER", "NUMBER"], 0, "(i0>=i1?i0:i1)"));
+        toReturn.push(new GPNode("numberLt", "FUNCTION", "NUMBER", "return i0<=i1?i0:i1;", ["NUMBER", "NUMBER"], 0, "(i0<=i1?i0:i1)"));
         return toReturn;
     }
 
     public static getAdvancedMatematicalFunctions(): GPNode[] {
         let toReturn: GPNode[] = [];
-        toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"], 0));
-        toReturn.push(new GPNode("sin", "FUNCTION", "NUMBER", "return i1*Math.sin(i0);", ["NUMBER", "NUMBER"], 0));
-        //toReturn.push(new GPNode("atan", "FUNCTION", "NUMBER", "return Math.atan(i0);", ["NUMBER"], 0));
-        //toReturn.push(new GPNode("exp", "FUNCTION", "NUMBER", "return Math.exp(i0);", ["NUMBER"], 0));
-        toReturn.push(new GPNode("log", "FUNCTION", "NUMBER", "return Math.log(Math.abs(i0));", ["NUMBER"], 0));
-        //toReturn.push(new GPNode("sqr3", "FUNCTION", "NUMBER", "return i0*i0*i0;", ["NUMBER"], 0));
+        toReturn.push(new GPNode("sqr", "FUNCTION", "NUMBER", "return i0*i0;", ["NUMBER"], 0, "(i0*i0)"));
+        toReturn.push(new GPNode("sin", "FUNCTION", "NUMBER", "return i1*Math.sin(i0);", ["NUMBER", "NUMBER"], 0, "(i1*Math.sin(i0))"));
+        //toReturn.push(new GPNode("atan", "FUNCTION", "NUMBER", "return Math.atan(i0);", ["NUMBER"], 0,"(i1*Math.atan(i0))"));
+        //toReturn.push(new GPNode("exp", "FUNCTION", "NUMBER", "return Math.exp(i0);", ["NUMBER"], 0,,"Math.exp(i0)"));
+        toReturn.push(new GPNode("log", "FUNCTION", "NUMBER", "return Math.log(Math.abs(i0));", ["NUMBER"], 0, "Math.log(Math.abs(i0))"));
+        //toReturn.push(new GPNode("sqr3", "FUNCTION", "NUMBER", "return i0*i0*i0;", ["NUMBER"], 0,,"(i0+i0*i0)"));
         return toReturn;
     }
 
@@ -173,9 +173,9 @@ export class Support {
     public static readCSV(name: string): any[] {
         let l = [];
         let data = fs.readFileSync(name).toString().split("\n");
-        let fields = data[0].split(",");
+        let fields = data[0].replace("\r", "").split(",");
         for (let i = 1; i < data.length; i++) {
-            let row = data[i].split(",");
+            let row = data[i].replace("\r", "").split(",");
             let obj: any = { index: i };
             fields.forEach((f, j) => obj[f] = parseFloat(row[j]));
             if (obj[fields[0]]) {
@@ -214,6 +214,25 @@ export class Support {
         };
         return targetValues;
     }
+
+    public static getSimpleExpression(node: GPNode) {
+        if (node.behavior == "CONSTANT") {
+            return node.code;
+        }
+        if (node.behavior == "EXTERNAL") {
+            return node.name;
+        }
+
+
+        let e = node.simpleExpression;
+        node.children.forEach((c, i) => {
+
+            e = Utils.replaceAll(e, 'i' + i, Support.getSimpleExpression(c));
+        })
+        //return `${this.name}(${this.children.reduce((p, c, i) => p + c.getExpression() + (i < cInputs - 1 ? ',' : ''), "")})`;
+        return e;
+    }
+
 
 
 

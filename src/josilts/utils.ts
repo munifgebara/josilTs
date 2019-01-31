@@ -1,6 +1,9 @@
 
 
 export class Utils {
+    static resume(exp: string, n: number = 20): string {
+        return exp.length < n ? exp : (exp.substr(0, n) + "...");
+    }
 
     public static round(n: number): number {
         return n;
@@ -19,6 +22,10 @@ export class Utils {
         let r = Utils.integerRandom(0, array.length - 1);
 
         return r;
+    }
+
+    public static replaceAll(somestring: string, oldString: string, newString: string): string {
+        return somestring.split(oldString).join(newString);
     }
 
 

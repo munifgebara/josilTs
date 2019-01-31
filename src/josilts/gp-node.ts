@@ -1,12 +1,14 @@
 import { Utils } from "./utils";
 import { Project } from "./project";
 import { GPBehavior, GPType, Support } from "./support";
-import { NOMEM } from "dns";
+import { NOMEM, TIMEOUT } from "dns";
 
 
 
 
 export class GPNode {
+
+    public static ALL: GPNode[] = [];
 
     public static getInstance(data: any): GPNode {
         let newInstance = new GPNode("CLONE", "FUNCTION", "NUMBER");
@@ -36,9 +38,13 @@ export class GPNode {
         return ni;
     }
 
-    constructor(public name: string, public behavior: GPBehavior, public returnType: GPType, public code: string = "NOOP", private inputTypes: GPType[] = [], private minimumHeight: number = 0) {
+    constructor(public name: string, public behavior: GPBehavior, public returnType: GPType, public code: string = "NOOP", private inputTypes: GPType[] = [], private minimumHeight: number = 0, public simpleExpression: string | null = null) {
+        GPNode.ALL.push(this);
         if (name == "CLONE") {
             return;
+        }
+        if (simpleExpression == null) {
+            this.simpleExpression = "(" + Utils.replaceAll(Utils.replaceAll(code, "return ", ""), ";", "") + ")";
         }
         this.initNode();
     }
@@ -51,6 +57,39 @@ export class GPNode {
             this.code = v.toString();
             this.name = v.toString();
         }
+    }
+
+    public isPureConstant(): boolean {
+        if (this.behavior == "CONSTANT") {
+            return true;
+        }
+        if (this.behavior == "EXTERNAL") {
+            return false;
+        }
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i].behavior != "CONSTANT") {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public getEquivalentConstant(): GPNode {
+        if (this.isPureConstant()) {
+            return new GPNode("", "CONSTANT", this.returnType, "" + eval(Support.getSimpleExpression(this)));
+        }
+        return this;
+    }
+
+    public simplify() {
+        this.children.forEach((ccc, i) => this.children[i] = ccc.getEquivalentConstant());
+    }
+
+    public deepSimplify(): GPNode {
+        this.children.forEach(c => c.deepSimplify());
+
+        this.simplify();
+        return this;
     }
 
 
@@ -144,7 +183,7 @@ export class GPNode {
 
     public label(): string {
         let label: string = `${this.name ? this.name : "N" + this.id}`;
-        return label.length < 5 ? label : label.substr(0, 5) + "...";
+        return label.length < 5 ? label : (label.substr(0, 5) + "...");
     }
 
     public updateH(): void {
@@ -162,5 +201,14 @@ export class GPNode {
             this.h = 1 + max;
         }
     }
+
+    public getInfo(): string {
+        let fieldsOfInterest = ['id', 'name', 'behavior', 'h', 'returnType', 'inputTypes'];
+        let info = fieldsOfInterest.reduce((p, c) => p + c.toUpperCase() + ":" + this[c] + " ", "");
+        info += `Number of children:${this.children.length} `
+        if (this.getExpression()) info += `RootExpression:(${this.getExpression().substr(0, 20)}...)`;
+        return info;
+    }
+
 
 }

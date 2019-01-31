@@ -60,16 +60,24 @@ export class Individual {
 
     }
 
-    public updateFitness(targetValues: any[]) {
-        if (this.fitness >= 0) {
+    public updateFitness(targetValues: any[], force: boolean = false) {
+        if (this.fitness >= 0 || force) {
             return this.fitness;
         }
         this.fitness = 0;
         targetValues.forEach(v => {
             let value = this.calculateValue(v);
             let dif = v.output - value;
-            this.fitness += (dif * dif);
+            this.fitness += Math.sqrt(dif * dif) / targetValues.length;
         });
+    }
+
+    public getInfo(): string {
+        let fieldsOfInterest = ['id', 'outputType', 'inputTypes', 'fitness'];
+        let info = fieldsOfInterest.reduce((p, c) => p + c.toUpperCase() + ":" + JSON.stringify(this[c]) + " ", "");
+        info += `Number of Nodes:${this.nodes.length} `
+        info += `RootExpression:(${this.rootExpression.getInfo()})`;
+        return info;
     }
 
 
