@@ -140,7 +140,7 @@ export class Project {
                 this.population[0].writeCSV(this.title, this.targetValues);
                 fs.writeFileSync(`bkp/${this.title}_BKP_best.json`, JSON.stringify(this.population[0], null, 2), "utf8");
                 if (this.population[0].fitness < minFitnes) break;
-                fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
+              //  fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
                 af = this.population[0].fitness;
                 console.log("");
             }
