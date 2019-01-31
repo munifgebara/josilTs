@@ -11,11 +11,11 @@ export class Utils {
     }
 
     public static floatRandom(min: number, max: number) {
-        return Math.random() * (max - min) + min;
+        return Utils.random() * (max - min) + min;
     }
 
     public static integerRandom(min: number, max: number) {
-        return Math.round(Math.random() * (max - min + 0.999) + min - 0.499);
+        return Math.round(Utils.random() * (max - min + 0.999) + min - 0.499);
     }
 
     public static indexRandom(array: any[]): number {
@@ -32,5 +32,15 @@ export class Utils {
     public static fn(n: any, l: number = 20, d: number = 4): string {
         return ("                    " + n.toFixed(d)).slice(-l);
     }
+
+    static seed = 1234;
+
+
+
+    public static random(): number { // doesn't repeat b4 JS dies.
+        Utils.seed = Utils.seed * 16807 % 2147483647;
+        return (Utils.seed - 1) / 2147483646;
+    }
+
 
 }

@@ -15,10 +15,10 @@ class Support {
         const toReturn = new gp_node_1.GPNode(type + " Constant", "CONSTANT", type, ``, [], 0);
         switch (type) {
             case "BOOLEAN":
-                toReturn.code = "" + (Math.random() > 0.5);
+                toReturn.code = "" + (utils_1.Utils.random() > 0.5);
                 break;
             case "NUMBER":
-                toReturn.code = "" + Math.random();
+                toReturn.code = "" + utils_1.Utils.random();
                 break;
             case "STRING":
                 toReturn.code = "String";
@@ -88,25 +88,32 @@ class Support {
             let n2c = n2.children[i2];
             if (n1c.returnType == n2c.returnType) {
                 n1.dotStyle = "solid";
-                n2.dotStyle = "solid";
-                n1c.dotStyle = "dashed";
+                n2.dotStyle = "dashed";
+                n1c.dotStyle = "solid";
                 n2c.dotStyle = "dashed";
                 n1.children[i1] = n2c;
                 n2.children[i2] = n1c;
-                if (Math.random() < 0.01) {
+                if (utils_1.Utils.random() < 0.01) {
                     //Project.mutate(gpFunction4);
                 }
-                if (Math.random() < 0.01) {
+                if (utils_1.Utils.random() < 0.01) {
                     //Project.mutate(gpFunction5);
                 }
+                let dot = `digraph Population_${gpFunction2.id}__${gpFunction3.id} {\n`;
+                dot += gpFunction2.getDotToCombine() + "\n";
+                dot += gpFunction3.getDotToCombine() + "\n";
+                dot += gpFunction4.getDotToCombine() + "\n";
+                dot += gpFunction5.getDotToCombine() + "\n";
+                dot += "}\n";
+                fs.writeFileSync(`pop/C_${gpFunction2.id}__${gpFunction3.id}.dot`, dot);
                 return { i1: gpFunction4, i2: gpFunction5 };
             }
             count1++;
         }
-        if (Math.random() < 0.5) {
+        if (utils_1.Utils.random() < 0.5) {
             //Project.mutate(gpFunction4);
         }
-        if (Math.random() < 0.5) {
+        if (utils_1.Utils.random() < 0.5) {
             //Project.mutate(gpFunction5);
         }
         return { i1: gpFunction4, i2: gpFunction5 };
@@ -202,7 +209,8 @@ class Support {
     static readIndividual(initialPopulation, name) {
         if (fs.existsSync(name)) {
             let ind = individual_1.Individual.getInstance(JSON.parse(fs.readFileSync(name).toString()));
-            ind.rootExpression.children[0].deepSimplify();
+            //ind.rootExpression.children[0].deepSimplify();
+            ind.fitness = -1;
             initialPopulation.push(ind);
         }
     }

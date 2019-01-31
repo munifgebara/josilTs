@@ -119,6 +119,14 @@ class Project {
         const elapsed = (end[0] + end[1] / 1e9).toFixed(3);
         console.log(elapsed, "s");
     }
+    getPopulationAsDot() {
+        let dot = `digraph Population_${this.generation} {\n`;
+        this.population.forEach(i => {
+            dot += i.rootExpression.getDotToCombine() + "\n";
+        });
+        dot += "}\n";
+        return dot;
+    }
 }
 exports.Project = Project;
 //# sourceMappingURL=project.js.map

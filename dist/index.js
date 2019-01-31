@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("source-map-support/register");
 const fs = require("fs");
 const project_1 = require("./josilts/project");
-const individual_1 = require("./josilts/individual");
 const gp_node_1 = require("./josilts/gp-node");
 const support_1 = require("./josilts/support");
 function runProject1() {
@@ -113,21 +112,19 @@ function runProject4() {
 exports.runProject4 = runProject4;
 function exemploDidatio() {
     let externalParameters = [{ name: "x", type: "NUMBER" }];
-    const sin = new gp_node_1.GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
-    const cos = new gp_node_1.GPNode("COS", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
+    //const sin = new GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
+    //const cos = new GPNode("COS", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
     let initialPopulation = [];
-    if (fs.existsSync('bkp/didatico_BKP_best.json')) {
-        let ind = individual_1.Individual.getInstance(JSON.parse(fs.readFileSync('bkp/didatico_BKP_best.json').toString()));
-        ind.rootExpression.deepSimplify();
-        initialPopulation.push(ind);
-    }
-    let didatico = new project_1.Project("didatico", externalParameters, "NUMBER", 1000, 5, [...support_1.Support.getBasicMatematicalFunctions().filter(f => f.name != "mod" && f.name != "div"), sin, cos], initialPopulation);
-    didatico.targetValues.push(...support_1.Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x+5)", -Math.PI, Math.PI, 0.1));
-    //didatico.targetValues.push(...Support.createTargetValuesFromCSV("samples/serra.min.csv"));
-    didatico.population[0].fitness = -1;
-    didatico.evolveWithBest();
-    didatico.evolveN(20, 0.01);
-    console.log(`s  ===>  ${didatico.population[0].id}  ${support_1.Support.getSimpleExpression(didatico.population[0].rootExpression)}`);
+    //Support.readIndividual(initialPopulation, 'bkp/didatico_BKP_best.json');
+    let didatico = new project_1.Project("didatico", externalParameters, "NUMBER", 8, 3, [...support_1.Support.getBasicMatematicalFunctions()], initialPopulation);
+    didatico.targetValues.push(...support_1.Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x)", -Math.PI, Math.PI, 0.1));
+    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    didatico.evolve();
+    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    //    didatico.evolve();
+    //    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    //    didatico.evolveN(1, 0.01);
+    //  console.log(`s  ===>  ${didatico.population[0].id}  ${Support.getSimpleExpression(didatico.population[0].rootExpression)}`);
 }
 exports.exemploDidatio = exemploDidatio;
 //exemploDidatio();

@@ -148,5 +148,16 @@ export class Project {
         console.log(elapsed, "s");
     }
 
+    getPopulationAsDot(): string {
+
+        let dot = `digraph Population_${this.generation} {\n`;
+        this.population.forEach(i => {
+            dot += i.rootExpression.getDotToCombine() + "\n";
+        })
+        dot += "}\n";
+        return dot;
+
+    }
+
 }
 

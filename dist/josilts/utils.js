@@ -9,10 +9,10 @@ class Utils {
         return Math.round(n * 100) / 100;
     }
     static floatRandom(min, max) {
-        return Math.random() * (max - min) + min;
+        return Utils.random() * (max - min) + min;
     }
     static integerRandom(min, max) {
-        return Math.round(Math.random() * (max - min + 0.999) + min - 0.499);
+        return Math.round(Utils.random() * (max - min + 0.999) + min - 0.499);
     }
     static indexRandom(array) {
         let r = Utils.integerRandom(0, array.length - 1);
@@ -24,6 +24,11 @@ class Utils {
     static fn(n, l = 20, d = 4) {
         return ("                    " + n.toFixed(d)).slice(-l);
     }
+    static random() {
+        Utils.seed = Utils.seed * 16807 % 2147483647;
+        return (Utils.seed - 1) / 2147483646;
+    }
 }
+Utils.seed = 1234;
 exports.Utils = Utils;
 //# sourceMappingURL=utils.js.map

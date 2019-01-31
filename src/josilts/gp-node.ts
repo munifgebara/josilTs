@@ -33,6 +33,10 @@ export class GPNode {
     public createCopy(): GPNode {
         let code = this.behavior == "CONSTANT" ? "NOOP" : this.code;
         let ni = new GPNode(this.name, this.behavior, this.returnType, code, this.inputTypes, this.minimumHeight);
+        if (this.behavior == "CONSTANT") {
+            ni.code = this.code;
+            ni.name = this.code;
+        }
         ni.children = [];
         this.children.forEach(c => ni.children.push(c.createCopy()));
         return ni;
@@ -53,7 +57,7 @@ export class GPNode {
         if (this.behavior == "EXTERNAL") {
             this.code = `externals['${this.name}']`;
         } else if (this.behavior == "CONSTANT" && this.code == "NOOP") {
-            let v = Math.random();
+            let v = Utils.random();
             this.code = v.toString();
             this.name = v.toString();
         }
@@ -178,12 +182,13 @@ export class GPNode {
     public getAllChildrenWithChildren(): GPNode[] {
         let tr: GPNode[] = [];
         this.addChildrenWithChildren(this, tr);
+        tr.shift();
         return tr;
     }
 
     public label(): string {
         let label: string = `${this.name ? this.name : "N" + this.id}`;
-        return label.length < 5 ? label : (label.substr(0, 5) + "...");
+        return label.length < 5 ? label : (label.substr(0, 8) + "...");
     }
 
     public updateH(): void {

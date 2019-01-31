@@ -12,6 +12,7 @@ class Individual {
         this.id = ++Individual.ID;
         this.fitness = -1;
         this.value = null;
+        this.parents = [];
         if (inputTypes[0].name == "CLONE") {
             return;
         }

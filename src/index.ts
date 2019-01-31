@@ -145,25 +145,26 @@ export function runProject4() {
 
 export function exemploDidatio() {
     let externalParameters: ExternalParameters[] = [{ name: "x", type: "NUMBER" }];
-    const sin = new GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
-    const cos = new GPNode("COS", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
+    //const sin = new GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0);
+    //const cos = new GPNode("COS", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0);
     let initialPopulation: Individual[] = [];
-    if (fs.existsSync('bkp/didatico_BKP_best.json')) {
-        let ind: Individual = Individual.getInstance(JSON.parse(fs.readFileSync('bkp/didatico_BKP_best.json').toString()));
-        ind.rootExpression.deepSimplify();
-        initialPopulation.push(ind);
-    }
+    //Support.readIndividual(initialPopulation, 'bkp/didatico_BKP_best.json');
 
-    let didatico = new Project("didatico", externalParameters, "NUMBER", 1000, 5, [...Support.getBasicMatematicalFunctions().filter(f => f.name != "mod" && f.name != "div"), sin, cos], initialPopulation);
-    didatico.targetValues.push(...Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x+5)", -Math.PI, Math.PI, 0.1));
-    //didatico.targetValues.push(...Support.createTargetValuesFromCSV("samples/serra.min.csv"));
-    didatico.population[0].fitness = -1;
-
+    let didatico = new Project("didatico", externalParameters, "NUMBER", 8, 3, [...Support.getBasicMatematicalFunctions()], initialPopulation);
+    didatico.targetValues.push(...Support.createTargetValuesFromExpression(externalParameters, "4*Math.cos(x)", -Math.PI, Math.PI, 0.1));
+    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    didatico.evolve();
+    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
+    //    didatico.evolve();
+    //    fs.writeFileSync(`pop/${didatico.title}_${didatico.generation}.dot`, didatico.getPopulationAsDot());
 
 
-    didatico.evolveWithBest();
-    didatico.evolveN(20, 0.01);
-    console.log(`s  ===>  ${didatico.population[0].id}  ${Support.getSimpleExpression(didatico.population[0].rootExpression)}`);
+    //    didatico.evolveN(1, 0.01);
+    //  console.log(`s  ===>  ${didatico.population[0].id}  ${Support.getSimpleExpression(didatico.population[0].rootExpression)}`);
+
+
+
+
 
 }
 

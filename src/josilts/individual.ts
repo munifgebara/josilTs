@@ -26,6 +26,10 @@ export class Individual {
 
     public value: any = null;
 
+    public parents: string[] = [];
+
+
+
     constructor(public inputTypes: ExternalParameters[], public outputType: GPType, public maxHeigth: number, public nodes: GPNode[]) {
         if (inputTypes[0].name == "CLONE") {
             return;
