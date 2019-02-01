@@ -109,7 +109,7 @@ export class Jogo {
 
     public externalMove(position: number, player: number) {
         for (let ad = 0; ad < 9; ad++) {
-            let p = Math.abs(position + ad) % 9;
+            let p = Math.abs(Math.round(position) + ad) % 9;
             if (this.state[p] == 0) {
                 this.state[p] = player;
                 return;

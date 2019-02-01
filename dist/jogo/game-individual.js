@@ -1,33 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const individual_1 = require("../josilts/individual");
 const jogo_1 = require("./jogo");
-class GameIndividual extends individual_1.Individual {
-    updateGameFitnes() {
+class GameIndividual {
+    static updateGameFitnes(ind) {
         let jogo = new jogo_1.Jogo();
         let points = 0;
         let winner = 0;
         for (let i = 0; i < 9; i++) {
             points++;
-            let nextMove = GameIndividual.jogoValue(this, jogo);
+            let nextMove = GameIndividual.jogoValue(ind, jogo);
             jogo.externalMove(nextMove, 1);
-            jogo.displayState();
             if (jogo.isWinner(1)) {
-                console.log("GP GANHOU!!");
                 winner = 1;
-                points += 10;
                 break;
             }
             jogo.doInteligenteMove(2);
-            jogo.displayState();
             if (jogo.isWinner(2)) {
-                points += 1;
                 winner = 2;
                 break;
             }
         }
         if (winner == 1) {
-            points += 10;
+            points += 20;
         }
         else if (winner == 0) {
             points += 5;
@@ -36,7 +30,7 @@ class GameIndividual extends individual_1.Individual {
             points += 1;
         }
         let fitness = 1 / points;
-        this.fitness = fitness;
+        ind.fitness = fitness;
         return fitness;
     }
     static jogoValue(ind, jogo) {

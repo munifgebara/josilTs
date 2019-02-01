@@ -13,6 +13,7 @@ export interface ExternalParameters {
 
 export class Project {
     public lastEvolve: string = "";
+    public specialFitness: any;
 
     public static getInstance(data: any): Project {
         let newInstance = new Project("_CLONE", data.externalParameters, data.outputType);
@@ -62,10 +63,16 @@ export class Project {
 
     public updateAllFitness() {
 
-        this.population.forEach((ind, i) => {
-            ind.updateFitness(this.targetValues);
-            process.stdout.write(`G:${this.generation} updating fitness ${i}  \r`);
-        });
+        if (!this.specialFitness) {
+
+            this.population.forEach((ind, i) => {
+                ind.updateFitness(this.targetValues);
+                process.stdout.write(`G:${this.generation} updating fitness ${i}  \r`);
+            });
+        }
+        else {
+            this.specialFitness(this.population);
+        }
         this.population.sort((a, b) => a.fitness - b.fitness);
     }
 
@@ -158,7 +165,6 @@ export class Project {
     }
 
     getPopulationAsDot(): string {
-
         let dot = `digraph Population_${this.generation} {\n`;
         this.population.forEach(i => {
             dot += i.rootExpression.getDotToCombine() + "\n";
