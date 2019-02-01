@@ -51,44 +51,78 @@ function teste1() {
     console.log(j.hasPossibiliteToWin(2));
 }
 
-let j2 = new Jogo();
+
+function ff4() {
+    let j2 = new Jogo();
 
 
-j2.displayState();
+    j2.displayState();
 
-console.log(j2.moveToToWin(1));
-console.log(j2.moveToToWin(2));
+    console.log(j2.moveToToWin(1));
+    console.log(j2.moveToToWin(2));
 
-let p = 2;
+    let p = 2;
+
+    let n = 100;
+    while (n >= 0) {
+        let ps = prompt('Your move:');
+        if (j2.state[ps] == 0) {
+            j2.state[ps] = 1;
+            if (j2.isWinner(1)) {
+                console.log("1 ganhou");
+                break;
+            }
+            n = j2.inteligentMove(p);
+            if (n >= 0) {
+                j2.state[n] = p;
+                //p = p == 1 ? 2 : 1;
+                if (j2.isWinner(2)) {
+                    console.log("2 ganhou");
+                    break;
+                }
+
+                j2.displayState();
+            }
+        }
+        else {
+            console.log("Movimento ilegal");
+        }
+    }
+    j2.displayState();
+
+}
+
+
+let j = new Jogo();
+
+
+j.displayState();
+
 
 let n = 100;
 while (n >= 0) {
-    let ps = prompt('Your move:');
-    if (j2.state[ps] == 0) {
-        j2.state[ps] = 1;
-        if (j2.isWinner(1)) {
-            console.log("1 ganhou");
+    let ps = adjustPosition(nm(j.state[0], j.state[1], j.state[2], j.state[3], j.state[4], j.state[5], j.state[6], j.state[7], j.state[8]), j);
+    j.state[ps] = 1;
+    j.displayState();
+    if (j.isWinner(1)) {
+        j.displayState();
+        console.log("1 ganhou");
+        break;
+    }
+    n = prompt('Your move:');
+    if (j.state[n] == 0) {
+        j.state[n] = 2;
+        if (j.isWinner(2)) {
+            j.displayState();
+            console.log("2 ganhou");
             break;
-        }
-        n = j2.inteligentMove(p);
-        if (n >= 0) {
-            j2.state[n] = p;
-            //p = p == 1 ? 2 : 1;
-            if (j2.isWinner(2)) {
-                console.log("2 ganhou");
-                break;
-            }
-
-            j2.displayState();
         }
     }
     else {
         console.log("Movimento ilegal");
     }
 }
-j2.displayState();
-
-
+j.displayState();
 
 
 
