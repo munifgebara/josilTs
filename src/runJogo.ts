@@ -30,31 +30,8 @@ pop.push(ind);
 
 
 
-
-for (let i = 0; i < 9; i++) {
-    let nextMove = jogoValue(ind, jogo);
-    jogo.externalMove(nextMove, 1);
-    jogo.displayState();
-    if (jogo.isWinner(1)) {
-        console.log("GP GANHOU!!");
-        break;
-    }
-    jogo.doInteligenteMove(2);
-    jogo.displayState();
-    if (jogo.isWinner(2)) {
-        console.log("Algoritimo tradicional GANHOU!!");
-        break;
-    }
-}
-
-
-
-
-
-
-
-
-
+let f = ind.updateGameFitnes();
+console.log(f);
 
 
 
@@ -78,10 +55,3 @@ project.evolveN(22);
 
 
 
-function jogoValue(ind: GameIndividual, jogo: Jogo) {
-    return ind.calculateValue({
-        s0: jogo.state[0], s1: jogo.state[1], s2: jogo.state[2],
-        s3: jogo.state[3], s4: jogo.state[4], s5: jogo.state[5],
-        s6: jogo.state[6], s7: jogo.state[7], s8: jogo.state[8]
-    });
-}
