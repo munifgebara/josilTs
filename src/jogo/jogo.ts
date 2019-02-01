@@ -101,6 +101,22 @@ export class Jogo {
         return -1;
     }
 
+    public doInteligenteMove(player: number) {
+        let p = this.inteligentMove(player);
+        this.state[p] = player;
+
+    }
+
+    public externalMove(position: number, player: number) {
+        for (let ad = 0; ad < 9; ad++) {
+            let p = Math.abs(position + ad) % 9;
+            if (this.state[p] == 0) {
+                this.state[p] = player;
+                return;
+            }
+        }
+    }
+
 
 
 }

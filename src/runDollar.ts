@@ -16,13 +16,15 @@ domainFunctions.push(new GPNode("sin", "FUNCTION", "NUMBER", "return Math.sin(i0
 domainFunctions.push(new GPNode("cos", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0));
 
 domainFunctions.push(...Support.getBasicMatematicalFunctions());
+domainFunctions.push(...Support.getAdvancedMatematicalFunctions());
+
 
 let pop: Individual[] = [];
 Support.readIndividual(pop, "bkp/dollar_BKP_best.json");
 
-let project = new Project("dollar", externalParameters, "NUMBER", 1000, 3, domainFunctions, pop);
+let project = new Project("dollar", externalParameters, "NUMBER", 3000, 6, domainFunctions, pop);
 project.targetValues.push(...targetValues);
-project.evolveN(12);
+project.evolveN(1200);
 
 let best = project.population[0];
 let bestExpression = best.rootExpression;

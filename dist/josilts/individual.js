@@ -55,7 +55,7 @@ class Individual {
         targetValues.forEach(v => {
             let value = this.calculateValue(v);
             let dif = v.output - value;
-            this.fitness += (Math.abs(dif)) / targetValues.length;
+            this.fitness += (dif * dif) / targetValues.length;
         });
         if (this.fitness == 0) {
             this.fitness = 10000;

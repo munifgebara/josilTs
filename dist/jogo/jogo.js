@@ -93,6 +93,19 @@ class Jogo {
             return 6;
         return -1;
     }
+    doInteligenteMove(player) {
+        let p = this.inteligentMove(player);
+        this.state[p] = player;
+    }
+    externalMove(position, player) {
+        for (let ad = 0; ad < 9; ad++) {
+            let p = Math.abs(position + ad) % 9;
+            if (this.state[p] == 0) {
+                this.state[p] = player;
+                return;
+            }
+        }
+    }
 }
 Jogo.winnerCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 exports.Jogo = Jogo;

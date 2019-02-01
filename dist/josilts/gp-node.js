@@ -67,12 +67,12 @@ class GPNode {
         return true;
     }
     getEquivalentConstant() {
-        if (this.isPureConstant()) {
-            if (support_1.Support.getSimpleExpression(this).indexOf("externals") >= 0) {
-                return this;
-            }
-            return new GPNode("", "CONSTANT", this.returnType, "" + eval(support_1.Support.getSimpleExpression(this)));
-        }
+        // if (this.isPureConstant()) {
+        //     if (Support.getSimpleExpression(this).indexOf("externals")>=0){
+        //         return this;
+        //     }
+        //     return new GPNode("", "CONSTANT", this.returnType, "" + eval(Support.getSimpleExpression(this)));
+        // }
         return this;
     }
     simplify() {

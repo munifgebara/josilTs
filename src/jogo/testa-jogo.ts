@@ -44,11 +44,19 @@ while (n >= 0) {
     let ps = prompt('Your move:');
     if (j2.state[ps] == 0) {
         j2.state[ps] = 1;
-
+        if (j2.isWinner(1)) {
+            console.log("1 ganhou");
+            break;
+        }
         n = j2.inteligentMove(p);
         if (n >= 0) {
             j2.state[n] = p;
             //p = p == 1 ? 2 : 1;
+            if (j2.isWinner(2)) {
+                console.log("2 ganhou");
+                break;
+            }
+
             j2.displayState();
         }
     }
