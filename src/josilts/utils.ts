@@ -43,5 +43,9 @@ export class Utils {
         return (Utils.seed - 1) / 2147483646;
     }
 
+    public static removeCommas(somestring: string): string {
+        return somestring.split(",").join("_");
+    }
+
 
 }

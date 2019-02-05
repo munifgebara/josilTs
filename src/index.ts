@@ -23,3 +23,28 @@ export function runPrimos() {
 }
 
 
+
+
+let pop: Individual[] = [];
+Support.readIndividual(pop, "bkp/d3d_BKP_best.json");
+let s1 = pop[0].rootExpression;
+let s2 = pop[0].rootExpression.createCopy();
+
+
+console.log(Support.getSimpleExpression2(s1));
+Support.writeSVGToDisk(`report/Teste.svg`, s1.getDot());
+console.log();
+s2.deepSimplify();
+s2.deepSimplify();
+s2.deepSimplify();
+s2.deepSimplify();
+console.log(Support.getSimpleExpression2(s2));
+Support.writeSVGToDisk(`report/TesteS.svg`, s2.getDot());
+
+s1.updateH();
+s2.updateH();
+
+console.log(s1.h, s2.h);
+
+let externals: any = { x: 1, y: 2 };
+console.log((((0.15840608175695509 * externals['x']) - (externals['y'] - 0.424045252325324))));

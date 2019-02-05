@@ -8,6 +8,7 @@ import { NOMEM, TIMEOUT } from "dns";
 
 export class GPNode {
 
+
     public static ALL: GPNode[] = [];
 
     public static getInstance(data: any): GPNode {
@@ -63,42 +64,7 @@ export class GPNode {
         }
     }
 
-    public isPureConstant(): boolean {
-        if (this.behavior == "CONSTANT") {
-            return true;
-        }
-        if (this.behavior == "EXTERNAL") {
-            return false;
-        }
-        for (let i = 0; i < this.children.length; i++) {
-            if (this.children[i].behavior != "CONSTANT") {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    public getEquivalentConstant(): GPNode {
-        // if (this.isPureConstant()) {
-        //     if (Support.getSimpleExpression(this).indexOf("externals")>=0){
-
-        //         return this;
-        //     }
-        //     return new GPNode("", "CONSTANT", this.returnType, "" + eval(Support.getSimpleExpression(this)));
-        // }
-        return this;
-    }
-
-    public simplify() {
-        this.children.forEach((ccc, i) => this.children[i] = ccc.getEquivalentConstant());
-    }
-
-    public deepSimplify(): GPNode {
-        this.children.forEach(c => c.deepSimplify());
-
-        this.simplify();
-        return this;
-    }
 
 
     public getFunction(): string {
@@ -141,7 +107,7 @@ export class GPNode {
                 }
             }
             else {
-                let allNodes: GPNode[] = [...externals, ...Support.getConstantNodes(externals.length + 1, type)];
+                let allNodes: GPNode[] = [...externals, ...externals, ...Support.getConstantNodes(4, type)];
                 let nc: GPNode = allNodes[Utils.indexRandom(allNodes)].createCopy();
                 this.children.push(nc);
             }
@@ -218,6 +184,40 @@ export class GPNode {
         if (this.getExpression()) info += `RootExpression:(${this.getExpression().substr(0, 20)}...)`;
         return info;
     }
+
+
+
+    deepSimplify(): GPNode {
+        let c: GPNode[] = this.getAllChildrenWithSimpleChildren();
+        c.forEach((cc, i) => {
+            let p = cc.children.reduce((ppp, ccc) => ppp + (ccc.behavior === "CONSTANT" ? 0 : 1), 0);
+            if (p == 0) {
+                let v = cc.value([], []);
+                cc.behavior = "CONSTANT";
+                cc.code = "" + v;
+                cc.name = "" + v;
+                cc.children = [];
+            }
+        });
+        return this;
+    }
+
+
+    private addChildrenWithSimpleChildren(current: GPNode, all: GPNode[]) {
+        if (current.children.length > 0) {
+            let lc = current.children.reduce((ppp, ccc) => ppp + ccc.children.length, 0);
+            if (lc == 0) all.push(current);
+            current.children.forEach(c => this.addChildrenWithSimpleChildren(c, all));
+        }
+    }
+
+    public getAllChildrenWithSimpleChildren(): GPNode[] {
+        let tr: GPNode[] = [];
+        this.addChildrenWithSimpleChildren(this, tr);
+
+        return tr;
+    }
+
 
 
 }

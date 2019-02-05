@@ -38,8 +38,8 @@ class Support {
         toReturn.push(new gp_node_1.GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"], 0, "(i0+i1)"));
         toReturn.push(new gp_node_1.GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"], 0, "(i0-i1)"));
         toReturn.push(new gp_node_1.GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"], 0, "(i0*i1)"));
-        toReturn.push(new gp_node_1.GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
-        toReturn.push(new gp_node_1.GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
+        //toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
+        //toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
         return toReturn;
     }
     static getLogicalFunctions() {
@@ -186,17 +186,37 @@ class Support {
     }
     static createTargetValuesFromExpression(externalParameters, expression, min = -10, max = 10, step = .5) {
         let targetValues = [];
-        for (let someParameter = min; someParameter < max; someParameter += step) {
-            let targetValue = { i: someParameter };
-            externalParameters.forEach(ep => { targetValue[ep.name] = utils_1.Utils.round(someParameter); }); //INICIALIZAR MELHOR FUNCOES COM MAIS VARIAVEIS
-            targetValue.output = this.evalExpressionWithParameters(expression, targetValue);
-            targetValues.push(targetValue);
+        let cv = {};
+        let i = 1;
+        let cp = 0;
+        externalParameters.forEach(ep => cv[ep.name] = min);
+        while (cp < externalParameters.length) {
+            let output = this.evalExpressionWithParameters(expression, cv);
+            targetValues.push(Object.assign({ i, output }, cv));
+            cp = 0;
+            let continua = true;
+            while (continua && cp < externalParameters.length) {
+                cv[externalParameters[cp].name] = cv[externalParameters[cp].name] + step;
+                if (cv[externalParameters[cp].name] > max) {
+                    cv[externalParameters[cp].name] = min;
+                    cp++;
+                    continua = true;
+                }
+                else {
+                    continua = false;
+                }
+            }
+            i++;
         }
-        ;
         return targetValues;
     }
     static getSimpleExpression2(node) {
-        return utils_1.Utils.replaceAll(utils_1.Utils.replaceAll(Support.getSimpleExpression(node), "externals['", ""), "']", "");
+        let ex = utils_1.Utils.replaceAll(utils_1.Utils.replaceAll(Support.getSimpleExpression(node), "externals['", ""), "']", "");
+        // while (ex[0] == "(" && ex[ex.length - 1] == ")") {
+        //     console.log(ex);
+        //     ex = ex.substr(1, ex.length - 2);
+        // }
+        return ex;
     }
     static getSimpleExpression(node) {
         if (node.behavior == "CONSTANT") {
@@ -210,7 +230,7 @@ class Support {
             e = utils_1.Utils.replaceAll(e, 'i' + i, Support.getSimpleExpression(c));
         });
         //return `${this.name}(${this.children.reduce((p, c, i) => p + c.getExpression() + (i < cInputs - 1 ? ',' : ''), "")})`;
-        return e;
+        return utils_1.Utils.replaceAll(e, "--", "+");
     }
     static readIndividual(initialPopulation, name) {
         if (fs.existsSync(name)) {

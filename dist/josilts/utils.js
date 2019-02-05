@@ -29,6 +29,9 @@ class Utils {
         Utils.seed = Utils.seed * 16807 % 2147483647;
         return (Utils.seed - 1) / 2147483646;
     }
+    static removeCommas(somestring) {
+        return somestring.split(",").join("_");
+    }
 }
 Utils.seed = 1234;
 exports.Utils = Utils;

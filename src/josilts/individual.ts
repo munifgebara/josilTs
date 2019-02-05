@@ -69,14 +69,22 @@ export class Individual {
             return this.fitness;
         }
         this.fitness = 0;
-        targetValues.forEach(v => {
+        let passo = Math.round(1 + targetValues.length / 100);
+
+
+        for (let i = Utils.integerRandom(0, passo); i < targetValues.length; i += passo) {
+            let v = targetValues[i];
             let value = this.calculateValue(v);
-            let dif = v.output - value;
-            this.fitness += (dif * dif) / targetValues.length;
-        });
+            let dif = Math.abs(v.output - value);
+            if (dif > 1000000) {
+                dif = 1000000;
+            }
+            this.fitness += dif / targetValues.length;
+        }
         if (this.fitness == 0) {
             this.fitness = 10000;
         }
+
     }
 
     public getInfo(): string {

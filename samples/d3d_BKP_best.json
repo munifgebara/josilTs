@@ -1,0 +1,273 @@
+{
+  "inputTypes": [
+    {
+      "name": "y",
+      "type": "NUMBER"
+    },
+    {
+      "name": "x",
+      "type": "NUMBER"
+    }
+  ],
+  "outputType": "NUMBER",
+  "maxHeigth": 4,
+  "nodes": [
+    {
+      "name": "add",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i0+i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "simpleExpression": "(i0+i1)",
+      "dotStyle": "filled",
+      "children": [],
+      "id": 1,
+      "h": 1
+    },
+    {
+      "name": "sub",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i0-i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "simpleExpression": "(i0-i1)",
+      "dotStyle": "filled",
+      "children": [],
+      "id": 2,
+      "h": 1
+    },
+    {
+      "name": "mul",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i0*i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "simpleExpression": "(i0*i1)",
+      "dotStyle": "filled",
+      "children": [],
+      "id": 3,
+      "h": 1
+    },
+    {
+      "name": "y",
+      "behavior": "EXTERNAL",
+      "returnType": "NUMBER",
+      "code": "externals['y']",
+      "inputTypes": [],
+      "minimumHeight": 0,
+      "simpleExpression": "()",
+      "dotStyle": "filled",
+      "children": [],
+      "id": 4,
+      "h": 1
+    },
+    {
+      "name": "x",
+      "behavior": "EXTERNAL",
+      "returnType": "NUMBER",
+      "code": "externals['x']",
+      "inputTypes": [],
+      "minimumHeight": 0,
+      "simpleExpression": "()",
+      "dotStyle": "filled",
+      "children": [],
+      "id": 5,
+      "h": 1
+    }
+  ],
+  "id": 35303,
+  "fitness": 0.009020015140082696,
+  "value": null,
+  "parents": [],
+  "rootExpression": {
+    "name": "",
+    "behavior": "FUNCTION",
+    "returnType": "NUMBER",
+    "code": "return i0;",
+    "inputTypes": [
+      "NUMBER"
+    ],
+    "minimumHeight": 0,
+    "simpleExpression": "(i0)",
+    "dotStyle": "filled",
+    "children": [
+      {
+        "name": "add",
+        "behavior": "FUNCTION",
+        "returnType": "NUMBER",
+        "code": "return i0+i1;",
+        "inputTypes": [
+          "NUMBER",
+          "NUMBER"
+        ],
+        "minimumHeight": 0,
+        "simpleExpression": "(i0+i1)",
+        "dotStyle": "solid",
+        "children": [
+          {
+            "name": "sub",
+            "behavior": "FUNCTION",
+            "returnType": "NUMBER",
+            "code": "return i0-i1;",
+            "inputTypes": [
+              "NUMBER",
+              "NUMBER"
+            ],
+            "minimumHeight": 0,
+            "simpleExpression": "(i0-i1)",
+            "dotStyle": "dashed",
+            "children": [
+              {
+                "name": "0.2686771813488353",
+                "behavior": "CONSTANT",
+                "returnType": "NUMBER",
+                "code": "0.2686771813488353",
+                "inputTypes": [],
+                "minimumHeight": 0,
+                "simpleExpression": "(NOOP)",
+                "dotStyle": "filled",
+                "children": [],
+                "id": 1486061,
+                "h": 1
+              },
+              {
+                "name": "mul",
+                "behavior": "FUNCTION",
+                "returnType": "NUMBER",
+                "code": "return i0*i1;",
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "simpleExpression": "(i0*i1)",
+                "dotStyle": "filled",
+                "children": [
+                  {
+                    "name": "y",
+                    "behavior": "EXTERNAL",
+                    "returnType": "NUMBER",
+                    "code": "externals['y']",
+                    "inputTypes": [],
+                    "minimumHeight": 0,
+                    "simpleExpression": "(externals['y'])",
+                    "dotStyle": "filled",
+                    "children": [],
+                    "id": 1486063,
+                    "h": 1
+                  },
+                  {
+                    "name": "y",
+                    "behavior": "EXTERNAL",
+                    "returnType": "NUMBER",
+                    "code": "externals['y']",
+                    "inputTypes": [],
+                    "minimumHeight": 0,
+                    "simpleExpression": "(externals['y'])",
+                    "dotStyle": "filled",
+                    "children": [],
+                    "id": 1486064,
+                    "h": 1
+                  }
+                ],
+                "id": 1486062,
+                "h": 1
+              }
+            ],
+            "id": 1486060,
+            "h": 1
+          },
+          {
+            "name": "sub",
+            "behavior": "FUNCTION",
+            "returnType": "NUMBER",
+            "code": "return i0-i1;",
+            "inputTypes": [
+              "NUMBER",
+              "NUMBER"
+            ],
+            "minimumHeight": 0,
+            "simpleExpression": "(i0-i1)",
+            "dotStyle": "filled",
+            "children": [
+              {
+                "name": "0.7403428337912474",
+                "behavior": "CONSTANT",
+                "returnType": "NUMBER",
+                "code": "0.7403428337912474",
+                "inputTypes": [],
+                "minimumHeight": 0,
+                "simpleExpression": "(NOOP)",
+                "dotStyle": "filled",
+                "children": [],
+                "id": 1486054,
+                "h": 1
+              },
+              {
+                "name": "mul",
+                "behavior": "FUNCTION",
+                "returnType": "NUMBER",
+                "code": "return i0*i1;",
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "simpleExpression": "(i0*i1)",
+                "dotStyle": "filled",
+                "children": [
+                  {
+                    "name": "x",
+                    "behavior": "EXTERNAL",
+                    "returnType": "NUMBER",
+                    "code": "externals['x']",
+                    "inputTypes": [],
+                    "minimumHeight": 0,
+                    "simpleExpression": "(externals['x'])",
+                    "dotStyle": "filled",
+                    "children": [],
+                    "id": 1486056,
+                    "h": 1
+                  },
+                  {
+                    "name": "x",
+                    "behavior": "EXTERNAL",
+                    "returnType": "NUMBER",
+                    "code": "externals['x']",
+                    "inputTypes": [],
+                    "minimumHeight": 0,
+                    "simpleExpression": "(externals['x'])",
+                    "dotStyle": "filled",
+                    "children": [],
+                    "id": 1486057,
+                    "h": 1
+                  }
+                ],
+                "id": 1486055,
+                "h": 1
+              }
+            ],
+            "id": 1486053,
+            "h": 1
+          }
+        ],
+        "id": 1486041,
+        "h": 1
+      }
+    ],
+    "id": 1486040,
+    "h": 1
+  }
+}
