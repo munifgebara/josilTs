@@ -9,13 +9,13 @@ const externalParameters = support_1.Support.createExternalParametersFromTargetV
 console.log(externalParameters);
 const domainFunctions = [];
 domainFunctions.push(new gp_node_1.GPNode("domingo", "FUNCTION", "NUMBER", "return externals['w']==1?1:i0", ["NUMBER"], 0));
-domainFunctions.push(new gp_node_1.GPNode("SIN", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0));
-domainFunctions.push(new gp_node_1.GPNode("SIN", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0));
+domainFunctions.push(new gp_node_1.GPNode("sin", "FUNCTION", "NUMBER", "return Math.sin(i0)", ["NUMBER"], 0));
+domainFunctions.push(new gp_node_1.GPNode("cos", "FUNCTION", "NUMBER", "return Math.cos(i0)", ["NUMBER"], 0));
 domainFunctions.push(...support_1.Support.getBasicMatematicalFunctions());
 let pop = [];
 support_1.Support.readIndividual(pop, "bkp/serra_BKP_best.json");
-utils_1.Utils.seed = utils_1.Utils.seed + Math.round(Math.random() * 1000);
-let project = new project_1.Project("serra", externalParameters, "NUMBER", 300, 10, domainFunctions, pop);
+utils_1.Utils.seed = utils_1.Utils.seed + Math.round(Math.random() * 1000000);
+let project = new project_1.Project("serra", externalParameters, "NUMBER", 500, 9, domainFunctions, pop);
 project.targetValues.push(...targetValues);
-project.evolveN(22);
+project.evolveN(9);
 //# sourceMappingURL=runSerra.js.map

@@ -70,9 +70,11 @@ export class Individual {
         }
         this.fitness = 0;
         let passo = Math.round(1 + targetValues.length / 100);
+        let init = Utils.integerRandom(0, passo);
+        //console.log(init, passo - 1);
+        //process.stdout.write(`${init} ${passo}  \r`);
 
-
-        for (let i = Utils.integerRandom(0, passo); i < targetValues.length; i += passo) {
+        for (let i = init; i < targetValues.length; i += passo) {
             let v = targetValues[i];
             let value = this.calculateValue(v);
             let dif = Math.abs(v.output - value);
@@ -82,7 +84,7 @@ export class Individual {
             this.fitness += dif / targetValues.length;
         }
         if (this.fitness == 0) {
-            this.fitness = 10000;
+            //this.fitness = 1000000;
         }
 
     }

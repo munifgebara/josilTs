@@ -96,7 +96,7 @@ export class GPNode {
                 }
             }
             else if (maxHeigth > 1) {
-                let allNodes: GPNode[] = [...possibileFunctions, ...externals, ...Support.getConstantNodes(4, type)];
+                let allNodes: GPNode[] = [...possibileFunctions, ...externals, ...Support.getIntegerConstantNodes(4)];
                 let nc: GPNode = allNodes[Utils.indexRandom(allNodes)].createCopy();
                 if (nc.behavior == "FUNCTION") {
                     nc.initChildren(nodes, maxHeigth - 1);
@@ -107,7 +107,7 @@ export class GPNode {
                 }
             }
             else {
-                let allNodes: GPNode[] = [...externals, ...externals, ...Support.getConstantNodes(4, type)];
+                let allNodes: GPNode[] = [...externals, ...externals, ...Support.getConstantNodes(4, type), ...Support.getIntegerConstantNodes(4)];
                 let nc: GPNode = allNodes[Utils.indexRandom(allNodes)].createCopy();
                 this.children.push(nc);
             }

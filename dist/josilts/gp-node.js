@@ -78,7 +78,7 @@ class GPNode {
                 }
             }
             else if (maxHeigth > 1) {
-                let allNodes = [...possibileFunctions, ...externals, ...support_1.Support.getConstantNodes(4, type)];
+                let allNodes = [...possibileFunctions, ...externals, ...support_1.Support.getIntegerConstantNodes(4)];
                 let nc = allNodes[utils_1.Utils.indexRandom(allNodes)].createCopy();
                 if (nc.behavior == "FUNCTION") {
                     nc.initChildren(nodes, maxHeigth - 1);
@@ -89,7 +89,7 @@ class GPNode {
                 }
             }
             else {
-                let allNodes = [...externals, ...externals, ...support_1.Support.getConstantNodes(4, type)];
+                let allNodes = [...externals, ...externals, ...support_1.Support.getConstantNodes(4, type), ...support_1.Support.getIntegerConstantNodes(4)];
                 let nc = allNodes[utils_1.Utils.indexRandom(allNodes)].createCopy();
                 this.children.push(nc);
             }

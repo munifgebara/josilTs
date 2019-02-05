@@ -15,6 +15,15 @@ export type GPBehavior = "CONSTANT" | "EXTERNAL" | "FUNCTION";
 
 
 export class Support {
+    static getIntegerConstantNodes(n: number): GPNode[] {
+        let toReturn: GPNode[] = [];
+        for (let i = 0; i < n; i++) {
+            const toReturn = new GPNode("Integer Constant", "CONSTANT", "NUMBER", ``, [], 0);
+            toReturn.code = "" + (i + 1);
+            toReturn.name = "" + (i + 1);
+        }
+        return toReturn;
+    }
     static createExternalParametersFromTargetValues(csv: any[]): ExternalParameters[] {
         let fields: string[] = Object.keys(csv[0]);
         return fields.filter(f => f != "index" && f != "output").reduce((p: ExternalParameters[], c: string) => [...p, { name: c, type: "NUMBER" } as ExternalParameters], []);
@@ -48,8 +57,8 @@ export class Support {
         toReturn.push(new GPNode("add", "FUNCTION", "NUMBER", "return i0+i1;", ["NUMBER", "NUMBER"], 0, "(i0+i1)"));
         toReturn.push(new GPNode("sub", "FUNCTION", "NUMBER", "return i0-i1;", ["NUMBER", "NUMBER"], 0, "(i0-i1)"));
         toReturn.push(new GPNode("mul", "FUNCTION", "NUMBER", "return i0*i1;", ["NUMBER", "NUMBER"], 0, "(i0*i1)"));
-        //toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
-        //toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
+        toReturn.push(new GPNode("div", "FUNCTION", "NUMBER", "return i1==0?1:i0/i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?1:i0/i1)"));
+        toReturn.push(new GPNode("mod", "FUNCTION", "NUMBER", "return i1==0?i0:i0%i1;", ["NUMBER", "NUMBER"], 0, "(i1==0?i0:i0%i1)"));
         return toReturn;
     }
 
@@ -278,7 +287,7 @@ export class Support {
     public static readIndividual(initialPopulation: Individual[], name: string) {
         if (fs.existsSync(name)) {
             let ind: Individual = Individual.getInstance(JSON.parse(fs.readFileSync(name).toString()));
-            //ind.rootExpression.children[0].deepSimplify();
+            ind.rootExpression.children[0].deepSimplify();
             ind.fitness = -1;
             initialPopulation.push(ind);
         }

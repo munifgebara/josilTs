@@ -25,7 +25,7 @@
       "simpleExpression": "(i0+i1)",
       "dotStyle": "filled",
       "children": [],
-      "id": 1,
+      "id": 20,
       "h": 1
     },
     {
@@ -41,7 +41,7 @@
       "simpleExpression": "(i0-i1)",
       "dotStyle": "filled",
       "children": [],
-      "id": 2,
+      "id": 21,
       "h": 1
     },
     {
@@ -57,7 +57,23 @@
       "simpleExpression": "(i0*i1)",
       "dotStyle": "filled",
       "children": [],
-      "id": 3,
+      "id": 22,
+      "h": 1
+    },
+    {
+      "name": "div",
+      "behavior": "FUNCTION",
+      "returnType": "NUMBER",
+      "code": "return i1==0?1:i0/i1;",
+      "inputTypes": [
+        "NUMBER",
+        "NUMBER"
+      ],
+      "minimumHeight": 0,
+      "simpleExpression": "(i1==0?1:i0/i1)",
+      "dotStyle": "filled",
+      "children": [],
+      "id": 23,
       "h": 1
     },
     {
@@ -70,7 +86,7 @@
       "simpleExpression": "()",
       "dotStyle": "filled",
       "children": [],
-      "id": 4,
+      "id": 24,
       "h": 1
     },
     {
@@ -83,12 +99,12 @@
       "simpleExpression": "()",
       "dotStyle": "filled",
       "children": [],
-      "id": 5,
+      "id": 25,
       "h": 1
     }
   ],
-  "id": 35303,
-  "fitness": 0.009020015140082696,
+  "id": 35732,
+  "fitness": 0,
   "value": null,
   "parents": [],
   "rootExpression": {
@@ -104,117 +120,74 @@
     "dotStyle": "filled",
     "children": [
       {
-        "name": "add",
+        "name": "sub",
         "behavior": "FUNCTION",
         "returnType": "NUMBER",
-        "code": "return i0+i1;",
+        "code": "return i0-i1;",
         "inputTypes": [
           "NUMBER",
           "NUMBER"
         ],
         "minimumHeight": 0,
-        "simpleExpression": "(i0+i1)",
-        "dotStyle": "solid",
+        "simpleExpression": "(i0-i1)",
+        "dotStyle": "dashed",
         "children": [
           {
-            "name": "sub",
+            "name": "div",
             "behavior": "FUNCTION",
             "returnType": "NUMBER",
-            "code": "return i0-i1;",
+            "code": "return i1==0?1:i0/i1;",
             "inputTypes": [
               "NUMBER",
               "NUMBER"
             ],
             "minimumHeight": 0,
-            "simpleExpression": "(i0-i1)",
-            "dotStyle": "dashed",
+            "simpleExpression": "(i1==0?1:i0/i1)",
+            "dotStyle": "solid",
             "children": [
               {
-                "name": "0.2686771813488353",
-                "behavior": "CONSTANT",
+                "name": "x",
+                "behavior": "EXTERNAL",
                 "returnType": "NUMBER",
-                "code": "0.2686771813488353",
+                "code": "externals['x']",
                 "inputTypes": [],
                 "minimumHeight": 0,
-                "simpleExpression": "(NOOP)",
+                "simpleExpression": "(externals['x'])",
                 "dotStyle": "filled",
                 "children": [],
-                "id": 1486061,
+                "id": 2374924,
                 "h": 1
               },
               {
-                "name": "mul",
-                "behavior": "FUNCTION",
+                "name": "x",
+                "behavior": "EXTERNAL",
                 "returnType": "NUMBER",
-                "code": "return i0*i1;",
-                "inputTypes": [
-                  "NUMBER",
-                  "NUMBER"
-                ],
+                "code": "externals['x']",
+                "inputTypes": [],
                 "minimumHeight": 0,
-                "simpleExpression": "(i0*i1)",
+                "simpleExpression": "(externals['x'])",
                 "dotStyle": "filled",
-                "children": [
-                  {
-                    "name": "y",
-                    "behavior": "EXTERNAL",
-                    "returnType": "NUMBER",
-                    "code": "externals['y']",
-                    "inputTypes": [],
-                    "minimumHeight": 0,
-                    "simpleExpression": "(externals['y'])",
-                    "dotStyle": "filled",
-                    "children": [],
-                    "id": 1486063,
-                    "h": 1
-                  },
-                  {
-                    "name": "y",
-                    "behavior": "EXTERNAL",
-                    "returnType": "NUMBER",
-                    "code": "externals['y']",
-                    "inputTypes": [],
-                    "minimumHeight": 0,
-                    "simpleExpression": "(externals['y'])",
-                    "dotStyle": "filled",
-                    "children": [],
-                    "id": 1486064,
-                    "h": 1
-                  }
-                ],
-                "id": 1486062,
+                "children": [],
+                "id": 2374925,
                 "h": 1
               }
             ],
-            "id": 1486060,
+            "id": 2374923,
             "h": 1
           },
           {
-            "name": "sub",
+            "name": "add",
             "behavior": "FUNCTION",
             "returnType": "NUMBER",
-            "code": "return i0-i1;",
+            "code": "return i0+i1;",
             "inputTypes": [
               "NUMBER",
               "NUMBER"
             ],
             "minimumHeight": 0,
-            "simpleExpression": "(i0-i1)",
+            "simpleExpression": "(i0+i1)",
             "dotStyle": "filled",
             "children": [
-              {
-                "name": "0.7403428337912474",
-                "behavior": "CONSTANT",
-                "returnType": "NUMBER",
-                "code": "0.7403428337912474",
-                "inputTypes": [],
-                "minimumHeight": 0,
-                "simpleExpression": "(NOOP)",
-                "dotStyle": "filled",
-                "children": [],
-                "id": 1486054,
-                "h": 1
-              },
               {
                 "name": "mul",
                 "behavior": "FUNCTION",
@@ -238,7 +211,7 @@
                     "simpleExpression": "(externals['x'])",
                     "dotStyle": "filled",
                     "children": [],
-                    "id": 1486056,
+                    "id": 2374939,
                     "h": 1
                   },
                   {
@@ -251,23 +224,66 @@
                     "simpleExpression": "(externals['x'])",
                     "dotStyle": "filled",
                     "children": [],
-                    "id": 1486057,
+                    "id": 2374940,
                     "h": 1
                   }
                 ],
-                "id": 1486055,
+                "id": 2374938,
+                "h": 1
+              },
+              {
+                "name": "mul",
+                "behavior": "FUNCTION",
+                "returnType": "NUMBER",
+                "code": "return i0*i1;",
+                "inputTypes": [
+                  "NUMBER",
+                  "NUMBER"
+                ],
+                "minimumHeight": 0,
+                "simpleExpression": "(i0*i1)",
+                "dotStyle": "filled",
+                "children": [
+                  {
+                    "name": "y",
+                    "behavior": "EXTERNAL",
+                    "returnType": "NUMBER",
+                    "code": "externals['y']",
+                    "inputTypes": [],
+                    "minimumHeight": 0,
+                    "simpleExpression": "(externals['y'])",
+                    "dotStyle": "filled",
+                    "children": [],
+                    "id": 2374942,
+                    "h": 1
+                  },
+                  {
+                    "name": "y",
+                    "behavior": "EXTERNAL",
+                    "returnType": "NUMBER",
+                    "code": "externals['y']",
+                    "inputTypes": [],
+                    "minimumHeight": 0,
+                    "simpleExpression": "(externals['y'])",
+                    "dotStyle": "filled",
+                    "children": [],
+                    "id": 2374943,
+                    "h": 1
+                  }
+                ],
+                "id": 2374941,
                 "h": 1
               }
             ],
-            "id": 1486053,
+            "id": 2374937,
             "h": 1
           }
         ],
-        "id": 1486041,
+        "id": 2374931,
         "h": 1
       }
     ],
-    "id": 1486040,
+    "id": 2374930,
     "h": 1
   }
 }

@@ -24,8 +24,8 @@ class Project {
         this.targetValues = [];
         externalParameters.forEach((c, i) => this.projectBasicNodes.push(new gp_node_1.GPNode(c.name, "EXTERNAL", c.type, ``, [], 0)));
         for (let i = population.length; i < this.populationSize; i++) {
-            //const n = new Individual(this.externalParameters, this.outputType, 3 + (i % (this.maxHeigth - 2)), this.projectBasicNodes);
-            const n = new individual_1.Individual(this.externalParameters, this.outputType, this.maxHeigth, this.projectBasicNodes);
+            const n = new individual_1.Individual(this.externalParameters, this.outputType, 3 + (i % (this.maxHeigth - 2)), this.projectBasicNodes);
+            //const n = new Individual(this.externalParameters, this.outputType, this.maxHeigth, this.projectBasicNodes);
             this.population.push(n);
             process.stdout.write("Creating Population " + (i + 1) + "/" + this.populationSize + "\r");
         }
@@ -47,7 +47,8 @@ class Project {
         if (!this.specialFitness) {
             this.population.forEach((ind, i) => {
                 ind.updateFitness(this.targetValues);
-                process.stdout.write(`G:${this.generation} updating fitness ${i}  \r`);
+                if (i % 100 == 0)
+                    process.stdout.write(`G:${this.generation} updating fitness ${i}  \r`);
             });
         }
         else {
@@ -96,7 +97,8 @@ class Project {
             r.s2.rootExpression.deepSimplify();
             this.population[j] = r.s1;
             this.population[j + 1] = r.s2;
-            process.stdout.write(`G:${this.generation} mixIndividuals ${i}  \r`);
+            if (i % 100 == 0)
+                process.stdout.write(`G:${this.generation} mixIndividuals ${i}  \r`);
         }
         //this.simplifyAll();
         this.updateAllFitness();
@@ -130,7 +132,7 @@ class Project {
                 fs.writeFileSync(`bkp/${this.title}_BKP_best.json`, JSON.stringify(this.population[0], null, 2), "utf8");
                 if (this.population[0].fitness < minFitnes)
                     break;
-                fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
+                //fs.writeFileSync(`pop/${this.title}_${this.generation}.dot`, this.getPopulationAsDot());
                 af = this.population[0].fitness;
                 console.log("");
             }
